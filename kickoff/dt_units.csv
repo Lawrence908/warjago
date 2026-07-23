@@ -1,0 +1,210 @@
+Name,DisplayName,Faction,Archetype,Tier,UnitSize,HpPerModel,MeleeAttack,MeleeDefence,ChargeBonus,Damage,ArmourPiercing,Armour,Morale,SpeedCmS,RangedAttack,RangeCm,Ammo,ModelScale,Cost,Upkeep,Ability,Weapon,Headgear,ColourPrimary,ColourSecondary,MeshHead,MeshTorso,MeshLegs,MeshHat,MeshWeapon,Image,AssetStatus,Notes
+SKU_MINERS,Skulkin Miners,SKULKIN,CHAFF,TROOP,32,34,3,2,2,10,0,0,99,420,0,0,0,1.0,310,31,,Pickaxe,None,#E8E3D3,#8B1A1A,,,,,,,todo,Cheapest body on the field. Can dig a tunnel entrance.
+SKU_WARRIORS,Skulkin Warriors,SKULKIN,LINE,TROOP,24,51,5,4,4,14,0,2,99,399,0,0,0,1.0,385,38,,Bone Sword,None,#E8E3D3,#8B1A1A,,,,,,,todo,The default Skulkin block. Elemental-coloured armour.
+SKU_WATCHMEN,Skulkin Watchmen,SKULKIN,SPEAR,TROOP,24,51,4,6,5,13,6,2,99,378,0,0,0,1.0,430,43,,Bone Spear,Conical,#E8E3D3,#8B1A1A,,,,,,,todo,Anti-large. Holds a line against dragons and giants.
+SKU_PITBOSSES,Skulkin Pit Bosses,SKULKIN,HEAVY,TROOP,18,76,7,6,6,20,8,5,99,315,0,0,0,1.1,465,46,,Bone Axe,Helmet,#E8E3D3,#8B1A1A,,,,,,,todo,Overseers. Nearby Skulkin reassemble twice instead of once.
+SKU_ENGINEERS,Skulkin Engineers,SKULKIN,SKIRMISH,TROOP,20,42,4,3,3,12,0,1,99,546,4,1100,10,1.0,325,32,,Wrench,Goggles,#E8E3D3,#8B1A1A,,,,,,,todo,Repair vehicles. Throw bone bombs.
+SKU_SKULLTRUCK,Skull Truck,SKULKIN,VEHICLE,TROOP,4,340,6,6,14,30,12,7,99,525,0,0,0,2.2,350,35,,Ram,None,#E8E3D3,#8B1A1A,,,,,,,todo,"Chariot. Massive charge, terrible turning circle."
+SKU_TREADASSAULT,Turbo Shredder,SKULKIN,VEHICLE,TROOP,4,340,6,6,14,30,12,7,99,525,0,0,0,2.2,350,35,,Saw Blades,None,#E8E3D3,#8B1A1A,,,,,,,todo,Grinds through infantry. Useless against armour.
+SER_HYP_SOLDIERS,Hypnobrai Soldiers,SERPENTINE,LINE,TROOP,24,60,5,4,4,14,0,2,52,399,0,0,0,1.0,495,49,,Serpent Blade,None,#3C7A3C,#C8A22A,,,,,,,todo,Blue. Chance to briefly stun on hit.
+SER_HYP_SCOUTS,Hypnobrai Scouts,SERPENTINE,SKIRMISH,TROOP,20,50,4,3,3,12,0,1,48,546,4,1100,10,1.0,415,41,,Dagger,None,#3C7A3C,#C8A22A,,,,,,,todo,Reveal hidden units. Fast.
+SER_FAN_SOLDIERS,Fangpyre Soldiers,SERPENTINE,LINE,TROOP,24,60,5,4,4,14,0,2,52,399,0,0,0,1.0,495,49,,Fang Blade,None,#3C7A3C,#C8A22A,,,,,,,todo,Red. Killed enemy models have a 25% chance to raise as Fangpyre.
+SER_FAN_SCOUTS,Fangpyre Scouts,SERPENTINE,CHAFF,TROOP,32,40,3,2,2,10,0,0,38,420,0,0,0,1.0,400,40,,Fangs,None,#3C7A3C,#C8A22A,,,,,,,todo,"Snappa's lot. Reckless: +2 charge, -10 morale."
+SER_CON_WARRIORS,Constrictai Warriors,SERPENTINE,HEAVY,TROOP,18,90,7,6,6,20,8,5,66,315,0,0,0,1.1,595,59,,Bone Club,None,#3C7A3C,#C8A22A,,,,,,,todo,"Black/orange. Can BURROW: deploy anywhere, ambush."
+SER_CON_SOLDIERS,Constrictai Soldiers,SERPENTINE,SHIELD,TROOP,24,70,4,7,3,12,0,4,62,357,0,0,0,1.0,565,56,,Shield & Mace,None,#3C7A3C,#C8A22A,,,,,,,todo,Crushing grip: roots the unit it engages.
+SER_VEN_SPITTERS,Venomari Spitters,SERPENTINE,SPITTER,TROOP,20,50,3,3,1,9,4,0,43,399,5,900,10,1.0,365,36,,Venom Vials,None,#3C7A3C,#C8A22A,,,,,,,todo,Green. Hits cause hallucination: target attacks randomly for 5s.
+SER_VEN_WARRIORS,Venomari Warriors,SERPENTINE,LINE,TROOP,24,60,5,4,4,14,0,2,52,399,0,0,0,1.0,495,49,,Twin Blades,None,#3C7A3C,#C8A22A,,,,,,,todo,Lizaru's line troops.
+SER_ANA_WARRIORS,Anacondrai Warriors,SERPENTINE,ELITE,TROOP,16,110,9,8,8,24,10,5,76,420,0,0,0,1.1,645,64,,Anacondrai Blade,None,#3C7A3C,#C8A22A,,,,,,,todo,"Purple. Bigger, smarter, natural leaders. Expensive."
+SER_VIPER_FLYERS,Viper Flyers,SERPENTINE,SKIRMISH,TROOP,20,50,4,3,3,12,0,1,48,546,4,1100,10,1.0,415,41,,Glider Blades,None,#3C7A3C,#C8A22A,,,,,,,todo,Set-derived flyers. Harass and reposition.
+SER_DEVOURER,The Great Devourer,SERPENTINE,GIANT,TROOP,1,1600,11,5,14,90,50,7,86,315,0,0,0,4.5,1240,124,,Jaws,None,#3C7A3C,#C8A22A,,,,,,,todo,Campaign boss. Grows every time it eats a unit.
+STO_SCOUTS,Stone Scouts,STONE_ARMY,ARCHER,TROOP,20,50,3,2,1,9,0,3,99,340,6,1600,14,1.0,485,48,,Crossbow,None,#1C1C1C,#B03030,,,,,,,todo,"Yellow markings, flaming bolts. No shoulder armour."
+STO_SOLDIERS,Stone Soldiers,STONE_ARMY,SHIELD,TROOP,24,70,4,7,3,12,0,7,99,289,0,0,0,1.0,755,75,,Katana & Shield,Conical,#1C1C1C,#B03030,,,,,,,todo,Conical red hat. The block that holds the line.
+STO_SWORDSMEN,Stone Swordsmen,STONE_ARMY,LINE,TROOP,24,60,5,4,4,14,0,5,99,323,0,0,0,1.0,670,67,,Katana,Conical,#1C1C1C,#B03030,,,,,,,todo,"Same body, no shield, more attack."
+STO_WARRIORS,Stone Warriors,STONE_ARMY,HEAVY,TROOP,18,90,7,6,6,20,8,8,99,255,0,0,0,1.1,775,77,,Butterfly Swords,Warrior Helm,#1C1C1C,#B03030,,,,,,,todo,"Black chest plate, samurai-style helm."
+STO_GIANT,Giant Stone Warrior,STONE_ARMY,MONSTER,TROOP,1,900,10,6,12,60,25,9,99,323,0,0,0,3.0,980,98,,Butterfly Swords,Black Helm,#1C1C1C,#B03030,,,,,,,todo,Single colossus. Cannot be killed by normal damage — only knocked down.
+NIN_POLICE,Ninjago Police,NINJA,SHIELD,TROOP,24,70,4,7,3,12,0,4,72,340,0,0,0,1.0,730,73,,Baton & Shield,Police Cap,#1E6FBF,#D9B310,,,,,,,todo,Cheap allied line. Arrives as reinforcements.
+NIN_SOLDIERS,Ninjago Soldiers,NINJA,SPEAR,TROOP,24,60,4,6,5,13,6,2,66,360,0,0,0,1.0,710,71,,Yari,Jingasa,#1E6FBF,#D9B310,,,,,,,todo,Serpentine War era regulars.
+NIN_ROYALGUARD,Royal Guards,NINJA,ELITE,TROOP,16,110,9,8,8,24,10,5,88,400,0,0,0,1.1,840,84,,Naginata,Guard Helm,#1E6FBF,#D9B310,,,,,,,todo,Hutchins' palace guard.
+NIN_SHINTARO,Army of Shintaro,NINJA,ARCHER,TROOP,20,50,3,2,1,9,0,0,50,400,6,1600,14,1.0,455,45,,Longbow,Winged Helm,#1E6FBF,#D9B310,,,,,,,todo,Sky Folk. Can be deployed on high ground only.
+NIN_SAMURAIX,Samurai X Mech,NINJA,MONSTER,TROOP,1,900,10,6,12,60,25,6,94,380,0,0,0,3.0,1035,103,,Mech Blades,None,#1E6FBF,#D9B310,,,,,,,todo,Nya's mech. Ranged + melee.
+NDR_DRONES,Nindroid Drones,NINDROID,CHAFF,TROOP,32,40,3,2,2,10,0,0,99,400,2,0,0,1.0,500,50,,Blade Arm,None,#2B2B2B,#00C2C7,,,,,,,todo,Expendable. Self-destruct on death for small AoE.
+NDR_WARRIORS,Nindroid Warriors,NINDROID,LINE,TROOP,24,60,5,4,4,14,0,2,99,380,2,0,0,1.0,600,60,,Techno Blade,None,#2B2B2B,#00C2C7,,,,,,,todo,Standard Nindroid infantry.
+NDR_SENTRIES,Nindroid Sentries,NINDROID,SHIELD,TROOP,24,70,4,7,3,12,0,4,99,340,2,0,0,1.0,680,68,,Stun Baton,None,#2B2B2B,#00C2C7,,,,,,,todo,Guards. Can be hacked and turned by Zane.
+NDR_ELITE,Nindroid Elite Guard,NINDROID,ELITE,TROOP,16,110,9,8,8,24,10,5,99,400,2,0,0,1.1,765,76,,Twin Blades,None,#2B2B2B,#00C2C7,,,,,,,todo,Cryptor's personal guard.
+NDR_MECHDRAGON,Nindroid MechDragon,NINDROID,GIANT,TROOP,1,1600,11,5,14,90,50,7,99,300,2,0,0,4.5,1440,144,,Missiles,None,#2B2B2B,#00C2C7,,,,,,,todo,Flying artillery platform.
+CUL_CULTISTS,Anacondrai Cultists,CULTISTS,LINE,TROOP,24,60,5,4,4,14,0,2,55,380,0,0,0,1.0,465,46,,Condrai Blade,Bone Mask,#5B2C87,#C8102E,,,,,,,todo,Bone armour over red robes. Upgrades via The Curse.
+CUL_ARCHERS,Condrai Archers,CULTISTS,ARCHER,TROOP,20,50,3,2,1,9,0,0,45,400,6,1600,14,1.0,330,33,,Bow,Bone Mask,#5B2C87,#C8102E,,,,,,,todo,
+CUL_CRUSHER,Anacondrai Crusher,CULTISTS,VEHICLE,TROOP,4,400,6,6,14,30,12,7,99,500,0,0,0,2.2,435,43,,Ram,None,#5B2C87,#C8102E,,,,,,,todo,
+CUL_COPTER,Condrai Copter,CULTISTS,VEHICLE,TROOP,4,400,6,6,14,30,12,7,99,500,0,0,0,2.2,435,43,,Guns,None,#5B2C87,#C8102E,,,,,,,todo,"Air. Fast, fragile."
+GHO_NINJA,Ghost Ninja,GHOST,LINE,TROOP,24,48,5,4,4,14,0,0,55,380,0,0,0,1.0,430,43,,Spectral Blade,Hood,#3FE0A0,#1A1A2E,,,,,,,todo,"Attila, Hackler, Ming, Spyder, Howla, Yokai, Wooo."
+GHO_WARRIORS,Ghost Warriors,GHOST,CHAFF,TROOP,32,32,3,2,2,10,0,0,40,400,0,0,0,1.0,385,38,,Claws,None,#3FE0A0,#1A1A2E,,,,,,,todo,"Cowler, Cyrus, Ghurka, Pitch, Pyrrhus, Wail."
+GHO_SKREEMERS,Skreemers,GHOST,SWARM,TROOP,48,16,2,1,1,5,0,0,30,480,0,0,0,0.7,375,37,,Bite,None,#3FE0A0,#1A1A2E,,,,,,,todo,Every 15s a surviving Skreemer spawns another Skreemer.
+GHO_PREEMINENT,The Preeminent,GHOST,GIANT,TROOP,1,1280,11,5,14,90,80,0,90,300,0,0,0,4.5,1130,113,,Tentacles,None,#3FE0A0,#1A1A2E,,,,,,,todo,Kaiju. One per campaign. Dies to a single large body of water.
+SKY_CREW,Sky Pirate Crew,SKY_PIRATES,LINE,TROOP,24,54,5,4,4,14,0,2,55,418,1,0,0,1.0,505,50,,Cutlass,Bandana,#8B4513,#2E8B57,,,,,,,todo,
+SKY_GUNNERS,Pirate Gunners,SKY_PIRATES,ARCHER,TROOP,20,45,3,2,1,9,0,0,45,440,7,1600,14,1.0,360,36,,Flintlock,Tricorn,#8B4513,#2E8B57,,,,,,,todo,Flintlocke's shooters.
+SKY_BOARDERS,Sky Boarders,SKY_PIRATES,SKIRMISH,TROOP,20,45,4,3,3,12,0,1,50,572,5,1100,10,1.0,425,42,,Grapple,Bandana,#8B4513,#2E8B57,,,,,,,todo,Fly. Land behind enemy lines.
+SKY_KEEP,Misfortune's Keep,SKY_PIRATES,GIANT,TROOP,1,1440,11,5,14,90,50,7,90,330,1,0,0,4.5,1185,118,,Broadside,None,#8B4513,#2E8B57,,,,,,,todo,Flying flagship. Artillery.
+VER_WARRIORS,Vermillion Warriors,VERMILLION,LINE,TROOP,24,66,5,4,4,14,0,2,55,361,0,0,0,1.0,495,49,,Serpent Axe,Vermillion Helm,#B22222,#4A4A4A,,,,,,,todo,
+VER_ARCHERS,Vermillion Archers,VERMILLION,ARCHER,TROOP,20,55,3,2,1,9,0,0,45,380,6,1600,14,1.0,355,35,,Bow,Vermillion Helm,#B22222,#4A4A4A,,,,,,,todo,
+VER_BUFFMILLION,Buffmillion,VERMILLION,MONSTER,TROOP,1,990,10,6,12,60,25,6,85,361,0,0,0,3.0,830,83,,Fists,Vermillion Helm,#B22222,#4A4A4A,,,,,,,todo,Giant. Reforms like the rest.
+VER_SWARM,Vermillion Snakes,VERMILLION,SWARM,TROOP,48,22,2,1,1,5,0,0,30,456,0,0,0,0.7,385,38,,Bite,None,#B22222,#4A4A4A,,,,,,,todo,What's left when armour breaks. Kill these to stop Reform.
+SOG_BIKERS,SoG Bikers,SONS_OF_GARMADON,CAV,TROOP,12,130,6,5,19,18,6,2,70,747,0,0,0,1.4,405,40,,Chain,Helmet,#4B0082,#E8E8E8,,,,,,,todo,"Luke, Chopper Maroon, Mohawk, Nails, Skip Vicious."
+SOG_THUGS,SoG Thugs,SONS_OF_GARMADON,LINE,TROOP,24,60,5,4,8,14,0,1,55,437,0,0,0,1.0,495,49,,Bat,None,#4B0082,#E8E8E8,,,,,,,todo,On foot.
+SOG_COLOSSUS,Colossus,SONS_OF_GARMADON,GIANT,TROOP,1,1600,11,5,18,90,50,6,90,345,0,0,0,4.5,1240,124,,Fists,None,#4B0082,#E8E8E8,,,,,,,todo,Garmadon's stone titan.
+DRH_HUNTERS,Dragon Hunters,DRAGON_HUNTERS,LINE,TROOP,24,60,5,4,4,14,0,2,55,380,1,0,0,1.0,455,45,,Chain Weapon,Scrap Helm,#8B7355,#FF6A00,,,,,,,todo,
+DRH_CROSSBOWS,Hunter Crossbows,DRAGON_HUNTERS,ARCHER,TROOP,20,50,3,2,1,9,0,0,45,400,7,1600,14,1.0,325,32,,Crossbow,Scrap Helm,#8B7355,#FF6A00,,,,,,,todo,
+DRH_RIDERS,Hunter Bike Riders,DRAGON_HUNTERS,CAV,TROOP,12,130,6,5,15,18,6,3,70,650,1,0,0,1.4,370,37,,Cleaver,Scrap Helm,#8B7355,#FF6A00,,,,,,,todo,
+DRH_FIRSTBOURNE,Firstbourne,DRAGON_HUNTERS,GIANT,TROOP,1,1600,11,5,14,90,50,7,90,300,1,0,0,4.5,1120,112,,Fire Breath,None,#8B7355,#FF6A00,,,,,,,todo,Mother of dragons. Neutral until captured — by either side.
+PYR_SLAYERS,Pyro Slayers,PYRO_VIPERS,LINE,TROOP,24,60,5,4,4,15,0,1,55,380,0,0,0,1.0,480,48,,Flame Blade,None,#FF8C00,#8B0000,,,,,,,todo,
+PYR_WHIPPERS,Pyro Whippers,PYRO_VIPERS,SKIRMISH,TROOP,20,50,4,3,3,13,0,0,50,520,4,1100,10,1.0,400,40,,Fire Whip,None,#FF8C00,#8B0000,,,,,,,todo,"Long reach, pulls enemies out of formation."
+PYR_DESTROYERS,Pyro Destroyers,PYRO_VIPERS,HEAVY,TROOP,18,90,7,6,6,22,8,4,70,300,0,0,0,1.1,590,59,,Flame Maul,None,#FF8C00,#8B0000,,,,,,,todo,
+PYR_FIREFANG,Fire Fang,PYRO_VIPERS,GIANT,TROOP,1,1600,11,5,14,99,50,6,90,300,0,0,0,4.5,1260,126,,Jaws,None,#FF8C00,#8B0000,,,,,,,todo,
+BLZ_WARRIORS,Blizzard Warriors,BLIZZARD_SAMURAI,LINE,TROOP,24,60,5,4,4,14,0,3,58,342,0,0,0,1.0,510,51,,Ice Katana,Blizzard Helm,#BFE8F5,#2C5F7C,,,,,,,todo,
+BLZ_SWORDMASTER,Blizzard Sword Masters,BLIZZARD_SAMURAI,ELITE,TROOP,16,110,9,8,8,24,10,6,84,360,0,0,0,1.1,660,66,,Ice Odachi,Blizzard Helm,#BFE8F5,#2C5F7C,,,,,,,todo,
+BLZ_ARCHERS,Blizzard Archers,BLIZZARD_SAMURAI,ARCHER,TROOP,20,50,3,2,1,9,0,1,47,360,6,1600,14,1.0,365,36,,Ice Bow,Blizzard Helm,#BFE8F5,#2C5F7C,,,,,,,todo,Hits slow the target.
+BLZ_BEHEMOTH,Ice Behemoth,BLIZZARD_SAMURAI,MONSTER,TROOP,1,900,10,6,12,60,25,7,89,342,0,0,0,3.0,805,80,,Fists,None,#BFE8F5,#2C5F7C,,,,,,,todo,
+BLZ_BOREAL,Boreal,BLIZZARD_SAMURAI,GIANT,TROOP,1,1600,11,5,14,90,50,8,94,270,0,0,0,4.5,1250,125,,Ice Breath,None,#BFE8F5,#2C5F7C,,,,,,,todo,
+CRY_VENGE_WAR,Vengestone Warriors,CRYSTAL_ARMY,HEAVY,TROOP,18,90,7,6,6,20,8,7,70,300,0,0,0,1.1,695,69,,Vengestone Maul,None,#7B2FBF,#00E5FF,,,,,,,todo,Aura: enemy heroes within 800cm cannot use abilities.
+CRY_VENGE_GUARD,Vengestone Guards,CRYSTAL_ARMY,SHIELD,TROOP,24,70,4,7,3,12,0,6,65,340,0,0,0,1.0,670,67,,Shield & Blade,None,#7B2FBF,#00E5FF,,,,,,,todo,
+CRY_VENGE_BRUTE,Vengestone Brutes,CRYSTAL_ARMY,MONSTER,TROOP,1,900,10,6,12,60,25,8,85,380,0,0,0,3.0,895,89,,Fists,None,#7B2FBF,#00E5FF,,,,,,,todo,
+CRY_WARRIORS,Crystal Warriors,CRYSTAL_ARMY,LINE,TROOP,24,60,5,4,4,14,0,4,55,380,0,0,0,1.0,595,59,,Crystal Blade,None,#7B2FBF,#00E5FF,,,,,,,todo,
+CRY_ZOMBIES,Crystal Zombies,CRYSTAL_ARMY,CHAFF,TROOP,32,40,3,2,2,10,0,2,40,400,0,0,0,1.0,505,50,,Claws,None,#7B2FBF,#00E5FF,,,,,,,todo,Converted civilians. Free — spawn from enemy casualties.
+CRY_SPIDERS,Crystal Spiders,CRYSTAL_ARMY,SWARM,TROOP,48,20,2,1,1,5,0,2,30,480,0,0,0,0.7,530,53,,Bite,None,#7B2FBF,#00E5FF,,,,,,,todo,
+IMP_CLAWS,Claws of Imperium,IMPERIUM,LINE,TROOP,24,60,5,4,4,14,0,3,55,380,1,0,0,1.0,665,66,,Shock Lance,Claw Helm,#D4AF37,#14B8B8,,,,,,,todo,
+IMP_HUNTERS,Claw Hunters,IMPERIUM,SKIRMISH,TROOP,20,50,4,3,3,12,0,2,50,520,5,1100,10,1.0,555,55,,Net Launcher,Claw Helm,#D4AF37,#14B8B8,,,,,,,todo,Can capture MONSTER units.
+IMP_GUARDS,Imperium Guards,IMPERIUM,SHIELD,TROOP,24,70,4,7,3,12,0,5,65,340,1,0,0,1.0,750,75,,Spear & Shield,Gold Helm,#D4AF37,#14B8B8,,,,,,,todo,Famously absent when needed.
+IMP_TEENFORCE,Teen Protection Force,IMPERIUM,CHAFF,TROOP,32,40,3,2,2,10,0,1,40,400,1,0,0,1.0,560,56,,Baton,Cap,#D4AF37,#14B8B8,,,,,,,todo,
+IMP_HOUND,Dragon Hunter Hound,IMPERIUM,VEHICLE,TROOP,4,400,6,6,14,30,12,8,99,500,1,0,0,2.2,590,59,,Claws,None,#D4AF37,#14B8B8,,,,,,,todo,
+IMP_EMPRESSMECH,Empress Mech,IMPERIUM,GIANT,TROOP,1,1600,11,5,14,90,50,8,90,300,1,0,0,4.5,1565,156,,Sword Beam,None,#D4AF37,#14B8B8,,,,,,,todo,Beatrix's ultimate. Immune to elemental damage.
+WLF_WARRIORS,Wolf Mask Warriors,WOLF_CLAN,LINE,TROOP,24,60,5,4,7,14,0,2,55,380,0,0,0,1.0,430,43,,Wolf Blade,Wolf Mask,#5A5A5A,#C8102E,,,,,,,todo,
+WLF_GUARDS,Wolf Mask Guards,WOLF_CLAN,SHIELD,TROOP,24,70,4,7,6,12,0,4,65,340,0,0,0,1.0,490,49,,Shield & Axe,Wolf Mask,#5A5A5A,#C8102E,,,,,,,todo,
+WLF_RIDERS,Wolf Riders,WOLF_CLAN,CAV,TROOP,12,130,6,5,18,18,6,3,70,650,0,0,0,1.4,350,35,,Spear,Wolf Mask,#5A5A5A,#C8102E,,,,,,,todo,
+GRB_WARRIORS,Bone Warriors,GREENBONES,LINE,TROOP,24,54,5,4,4,14,0,2,99,380,0,0,0,1.0,390,39,,Bone Sword,None,#8FBF3F,#2F2F2F,,,,,,,todo,
+GRB_GUARDS,Bone Guards,GREENBONES,SHIELD,TROOP,24,63,4,7,3,12,0,4,99,340,0,0,0,1.0,445,44,,Shield & Spear,None,#8FBF3F,#2F2F2F,,,,,,,todo,
+GRB_HUNTERS,Bone Hunters,GREENBONES,ARCHER,TROOP,20,45,3,2,1,9,0,0,99,400,6,1600,14,1.0,275,27,,Bone Bow,None,#8FBF3F,#2F2F2F,,,,,,,todo,
+GRB_KNIGHTS,Bone Knights,GREENBONES,ELITE,TROOP,16,99,9,8,8,24,10,5,99,400,0,0,0,1.1,510,51,,Greatsword,Bone Helm,#8FBF3F,#2F2F2F,,,,,,,todo,
+GRB_SCORPIOS,Bone Scorpios,GREENBONES,CAV,TROOP,12,117,6,5,15,18,6,3,99,650,0,0,0,1.4,315,31,,Stinger,None,#8FBF3F,#2F2F2F,,,,,,,todo,Mounts.
+LRD_SAMUKAI,Samukai,SKULKIN,LORD,LORD,1,1020,12,10,12,45,25,5,99,441,0,0,0,1.25,665,66,AB_FOUR_ARMED_FURY,,,#E8E3D3,#8B1A1A,,,,,,,todo,"Four arms, four bone daggers. King of the Underworld."
+LRD_GARMADON_U,Lord Garmadon (Underworld),SKULKIN,LORD,LORD,1,1020,12,10,12,45,25,5,99,441,0,0,0,1.25,665,66,AB_MEGA_WEAPON,,,#E8E3D3,#8B1A1A,,,,,,,todo,Four-armed. Commands the Skulkin from the throne.
+HRO_KRUNCHA,Kruncha,SKULKIN,HERO,CMD,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_BONE_RALLY,,,#E8E3D3,#8B1A1A,,,,,,,todo,"General of Earth. Helmeted, permanently furious."
+HRO_NUCKAL,Nuckal,SKULKIN,HERO,CMD,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_LIGHTNING_RUSH,,,#E8E3D3,#8B1A1A,,,,,,,todo,"General of Lightning. Spiked skull, no impulse control."
+HRO_WYPLASH,Wyplash,SKULKIN,HERO,CMD,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_WATCHFUL_EYE,,,#E8E3D3,#8B1A1A,,,,,,,todo,"General of Ice. Straw hat, deeply paranoid."
+HRO_FRAKJAW,Frakjaw,SKULKIN,HERO,ELITE,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_FIRE_BLAST,,,#E8E3D3,#8B1A1A,,,,,,,todo,Fire warrior. Loud.
+HRO_BONEZAI,Bonezai,SKULKIN,HERO,ELITE,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_ICE_WALL,,,#E8E3D3,#8B1A1A,,,,,,,todo,Ice warrior. Builds the vehicles.
+HRO_CHOPOV,Chopov,SKULKIN,HERO,ELITE,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_EARTHQUAKE,,,#E8E3D3,#8B1A1A,,,,,,,todo,Earth warrior. Mechanic.
+HRO_KRAZI,Krazi,SKULKIN,HERO,ELITE,1,595,10,8,10,35,15,4,99,462,0,0,0,1.15,455,45,AB_LIGHTNING_BOLT,,,#E8E3D3,#8B1A1A,,,,,,,todo,"Lightning warrior. Jester hat, unhinged."
+LRD_PYTHOR,Pythor P. Chumsworth,SERPENTINE,LORD,LORD,1,1200,12,10,12,45,25,5,95,441,0,0,0,1.25,900,90,AB_VANISH,,,#3C7A3C,#C8A22A,,,,,,,todo,Last Anacondrai. Snake King. Turns invisible.
+LRD_SKALES,Skales,SERPENTINE,LORD,LORD,1,1200,12,10,12,45,25,5,95,441,0,0,0,1.25,900,90,AB_HYPNOTIC_GAZE,,,#3C7A3C,#C8A22A,,,,,,,todo,"Hypnobrai General, later Snake King."
+HRO_SLITHRAA,Slithraa,SERPENTINE,HERO,CMD,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_SLITHER_PIT,,,#3C7A3C,#C8A22A,,,,,,,todo,Deposed Hypnobrai General. Wants his tail back.
+HRO_FANGTOM,Fangtom,SERPENTINE,HERO,CMD,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_FANGPYRE_BITE,,,#3C7A3C,#C8A22A,,,,,,,todo,Two-headed Fangpyre General.
+HRO_SKALIDOR,Skalidor,SERPENTINE,HERO,CMD,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_CONSTRICT,,,#3C7A3C,#C8A22A,,,,,,,todo,Constrictai General. Huge and slow.
+HRO_ACIDICUS,Acidicus,SERPENTINE,HERO,CMD,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_VENOM_CLOUD,,,#3C7A3C,#C8A22A,,,,,,,todo,Venomari General. Invented the venom vials.
+HRO_ARCTURUS,Arcturus,SERPENTINE,HERO,CMD,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_VANISH,,,#3C7A3C,#C8A22A,,,,,,,todo,Ancient Anacondrai General.
+HRO_MEZMO,Mezmo,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_HYPNOTIC_GAZE,,,#3C7A3C,#C8A22A,,,,,,,todo,Hypnobrai Warrior.
+HRO_RATTLA,Rattla,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_HYPNOTIC_GAZE,,,#3C7A3C,#C8A22A,,,,,,,todo,Hypnobrai Soldier.
+HRO_FANGDAM,Fangdam,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_FANGPYRE_BITE,,,#3C7A3C,#C8A22A,,,,,,,todo,Fangtom's two-headed brother.
+HRO_FANGSUEI,Fang-Suei,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_FANGPYRE_BITE,,,#3C7A3C,#C8A22A,,,,,,,todo,Fangpyre Soldier.
+HRO_SNAPPA,Snappa,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_FANGPYRE_BITE,,,#3C7A3C,#C8A22A,,,,,,,todo,Fangpyre Scout. Reckless.
+HRO_BYTAR,Bytar,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_CONSTRICT,,,#3C7A3C,#C8A22A,,,,,,,todo,Constrictai Warrior.
+HRO_CHOKUN,Chokun,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_CONSTRICT,,,#3C7A3C,#C8A22A,,,,,,,todo,Constrictai Soldier.
+HRO_SNIKE,Snike,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_CONSTRICT,,,#3C7A3C,#C8A22A,,,,,,,todo,Constrictai Scout.
+HRO_LIZARU,Lizaru,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_VENOM_CLOUD,,,#3C7A3C,#C8A22A,,,,,,,todo,Venomari Warrior.
+HRO_SPITTA,Spitta,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_VENOM_CLOUD,,,#3C7A3C,#C8A22A,,,,,,,todo,Venomari Soldier. Leaks constantly.
+HRO_ZOLTAR,Zoltar,SERPENTINE,HERO,ELITE,1,700,10,8,10,35,15,4,86,462,0,0,0,1.15,610,61,AB_VENOM_CLOUD,,,#3C7A3C,#C8A22A,,,,,,,todo,Venomari Scout.
+LRD_OVERLORD,The Overlord,STONE_ARMY,LORD,LORD,1,1200,12,10,12,45,25,8,99,357,0,0,0,1.25,1105,110,AB_DARKNESS_FALLS,,,#1C1C1C,#B03030,,,,,,,todo,Creator of the Stone Army. The first evil.
+LRD_KOZU,General Kozu,STONE_ARMY,LORD,LORD,1,1200,12,10,12,45,25,8,99,357,0,0,0,1.25,1105,110,AB_FOUR_BLADES,,,#1C1C1C,#B03030,,,,,,,todo,"Four arms, twin butterfly swords. Only Stone soldier who speaks."
+LRD_GARMADON_S,Lord Garmadon (Helmet),STONE_ARMY,LORD,LORD,1,1200,12,10,12,45,25,8,99,357,0,0,0,1.25,1105,110,AB_MEGA_WEAPON,,,#1C1C1C,#B03030,,,,,,,todo,Commands the Stone Army via the Helmet of Shadows.
+HRO_DARETH,Dareth,STONE_ARMY,HERO,LORD,1,700,10,8,10,35,15,7,99,374,0,0,0,1.15,755,75,AB_HELMET_COMMAND,,,#1C1C1C,#B03030,,,,,,,todo,The Brown Ninja. Genuinely canonically commands this army.
+LRD_LLOYD,Lloyd Garmadon,NINJA,LORD,LORD,1,1200,12,10,12,45,25,5,110,420,0,0,0,1.25,1170,117,AB_GOLDEN_DRAGON,,,#1E6FBF,#D9B310,,,,,,,todo,Green/Golden Ninja. Master of Energy.
+LRD_WU,Master Wu,NINJA,LORD,LORD,1,1200,12,10,12,45,25,5,110,420,0,0,0,1.25,1170,117,AB_STAFF_OF_WISDOM,,,#1E6FBF,#D9B310,,,,,,,todo,Sensei. Creation Spinjitzu.
+HRO_KAI,Kai,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_FIRE_BLAST,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Fire.
+HRO_JAY,Jay Walker,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_LIGHTNING_BOLT,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Lightning.
+HRO_COLE,Cole,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_EARTHQUAKE,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Earth.
+HRO_ZANE,Zane,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_ICE_WALL,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Ice. Nindroid.
+HRO_NYA,Nya,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_WATER_WAVE,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Water. Hard-counters Ghosts.
+HRO_PIXAL,P.I.X.A.L.,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_OVERCLOCK,,,#1E6FBF,#D9B310,,,,,,,todo,Samurai X.
+HRO_MORRO_G,Morro (redeemed),NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_WIND_BURST,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Wind.
+HRO_HUTCHINS,Hutchins,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_STAFF_OF_WISDOM,,,#1E6FBF,#D9B310,,,,,,,todo,Head of the Royal Guard.
+HRO_HAILMAR,Captain Hailmar,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_STAFF_OF_WISDOM,,,#1E6FBF,#D9B310,,,,,,,todo,Shintaro Royal Guard.
+HRO_SKYLOR,Skylor Chen,NINJA,HERO,CMD,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_ANACONDRAI_CURSE,,,#1E6FBF,#D9B310,,,,,,,todo,Master of Amber: copies the ability of whoever she last touched.
+HRO_RONIN,Ronin,NINJA,HERO,ELITE,1,700,10,8,10,35,15,4,99,440,0,0,0,1.15,790,79,AB_VANISH,,,#1E6FBF,#D9B310,,,,,,,todo,Mercenary. Available to the highest bidder.
+LRD_OVERLORD_D,The Golden Master,NINDROID,LORD,LORD,1,1200,12,10,12,45,25,5,99,420,2,0,0,1.25,1045,104,AB_DARKNESS_FALLS,,,#2B2B2B,#00C2C7,,,,,,,todo,"The Overlord, digitised and rebuilt."
+LRD_CRYPTOR,General Cryptor,NINDROID,LORD,LORD,1,1200,12,10,12,45,25,5,99,420,2,0,0,1.25,1045,104,AB_OVERCLOCK,,,#2B2B2B,#00C2C7,,,,,,,todo,Modelled on Zane. Insufferable about it.
+HRO_MINDROID,Min-Droid,NINDROID,HERO,ELITE,1,700,10,8,10,35,15,4,99,440,2,0,0,1.15,710,71,AB_LIGHTNING_RUSH,,,#2B2B2B,#00C2C7,,,,,,,todo,Built short. Furious about it.
+HRO_SENTRYGEN,Sentry General,NINDROID,HERO,CMD,1,700,10,8,10,35,15,4,99,440,2,0,0,1.15,710,71,AB_OVERCLOCK,,,#2B2B2B,#00C2C7,,,,,,,todo,Commands the Sentries.
+LRD_CHEN,Master Chen,CULTISTS,LORD,LORD,1,1200,12,10,12,45,25,5,100,420,0,0,0,1.25,855,85,AB_ANACONDRAI_CURSE,,,#5B2C87,#C8102E,,,,,,,todo,Cult leader. Runs a noodle empire as a front.
+LRD_CLOUSE,Clouse,CULTISTS,LORD,LORD,1,1200,12,10,12,45,25,5,100,420,0,0,0,1.25,855,85,AB_DARK_SPELL,,,#5B2C87,#C8102E,,,,,,,todo,Chen's sorcerer and right hand.
+HRO_EYEZOR,Eyezor,CULTISTS,HERO,CMD,1,700,10,8,10,35,15,4,90,440,0,0,0,1.15,580,58,AB_BONE_RALLY,,,#5B2C87,#C8102E,,,,,,,todo,"Chief enforcer. Mohawk, eye scar."
+HRO_ZUGU,Zugu,CULTISTS,HERO,CMD,1,700,10,8,10,35,15,4,90,440,0,0,0,1.15,580,58,AB_EARTHQUAKE,,,#5B2C87,#C8102E,,,,,,,todo,General. Former sumo.
+HRO_KAPAU,Kapau,CULTISTS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,0,0,0,1.15,580,58,AB_ANACONDRAI_CURSE,,,#5B2C87,#C8102E,,,,,,,todo,Later Kapau'rai.
+HRO_CHOPE,Chope,CULTISTS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,0,0,0,1.15,580,58,AB_ANACONDRAI_CURSE,,,#5B2C87,#C8102E,,,,,,,todo,Later Chope'rai.
+HRO_KRAIT,Krait,CULTISTS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,0,0,0,1.15,580,58,AB_VENOM_CLOUD,,,#5B2C87,#C8102E,,,,,,,todo,Cultist.
+HRO_SLEVEN,Sleven,CULTISTS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,0,0,0,1.15,580,58,AB_VENOM_CLOUD,,,#5B2C87,#C8102E,,,,,,,todo,Cultist.
+LRD_MORRO,Morro,GHOST,LORD,LORD,1,960,12,10,12,45,40,0,100,420,0,0,0,1.25,800,80,AB_POSSESSION,,,#3FE0A0,#1A1A2E,,,,,,,todo,Wu's first student. Master of Wind. Possesses Lloyd.
+HRO_SOULARCHER,Bow Master Soul Archer,GHOST,HERO,CMD,1,560,10,8,10,35,24,0,90,440,0,0,0,1.15,540,54,AB_VANISH,,,#3FE0A0,#1A1A2E,,,,,,,todo,Cursed arrows.
+HRO_BANSHA,Blade Master Bansha,GHOST,HERO,CMD,1,560,10,8,10,35,24,0,90,440,0,0,0,1.15,540,54,AB_POSSESSION,,,#3FE0A0,#1A1A2E,,,,,,,todo,Telepath.
+HRO_GHOULTAR,Scythe Master Ghoultar,GHOST,HERO,CMD,1,560,10,8,10,35,24,0,90,440,0,0,0,1.15,540,54,AB_EARTHQUAKE,,,#3FE0A0,#1A1A2E,,,,,,,todo,"All strength, no plan."
+HRO_WRAYTH,Chain Master Wrayth,GHOST,HERO,CMD,1,560,10,8,10,35,24,0,90,440,0,0,0,1.15,540,54,AB_CONSTRICT,,,#3FE0A0,#1A1A2E,,,,,,,todo,Chain whip and Soul Cycle.
+LRD_NADAKHAN,Nadakhan,SKY_PIRATES,LORD,LORD,1,1080,12,10,12,45,25,5,100,462,1,0,0,1.25,860,86,AB_TWISTED_WISH,,,#8B4513,#2E8B57,,,,,,,todo,"Djinn captain. Four arms. Grants wishes, badly."
+HRO_FLINTLOCKE,Flintlocke,SKY_PIRATES,HERO,CMD,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_FIRE_BLAST,,,#8B4513,#2E8B57,,,,,,,todo,"First mate. Two pistols, never misses."
+HRO_DOGSHANK,Dogshank,SKY_PIRATES,HERO,CMD,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_CONSTRICT,,,#8B4513,#2E8B57,,,,,,,todo,Giant. Anchor and chain.
+HRO_DOUBLOON,Doubloon,SKY_PIRATES,HERO,ELITE,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_VANISH,,,#8B4513,#2E8B57,,,,,,,todo,Two-faced. Silent.
+HRO_CLANCEE,Clancee,SKY_PIRATES,HERO,ELITE,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_VENOM_CLOUD,,,#8B4513,#2E8B57,,,,,,,todo,Serpentine swabbie. Peg leg. Seasick.
+HRO_SQIFFY,Sqiffy,SKY_PIRATES,HERO,ELITE,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_LIGHTNING_RUSH,,,#8B4513,#2E8B57,,,,,,,todo,Youngest of the crew.
+HRO_BUCKO,Bucko,SKY_PIRATES,HERO,ELITE,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_FIRE_BLAST,,,#8B4513,#2E8B57,,,,,,,todo,Pirate.
+HRO_CYREN,Cyren,SKY_PIRATES,HERO,ELITE,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_HYPNOTIC_GAZE,,,#8B4513,#2E8B57,,,,,,,todo,Her singing voice stops an army.
+HRO_MONKEYWR,Monkey Wretch,SKY_PIRATES,HERO,ELITE,1,630,10,8,10,35,15,4,90,484,1,0,0,1.15,585,58,AB_OVERCLOCK,,,#8B4513,#2E8B57,,,,,,,todo,Cybernetic monkey mechanic.
+LRD_KRUX,Krux,VERMILLION,LORD,LORD,1,1320,12,10,12,45,25,5,100,399,0,0,0,1.25,950,95,AB_TIME_SLIP,,,#B22222,#4A4A4A,,,,,,,todo,Time Twin. Poses as Dr. Saunders.
+LRD_ACRONIX,Acronix,VERMILLION,LORD,LORD,1,1320,12,10,12,45,25,5,100,399,0,0,0,1.25,950,95,AB_TIME_SLIP,,,#B22222,#4A4A4A,,,,,,,todo,Time Twin. The one who skipped 40 years.
+HRO_MACHIA,Supreme Commander Machia,VERMILLION,HERO,CMD,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_REFORM,,,#B22222,#4A4A4A,,,,,,,todo,Actually competent. Replaces the other two.
+HRO_RAGGMUNK,Commander Raggmunk,VERMILLION,HERO,CMD,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_BONE_RALLY,,,#B22222,#4A4A4A,,,,,,,todo,Ego-driven.
+HRO_BLUNCK,Commander Blunck,VERMILLION,HERO,CMD,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_EARTHQUAKE,,,#B22222,#4A4A4A,,,,,,,todo,Brutish.
+HRO_SLACKJAW,Slackjaw,VERMILLION,HERO,ELITE,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_REFORM,,,#B22222,#4A4A4A,,,,,,,todo,Named warrior.
+HRO_RIVETT,Rivett,VERMILLION,HERO,ELITE,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_REFORM,,,#B22222,#4A4A4A,,,,,,,todo,Named warrior.
+HRO_TANNIN,Tannin,VERMILLION,HERO,ELITE,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_REFORM,,,#B22222,#4A4A4A,,,,,,,todo,Named warrior.
+HRO_VERMIN,Vermin,VERMILLION,HERO,ELITE,1,770,10,8,10,35,15,4,90,418,0,0,0,1.15,635,63,AB_REFORM,,,#B22222,#4A4A4A,,,,,,,todo,Named warrior.
+LRD_HARUMI,Harumi,SONS_OF_GARMADON,LORD,LORD,1,1200,12,10,16,45,25,4,100,483,0,0,0,1.25,900,90,AB_THE_QUIET_ONE,,,#4B0082,#E8E8E8,,,,,,,todo,The Quiet One. Princess of Ninjago. The actual leader.
+LRD_GARMADON_R,Lord Garmadon (Reborn),SONS_OF_GARMADON,LORD,LORD,1,1200,12,10,16,45,25,4,100,483,0,0,0,1.25,900,90,AB_MEGA_WEAPON,,,#4B0082,#E8E8E8,,,,,,,todo,"Resurrected. Four arms, no restraint."
+HRO_KILLOW,Killow,SONS_OF_GARMADON,HERO,CMD,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_MASK_DECEPTION,,,#4B0082,#E8E8E8,,,,,,,todo,Fist of the Quiet One. Enormous.
+HRO_MRE,Mr. E,SONS_OF_GARMADON,HERO,CMD,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_MASK_VENGEANCE,,,#4B0082,#E8E8E8,,,,,,,todo,Fist of the Quiet One. Nindroid.
+HRO_ULTRAVIOLET,Ultra Violet,SONS_OF_GARMADON,HERO,CMD,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_MASK_HATRED,,,#4B0082,#E8E8E8,,,,,,,todo,Fist of the Quiet One. Manic.
+HRO_LUKE,Luke Cunningham,SONS_OF_GARMADON,HERO,ELITE,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_LIGHTNING_RUSH,,,#4B0082,#E8E8E8,,,,,,,todo,Biker.
+HRO_CHOPPER,Chopper Maroon,SONS_OF_GARMADON,HERO,ELITE,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_LIGHTNING_RUSH,,,#4B0082,#E8E8E8,,,,,,,todo,Biker.
+HRO_MOHAWK,Mohawk,SONS_OF_GARMADON,HERO,ELITE,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_LIGHTNING_RUSH,,,#4B0082,#E8E8E8,,,,,,,todo,Biker.
+HRO_NAILS,Nails,SONS_OF_GARMADON,HERO,ELITE,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_LIGHTNING_RUSH,,,#4B0082,#E8E8E8,,,,,,,todo,Biker.
+HRO_SKIPVIC,Skip Vicious,SONS_OF_GARMADON,HERO,ELITE,1,700,10,8,14,35,15,3,90,506,0,0,0,1.15,610,61,AB_LIGHTNING_RUSH,,,#4B0082,#E8E8E8,,,,,,,todo,Biker.
+LRD_IRONBARON,Iron Baron,DRAGON_HUNTERS,LORD,LORD,1,1200,12,10,12,45,25,5,100,420,1,0,0,1.25,815,81,AB_DRAGON_BAIT,,,#8B7355,#FF6A00,,,,,,,todo,"Mechanical leg, claw arm, elaborate lie."
+HRO_HEAVYMETAL,Heavy Metal (Faith),DRAGON_HUNTERS,HERO,CMD,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_VANISH,,,#8B7355,#FF6A00,,,,,,,todo,Second-in-command. Defects.
+HRO_JETJACK,Jet Jack,DRAGON_HUNTERS,HERO,CMD,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_LIGHTNING_RUSH,,,#8B7355,#FF6A00,,,,,,,todo,Jetpack. Sharpshooter.
+HRO_DADDYNOLEGS,Daddy No Legs,DRAGON_HUNTERS,HERO,CMD,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_CONSTRICT,,,#8B7355,#FF6A00,,,,,,,todo,Mechanical spider legs.
+HRO_MUZZLE,Muzzle,DRAGON_HUNTERS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_EARTHQUAKE,,,#8B7355,#FF6A00,,,,,,,todo,Muzzled brute.
+HRO_CHEWTOY,Chew Toy,DRAGON_HUNTERS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_EARTHQUAKE,,,#8B7355,#FF6A00,,,,,,,todo,Hunter.
+HRO_ARKADE,Arkade,DRAGON_HUNTERS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_FIRE_BLAST,,,#8B7355,#FF6A00,,,,,,,todo,Hunter.
+HRO_SCAR,Scar the Skullbreaker,DRAGON_HUNTERS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_EARTHQUAKE,,,#8B7355,#FF6A00,,,,,,,todo,Hunter.
+HRO_OTTOPILOT,Otto Pilot,DRAGON_HUNTERS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_LIGHTNING_RUSH,,,#8B7355,#FF6A00,,,,,,,todo,Pilot.
+HRO_DANGERBUFF,Stalwart Dangerbuff,DRAGON_HUNTERS,HERO,ELITE,1,700,10,8,10,35,15,4,90,440,1,0,0,1.15,550,55,AB_BONE_RALLY,,,#8B7355,#FF6A00,,,,,,,todo,Dangerbuff clan.
+LRD_OMEGA,The Omega,DRAGON_HUNTERS,LORD,LORD,1,1200,12,10,12,45,25,5,100,420,1,0,0,1.25,815,81,AB_DARKNESS_FALLS,,,#8B7355,#FF6A00,,,,,,,todo,Oni warlord supreme. Turns everything to dust.
+LRD_ASPHEERA,Aspheera,PYRO_VIPERS,LORD,LORD,1,1200,12,10,12,50,25,4,100,420,0,0,0,1.25,910,91,AB_STOLEN_SPINJITZU,,,#FF8C00,#8B0000,,,,,,,todo,Stole Wu's Spinjitzu. Holds a 1000-year grudge.
+HRO_CHAR,Char,PYRO_VIPERS,HERO,CMD,1,700,10,8,10,38,15,3,90,440,0,0,0,1.15,610,61,AB_ASH_CLOUD,,,#FF8C00,#8B0000,,,,,,,todo,General. Charred survivor.
+HRO_MAMBO_V,Mambo V,PYRO_VIPERS,HERO,CMD,1,700,10,8,10,38,15,3,90,440,0,0,0,1.15,610,61,AB_STAFF_OF_WISDOM,,,#FF8C00,#8B0000,,,,,,,todo,Serpentine King. Aspheera's era.
+LRD_ICEEMPEROR,The Ice Emperor,BLIZZARD_SAMURAI,LORD,LORD,1,1200,12,10,12,45,25,6,105,378,0,0,0,1.25,905,90,AB_FROZEN_WASTES,,,#BFE8F5,#2C5F7C,,,,,,,todo,"Zane, amnesiac, holding the Scroll of Forbidden Spinjitzu."
+LRD_VEX,General Vex,BLIZZARD_SAMURAI,LORD,LORD,1,1200,12,10,12,45,25,6,105,378,0,0,0,1.25,905,90,AB_WHISPERS,,,#BFE8F5,#2C5F7C,,,,,,,todo,The advisor. The actual villain.
+HRO_GRIMFAX,Grimfax,BLIZZARD_SAMURAI,HERO,CMD,1,700,10,8,10,35,15,5,94,396,0,0,0,1.15,615,61,AB_ICE_WALL,,,#BFE8F5,#2C5F7C,,,,,,,todo,Former Blizzard general and King of the Never-Realm. Defects.
+LRD_CRYSTALKING,The Crystal King,CRYSTAL_ARMY,LORD,LORD,1,1200,12,10,12,45,25,7,100,420,0,0,0,1.25,1010,101,AB_DARKNESS_FALLS,,,#7B2FBF,#00E5FF,,,,,,,todo,The Overlord's final form.
+LRD_HARUMI_C,Harumi (Crystal),CRYSTAL_ARMY,LORD,LORD,1,1200,12,10,12,45,25,7,100,420,0,0,0,1.25,1010,101,AB_THE_QUIET_ONE,,,#7B2FBF,#00E5FF,,,,,,,todo,Field commander of the Crystal Army.
+LRD_BEATRIX,Empress Beatrix Vespasian-Orus,IMPERIUM,LORD,LORD,1,1200,12,10,12,45,25,6,100,420,1,0,0,1.25,1140,114,AB_EMPRESS_MECH,,,#D4AF37,#14B8B8,,,,,,,todo,"Usurper. Killed her father, imprisoned her sister."
+LRD_RAS_I,Lord Ras (Imperium),IMPERIUM,LORD,LORD,1,1200,12,10,12,45,25,6,100,420,1,0,0,1.25,1140,114,AB_RHINO_CHARGE,,,#D4AF37,#14B8B8,,,,,,,todo,Beatrix's second-in-command. Rhino mask.
+HRO_RAPTON,Rapton,IMPERIUM,HERO,CMD,1,700,10,8,10,35,15,5,90,440,1,0,0,1.15,775,77,AB_DRAGON_BAIT,,,#D4AF37,#14B8B8,,,,,,,todo,Claw commander.
+HRO_DORAMA,Dorama,IMPERIUM,HERO,CMD,1,700,10,8,10,35,15,5,90,440,1,0,0,1.15,775,77,AB_VANISH,,,#D4AF37,#14B8B8,,,,,,,todo,Theatrical master of disguise.
+HRO_JORDANA_I,Jordana,IMPERIUM,HERO,CMD,1,700,10,8,10,35,15,5,90,440,1,0,0,1.15,775,77,AB_LIGHTNING_BOLT,,,#D4AF37,#14B8B8,,,,,,,todo,Sora's rival. Ruthlessly competitive.
+HRO_LAROW,Dr. LaRow,IMPERIUM,HERO,CMD,1,700,10,8,10,35,15,5,90,440,1,0,0,1.15,775,77,AB_OVERCLOCK,,,#D4AF37,#14B8B8,,,,,,,todo,Chief scientist. Built the MergeQuake weapon.
+HRO_MELVIN,Melvin,IMPERIUM,HERO,ELITE,1,700,10,8,10,35,15,5,90,440,1,0,0,1.15,775,77,AB_BONE_RALLY,,,#D4AF37,#14B8B8,,,,,,,todo,Guard. Doing his best.
+HRO_CLAWGEN,Claw General,IMPERIUM,HERO,CMD,1,700,10,8,10,35,15,5,90,440,1,0,0,1.15,775,77,AB_RHINO_CHARGE,,,#D4AF37,#14B8B8,,,,,,,todo,Generic general — clone for variety.
+LRD_RAS_W,Lord Ras (Wolf Clan),WOLF_CLAN,LORD,LORD,1,1200,12,10,15,45,25,5,100,420,0,0,0,1.25,770,77,AB_PACK_HOWL,,,#5A5A5A,#C8102E,,,,,,,todo,"Same rhino, own army now."
+HRO_JORDANA_W,Jordana (Wolf Clan),WOLF_CLAN,HERO,CMD,1,700,10,8,13,35,15,4,90,440,0,0,0,1.15,520,52,AB_LIGHTNING_BOLT,,,#5A5A5A,#C8102E,,,,,,,todo,Lieutenant.
+HRO_ASA,Asa,WOLF_CLAN,HERO,ELITE,1,700,10,8,13,35,15,4,90,440,0,0,0,1.15,520,52,AB_PACK_HOWL,,,#5A5A5A,#C8102E,,,,,,,todo,Children of the Wolf.
+HRO_BALUN,Balun,WOLF_CLAN,HERO,ELITE,1,700,10,8,13,35,15,4,90,440,0,0,0,1.15,520,52,AB_PACK_HOWL,,,#5A5A5A,#C8102E,,,,,,,todo,Children of the Wolf.
+HRO_IRIEL,Iriel,WOLF_CLAN,HERO,ELITE,1,700,10,8,13,35,15,4,90,440,0,0,0,1.15,520,52,AB_PACK_HOWL,,,#5A5A5A,#C8102E,,,,,,,todo,Children of the Wolf.
+HRO_WARBY,Warby,WOLF_CLAN,HERO,ELITE,1,700,10,8,13,35,15,4,90,440,0,0,0,1.15,520,52,AB_PACK_HOWL,,,#5A5A5A,#C8102E,,,,,,,todo,Children of the Wolf.
+HRO_ZURI,Zuri,WOLF_CLAN,HERO,ELITE,1,700,10,8,13,35,15,4,90,440,0,0,0,1.15,520,52,AB_PACK_HOWL,,,#5A5A5A,#C8102E,,,,,,,todo,Children of the Wolf.
+LRD_BONEKING,Bone King,GREENBONES,LORD,LORD,1,1080,12,10,12,45,25,5,99,420,0,0,0,1.25,680,68,AB_RISE_AGAIN,,,#8FBF3F,#2F2F2F,,,,,,,todo,Every enemy that dies near him joins him.

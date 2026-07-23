@@ -1,0 +1,234 @@
+name,faction,tier,role,notes,image,asset_status
+Lord Garmadon,Skulkin (Skeleton Army),LORD,King of the Underworld,Seized the throne from Samukai; commands via Samukai,,todo
+Samukai,Skulkin (Skeleton Army),LORD/CMD,Skulkin King → General of Fire,"Four-armed, wields 4 bone daggers; second-in-command to Garmadon",,todo
+Wyplash,Skulkin (Skeleton Army),CMD,General of Ice,"Straw hat, paranoid; becomes leader after Samukai's death",,todo
+Kruncha,Skulkin (Skeleton Army),CMD,General of Earth,"Helmeted, hot-tempered; briefly King of the Underworld",,todo
+Nuckal,Skulkin (Skeleton Army),CMD,General of Lightning,"Spiked skull, childish; Kruncha's foil",,todo
+Frakjaw,Skulkin (Skeleton Army),ELITE,Fire warrior,"Loud, frequently recurring grunt",,todo
+Bonezai,Skulkin (Skeleton Army),ELITE,Ice warrior,Vehicle builder,,todo
+Chopov,Skulkin (Skeleton Army),ELITE,Earth warrior,Mechanic; base model most Skulkin extras are built from,,todo
+Krazi,Skulkin (Skeleton Army),ELITE,Lightning warrior,"Jester hat, unhinged",,todo
+Skulkin Warriors,Skulkin (Skeleton Army),TROOP,Line infantry,"Bone weapons, elemental-coloured armour",,todo
+Skulkin Miners,Skulkin (Skeleton Army),TROOP,Labour,,,todo
+Skulkin Engineers,Skulkin (Skeleton Army),TROOP,Vehicle crew,,,todo
+Skulkin Pit Bosses,Skulkin (Skeleton Army),TROOP,Overseers,,,todo
+Skulkin Watchmen,Skulkin (Skeleton Army),TROOP,Sentries,,,todo
+Skeleton Figurehead,Skulkin (Skeleton Army),ELITE,Misc.,Later appears on the Misfortune's Keep,,todo
+Pythor P. Chumsworth,Anacondrai (purple,LORD,General → Snake King,Last surviving Anacondrai; turns invisible,,todo
+Arcturus,Anacondrai (purple,CMD,Anacondrai General,Leader of the ancient generals banished to the Cursed Realm,,todo
+Anacondrai Generals,Anacondrai (purple,CMD,Ancient generals,Freed from the Cursed Realm in S4,,todo
+Anacondrai Warriors,Anacondrai (purple,TROOP,Line infantry,Bigger and smarter than other Serpentine,,todo
+Anacondrai Serpent,Anacondrai (purple,—,Beast,The tribe's giant serpent,,todo
+Slithraa,Hypnobrai (blue,CMD,Former General,Deposed by Skales in the Slither Pit,,todo
+Skales,Hypnobrai (blue,LORD/CMD,General → Snake King (post-Pythor),Hypnotic gaze; later married to Selma,,todo
+Mezmo,Hypnobrai (blue,ELITE,Warrior,,,todo
+Rattla,Hypnobrai (blue,TROOP,Soldier,,,todo
+Hypno Vipers,Hypnobrai (blue,TROOP,Scouts,,,todo
+Skales Jr.,Hypnobrai (blue,—,Non-combatant,Skales' son,,todo
+Spitz,Hypnobrai (blue,ELITE,Unaffiliated Hypnobrai,*Dragons Rising* era,,todo
+Fangtom,Fangpyre (red,CMD,General,Two-headed,,todo
+Fangdam,Fangpyre (red,ELITE,Warrior,Two-headed; Fangtom's brother,,todo
+Fang-Suei,Fangpyre (red,TROOP,Soldier,,,todo
+Snappa,Fangpyre (red,TROOP,Scout,Reckless,,todo
+Red Vipers,Fangpyre (red,TROOP,Scouts,,,todo
+Skalidor,Constrictai (black/orange,CMD,General,"Huge, slow, strong",,todo
+Bytar,Constrictai (black/orange,ELITE,Warrior,,,todo
+Chokun,Constrictai (black/orange,TROOP,Soldier,,,todo
+Snike,Constrictai (black/orange,TROOP,Scout,,,todo
+Acidicus,Venomari (green,CMD,General,Inventor of the venom vials,,todo
+Lizaru,Venomari (green,ELITE,Warrior,,,todo
+Spitta,Venomari (green,TROOP,Soldier,Leaks venom constantly,,todo
+Zoltar,Venomari (green,TROOP,Scout,,,todo
+Mambo I,Serpentine,LORD,Ancient Serpentine King,Aspheera's era,,todo
+Mambo V,Serpentine,LORD,Serpentine King,,,todo
+The Great Devourer,Serpentine,—,Beast,Tribe-agnostic doom serpent,,todo
+Boa Destructors / Cobra Mechanics / Python Dynamite / Sneaky Snakes / Viper Flyers,Serpentine,TROOP,"""Snake warriors"" unit types",Set-derived generic snake units,,todo
+The Overlord,Stone Army,LORD,Creator / ultimate evil,,,todo
+Lord Garmadon,Stone Army,LORD,Commander via the Helmet of Shadows,,,todo
+Dareth,Stone Army,LORD,Final commander (!),Wins the army by donning the Helmet,,todo
+General Kozu,Stone Army,CMD,Supreme commander,"White face, red markings, four arms, twin butterfly swords; only Stone soldier who speaks modern Ninjago",,todo
+Giant Stone Warrior,Stone Army,ELITE,Colossus unit,"Black helmet, enormous; butterfly swords",,todo
+Stone Warriors,Stone Army,TROOP,Heavy infantry,"Two arms, black chest plate, butterfly swords/katana",,todo
+Stone Soldiers / Swordsmen,Stone Army,TROOP,Line infantry,"Conical red hat, black katana, round red shield",,todo
+Stone Scouts,Stone Army,TROOP,Skirmishers,"Crossbow, sometimes flaming arrows; no shoulder armour",,todo
+The Digital Overlord / Golden Master,Nindroid Army,LORD,Creator,,,todo
+Pythor,Nindroid Army,CMD,Field agent,Working for the Overlord,,todo
+General Cryptor,Nindroid Army,CMD,Army commander,Arrogant; modelled on Zane,,todo
+Min-Droid,Nindroid Army,ELITE,Undersized Nindroid,Built short due to lack of metal; Cryptor's nickname stuck,,todo
+Nindroid Driver,Nindroid Army,ELITE,Transport pilot,,,todo
+Sentry General,Nindroid Army,CMD,Sentry commander,,,todo
+Nindroid Warriors,Nindroid Army,TROOP,Line infantry,,,todo
+Nindroid Drones,Nindroid Army,TROOP,Expendable units,,,todo
+Nindroid Sentries,Nindroid Army,TROOP,Guards,Later reprogrammed as allies,,todo
+Nindroid MechDragon,Nindroid Army,—,War machine,,,todo
+Master Chen,Anacondrai Cultists,LORD,Cult leader,Noodle empire front; Tournament of Elements host,,todo
+Clouse,Anacondrai Cultists,CMD,Right hand / sorcerer,"Dark magic, spellbook",,todo
+Eyezor,Anacondrai Cultists,CMD,Chief enforcer,"Mohawk, eye scar",,todo
+Zugu,Anacondrai Cultists,CMD,General,Former sumo,,todo
+Kapau,Anacondrai Cultists,ELITE,Cultist lieutenant,"Later ""Kapau'rai""",,todo
+Chope,Anacondrai Cultists,ELITE,Cultist lieutenant,"Later ""Chope'rai""",,todo
+Krait,Anacondrai Cultists,ELITE,Cultist,,,todo
+Sleven,Anacondrai Cultists,ELITE,Cultist,,,todo
+Skylor,Anacondrai Cultists,—,Chen's daughter (defects),Master of Amber,,todo
+Anacondrai Cultists,Anacondrai Cultists,TROOP,Line infantry,Bone armour over red/purple robes,,todo
+The Preeminent,Ghost Warriors,LORD,"The Cursed Realm itself, embodied",Kaiju-scale,,todo
+Morro,Ghost Warriors,CMD,Ghost commander,Wu's former student; Master of Wind; possesses Lloyd,,todo
+Bow Master Soul Archer,Ghost Warriors,CMD,Ranged master,Cursed arrows,,todo
+Blade Master Bansha,Ghost Warriors,CMD,Blade master,"Possession, telepathy",,todo
+Scythe Master Ghoultar,Ghost Warriors,CMD,Scythe master,"Brute strength, dim",,todo
+Chain Master Wrayth,Ghost Warriors,CMD,Chain master,Chain whip + Soul Cycle,,todo
+"Ghost Ninja: Attila, Hackler, Ming, Spyder, Howla, Yokai, Wooo",Ghost Warriors,ELITE,Named ghost ninja,,,todo
+"Ghost Warriors: Cowler, Cyrus, Ghurka, Pitch, Pyrrhus, Wail",Ghost Warriors,ELITE,Named ghost warriors,,,todo
+Skreemers,Ghost Warriors,TROOP,Swarm units,Small flying ghosts that create more ghosts,,todo
+Nadakhan,Sky Pirates,LORD,Djinn captain,Grants twisted wishes; four arms,,todo
+Captain Soto,Sky Pirates,LORD,Original captain (predecessor),Of the *Destiny's Bounty* pirates,,todo
+Delara,Sky Pirates,CMD,Former captain,Nadakhan's late love,,todo
+Flintlocke,Sky Pirates,CMD,First mate,"Marksman, two pistols",,todo
+Dogshank,Sky Pirates,CMD,Enforcer,Giant; anchor-and-chain,,todo
+Doubloon,Sky Pirates,ELITE,Two-faced silent brute,Coin-flip mask,,todo
+Clancee,Sky Pirates,ELITE,Serpentine swabbie,"Seasick, peg leg",,todo
+Sqiffy,Sky Pirates,ELITE,Pirate,Youngest crew member,,todo
+Bucko,Sky Pirates,ELITE,Pirate,,,todo
+Cyren,Sky Pirates,ELITE,Pirate,Siren-like singing voice,,todo
+Monkey Wretch,Sky Pirates,ELITE,Mechanic,Cybernetic monkey,,todo
+Sky Pirate crew,Sky Pirates,TROOP,Line infantry,,,todo
+Krux (Master of Time – Time),Vermillion,LORD,Time Twin,Poses as Dr. Saunders,,todo
+Acronix (Master of Time),Vermillion,LORD,Time Twin,The younger-seeming twin,,todo
+Supreme Commander Machia,Vermillion,CMD,Supreme commander,Cunning; replaces Raggmunk & Blunck,,todo
+Commander Raggmunk,Vermillion,CMD,Commander,Ego-driven,,todo
+Commander Blunck,Vermillion,CMD,Commander,Brutish,,todo
+Buffmillion,Vermillion,ELITE,Heavy unit,Giant Vermillion,,todo
+Rivett,Vermillion,ELITE,Named warrior,,,todo
+Tannin,Vermillion,ELITE,Named warrior,,,todo
+Vermin,Vermillion,ELITE,Named warrior,,,todo
+Slackjaw,Vermillion,ELITE,Named warrior,,,todo
+Vermillion Warriors,Vermillion,TROOP,Line infantry,Reassemble after being scattered,,todo
+Harumi,Sons of Garmadon,LORD,"""The Quiet One""",Princess of Ninjago; the real leader,,todo
+Lord Garmadon,Sons of Garmadon,LORD,Resurrected figurehead,,,todo
+Killow,Sons of Garmadon,CMD,Fist of the Quiet One,Massive; Oni Mask of Deception,,todo
+Mr. E,Sons of Garmadon,CMD,Fist of the Quiet One,Nindroid; Oni Mask of Vengeance,,todo
+Ultra Violet,Sons of Garmadon,CMD,Fist of the Quiet One,Manic; Oni Mask of Hatred,,todo
+Luke Cunningham,Sons of Garmadon,ELITE,Biker,,,todo
+Chopper Maroon,Sons of Garmadon,ELITE,Biker,,,todo
+Mohawk,Sons of Garmadon,ELITE,Biker,,,todo
+Nails,Sons of Garmadon,ELITE,Biker,,,todo
+Skip Vicious,Sons of Garmadon,ELITE,Biker,,,todo
+Scooter,Sons of Garmadon,ELITE,Biker,,,todo
+Sawyer,Sons of Garmadon,ELITE,Biker,,,todo
+Buffer,Sons of Garmadon,ELITE,Biker,,,todo
+Colossus,Sons of Garmadon,—,Titan,Garmadon's stone giant,,todo
+SoG members,Sons of Garmadon,TROOP,Line infantry,,,todo
+Iron Baron,Dragon Hunters,LORD,Leader of the Hunters,Mechanical leg + claw arm; wields the Dragon Armour myth,,todo
+Heavy Metal (Faith),Dragon Hunters,CMD,Second-in-command → defects,Masked; later allies with the ninja,,todo
+Jet Jack,Dragon Hunters,CMD,Lieutenant,"Jetpack, sharpshooter",,todo
+Daddy No Legs,Dragon Hunters,CMD,Lieutenant,Mechanical spider legs,,todo
+Muzzle,Dragon Hunters,ELITE,Hunter,Muzzled brute,,todo
+Chew Toy,Dragon Hunters,ELITE,Hunter,,,todo
+Arkade,Dragon Hunters,ELITE,Hunter,,,todo
+Scar the Skullbreaker,Dragon Hunters,ELITE,Hunter,,,todo
+Stalwart Dangerbuff,Dragon Hunters,ELITE,Dangerbuff clan,,,todo
+Otto Pilot,Dragon Hunters,ELITE,Pilot,,,todo
+Dragon Hunters,Dragon Hunters,TROOP,Line infantry,"Scrap armour, chain weapons",,todo
+Firstbourne,Dragon Hunters,—,Beast,Mother of all dragons,,todo
+The Omega,Oni,LORD,Oni warlord supreme,,,todo
+Oni Warlords,Oni,CMD,Warlords,,,todo
+Oni Horde,Oni,TROOP,Shadow swarm,Turn everything to stone/dust,,todo
+Shadow Army,Oni,TROOP,Related shadow units,,,todo
+Aspheera,Pyro Vipers,LORD,Serpentine sorceress,Stole Wu's Spinjitzu; fire magic,,todo
+Char,Pyro Vipers,CMD,General,Charred survivor of the ancient war,,todo
+Pyro Destroyers,Pyro Vipers,TROOP,Heavy infantry,,,todo
+Pyro Slayers,Pyro Vipers,TROOP,Line infantry,,,todo
+Pyro Whippers,Pyro Vipers,TROOP,Skirmishers,Whip-armed,,todo
+Fire Fangs,Pyro Vipers,—,Beast,Giant snake construct,,todo
+"The Ice Emperor (Zane, amnesiac)",Blizzard Samurai,LORD,Emperor,Wields the Scroll of Forbidden Spinjitzu,,todo
+General Vex,Blizzard Samurai,CMD,The Emperor's advisor/manipulator,The true villain of the arc,,todo
+Grimfax,Blizzard Samurai,CMD,Former Blizzard general → ally,Ex-King of the Never-Realm,,todo
+Blizzard Sword Masters,Blizzard Samurai,TROOP,Elite infantry,,,todo
+Blizzard Warriors,Blizzard Samurai,TROOP,Line infantry,,,todo
+Blizzard Archers,Blizzard Samurai,TROOP,Ranged,,,todo
+Boreal,Blizzard Samurai,—,Beast,Ice dragon,,todo
+Ice Behemoth,Blizzard Samurai,—,Beast,,,todo
+Unagami,Unagami's Army,LORD,The game's rogue creator-AI,Milton Dyer's creation,,todo
+Avatar Harumi,Unagami's Army,CMD,Boss enemy,,,todo
+Sushimi,Unagami's Army,CMD,Boss enemy,Sushi-chef boss + his chefs,,todo
+Hostess,Unagami's Army,CMD,Boss enemy,,,todo
+"Red Visors (incl. Red 27, Red 29)",Unagami's Army,TROOP,Line infantry,,,todo
+Whack Rats (Richie / Ritchie),Unagami's Army,TROOP,Street gang,,,todo
+The Skull Sorcerer (Vangelis),Skull Sorcerer / Shintaro,LORD,Sorcerer-king,Secretly Shintaro's royal advisor,,todo
+Awakened Warriors,Skull Sorcerer / Shintaro,TROOP,Undead infantry,Skeleton soldiers of the mines,,todo
+Skull Guards / Bone units,Skull Sorcerer / Shintaro,TROOP,Guards,,,todo
+Grief-Bringer,Skull Sorcerer / Shintaro,—,Beast,Giant skeletal dragon,,todo
+Opposing force: Army of Shintaro,Skull Sorcerer / Shintaro,—,Sky Folk military,Led by Captain Hailmar under Queen Vania,,todo
+Wojira,Merlopia / Wojira,LORD,Serpent goddess of the sea,,,todo
+Prince Kalmaar,Merlopia / Wojira,LORD,Merlopian prince,The season's driving villain,,todo
+King Trimaar,Merlopia / Wojira,—,Merlopian king,Kalmaar's father,,todo
+Gripe,Merlopia / Wojira,CMD,Maaray Soldier commander,,,todo
+Maaray Guards,Merlopia / Wojira,TROOP,Palace guards,,,todo
+Maaray Soldiers,Merlopia / Wojira,TROOP,Line infantry,,,todo
+Benthomaar,Merlopia / Wojira,—,Defector / ally,,,todo
+Keepers (Wojira cult): Chief Mammatus,Merlopia / Wojira,LORD,Chief,,,todo
+PoulErik,Merlopia / Wojira,ELITE,Keeper,,,todo
+Rumble Keepers,Merlopia / Wojira,TROOP,Line infantry,,,todo
+Thunder Keepers,Merlopia / Wojira,TROOP,Ranged,,,todo
+The Crystal King (the Overlord),Crystal Army,LORD,Supreme leader,,,todo
+Harumi,Crystal Army,CMD,Field commander,Returns,,todo
+Council of the Crystal King,Crystal Army,CMD,Villain council,"Reunites past villains (Aspheera, Pythor, Vangelis and others)",,todo
+Vengestone Warriors,Crystal Army,TROOP,Heavy infantry,Vengestone nullifies elemental powers,,todo
+Vengestone Guards,Crystal Army,TROOP,Guards,,,todo
+Vengestone Brutes,Crystal Army,TROOP,Heavies,,,todo
+Crystal Warriors,Crystal Army,TROOP,Line infantry,,,todo
+Crystal Zombies,Crystal Army,TROOP,Converted civilians,,,todo
+Crystal Spiders,Crystal Army,TROOP,Swarm,,,todo
+Empress Beatrix Vespasian-Orus,Imperium / Claws of Imperium,LORD,Empress,"Usurper; killed her father Levo, imprisoned her sister Zeatrix",,todo
+Lord Ras,Imperium / Claws of Imperium,CMD,Second-in-command,Rhino-masked warlord; later goes his own way,,todo
+Rapton,Imperium / Claws of Imperium,CMD,Claw commander,,,todo
+Claw Generals,Imperium / Claws of Imperium,CMD,Generals,,,todo
+Dorama,Imperium / Claws of Imperium,CMD,Agent,Theatrical shapeshifter/master of disguise,,todo
+Jordana,Imperium / Claws of Imperium,CMD,Agent,Sora's rival; later Wolf Clan,,todo
+Dr. LaRow,Imperium / Claws of Imperium,CMD,Chief scientist,"Advanced Systems Lab, MergeQuake weapon",,todo
+Melvin,Imperium / Claws of Imperium,ELITE,Guard,,,todo
+Claw Hunters,Imperium / Claws of Imperium,TROOP,Dragon-hunting infantry,,,todo
+Claws of Imperium / Freebooters,Imperium / Claws of Imperium,TROOP,Line infantry,,,todo
+Imperium Guards,Imperium / Claws of Imperium,TROOP,City guards,,,todo
+Imperium Guard Commander,Imperium / Claws of Imperium,CMD,Guard commander,,,todo
+Imperium Teen Protection Force,Imperium / Claws of Imperium,TROOP,Youth corps,,,todo
+Emperor Levo,Imperium / Claws of Imperium,—,Former emperor (deceased),"Beatrix's father, an Elemental Master",,todo
+Zeatrix,Imperium / Claws of Imperium,—,Rightful heir,Imprisoned by Beatrix,,todo
+Lord Ras,Wolf Clan,LORD,Clan leader,,,todo
+Jordana,Wolf Clan,CMD,Lieutenant,,,todo
+"Children of the Wolf: Asa, Balun, Iriel, Warby, Zuri",Wolf Clan,ELITE,Inner circle,,,todo
+Wolf Mask Warriors,Wolf Clan,TROOP,Line infantry,,,todo
+Wolf Mask Guards,Wolf Clan,TROOP,Guards,,,todo
+Ras' Master,Wolf Clan,LORD,Overarching power,,,todo
+The Administrator,The Administration,LORD,Head of the Administration,,,todo
+Agent Roderick Allen,The Administration,CMD,Agent,,,todo
+Agent Denholt,The Administration,CMD,Agent,,,todo
+Agent Farbissina,The Administration,CMD,Agent,,,todo
+Agent Karit,The Administration,CMD,Agent,,,todo
+Agent SsssSsss Underwood,The Administration,CMD,Agent,Serpentine,,todo
+Agent Ramirez,The Administration,CMD,Agent,,,todo
+Sub-Agent Prentis,The Administration,ELITE,Junior agent,,,todo
+Administration Agents,The Administration,TROOP,Line units,,,todo
+Nokt,The Forbidden Five / Nokt,LORD,Of the Forbidden Five,,,todo
+Drix,The Forbidden Five / Nokt,CMD,Of the Forbidden Five,,,todo
+Kur,The Forbidden Five / Nokt,CMD,Of the Forbidden Five,,,todo
+Rox,The Forbidden Five / Nokt,CMD,Of the Forbidden Five,,,todo
+Zarkt,The Forbidden Five / Nokt,CMD,Of the Forbidden Five,,,todo
+Spectral Dragonians,The Forbidden Five / Nokt,TROOP,Line infantry,,,todo
+Loyalists,The Forbidden Five / Nokt,TROOP,Beatrix's remaining faction,Season 4 villain faction,,todo
+Bone King,Greenbone Warriors,LORD,Ruler,,,todo
+Bone Knights,Greenbone Warriors,ELITE,Elite infantry,,,todo
+Bone Warriors,Greenbone Warriors,TROOP,Line infantry,,,todo
+Bone Guards,Greenbone Warriors,TROOP,Guards,,,todo
+Bone Hunters,Greenbone Warriors,TROOP,Skirmishers,,,todo
+Bone Scorpios,Greenbone Warriors,TROOP,Beast-riders / mounts,,,todo
+Emperor / Empress of Ninjago,"Ninjago's own forces (for the ""good guy"" side)",LORD,Royal Family,Harumi's adoptive parents,,todo
+Hutchins,"Ninjago's own forces (for the ""good guy"" side)",CMD,Head of the Royal Guard,,,todo
+Royal Guards,"Ninjago's own forces (for the ""good guy"" side)",TROOP,Palace guards,,,todo
+Ninjago Soldiers,"Ninjago's own forces (for the ""good guy"" side)",TROOP,Army,Serpentine War era,,todo
+"Ninjago Police (Commissioner, Hounddog McBrag, Noonan, Simon…)","Ninjago's own forces (for the ""good guy"" side)",TROOP,Law enforcement,,,todo
+Master Wu,"Ninjago's own forces (for the ""good guy"" side)",LORD,Sensei,,,todo
+Captain Hailmar,"Ninjago's own forces (for the ""good guy"" side)",CMD,Shintaro Royal Guard,Under Queen Vania,,todo
+Army of Shintaro / Sky Folk,"Ninjago's own forces (for the ""good guy"" side)",TROOP,Line infantry,,,todo
+The Elemental Alliance,"Ninjago's own forces (for the ""good guy"" side)",CMD,Historic hero coalition,"Ray, Maya, Lilly, Dusk, Hibernus, Levi, Master of Sound…",,todo
+The Resistance (Hunted / Never-Realm / Crystalized),"Ninjago's own forces (for the ""good guy"" side)",TROOP,Insurgents,Three separate resistance groups across seasons,,todo
