@@ -45,6 +45,9 @@ public:
 	/** Slain-but-reassembling models (Skulkin "Already Dead"). Such a unit is not yet beaten. */
 	int32 PendingReviveCount() const;
 
+	/** 0..1 remaining strength (living models' HP over the unit's maximum), for the health bar. */
+	float GetStrengthFraction() const;
+
 	bool HasActiveOrder() const { return OrderType != EOrderType::NoOrder; }
 
 	/** Set the row + team before FinishSpawning (used by the game mode when spawning armies). */

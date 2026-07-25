@@ -45,13 +45,24 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Status markers above units: a red flag for routing, a cyan sphere for frozen.
+	// Per-unit health bar (green when full, red when nearly dead) and status markers.
 	for (ANinjagoUnit* Unit : AllUnits)
 	{
 		if (!IsValid(Unit) || Unit->LivingModelCount() == 0)
 		{
 			continue;
 		}
+
+		const float Frac = Unit->GetStrengthFraction();
+		const FVector BarBase = Unit->GetActorLocation() + FVector(0.f, 0.f, 175.f);
+		const float HalfW = 120.f;
+		const FVector BarL = BarBase - FVector(HalfW, 0.f, 0.f);
+		const FVector BarR = BarBase + FVector(HalfW, 0.f, 0.f);
+		const FVector BarFill = BarL + (BarR - BarL) * Frac;
+		const FColor FillColour(static_cast<uint8>((1.f - Frac) * 255.f), static_cast<uint8>(Frac * 255.f), 40);
+		DrawDebugLine(GetWorld(), BarL, BarR, FColor(25, 25, 25), false, -1.f, 0, 16.f);
+		DrawDebugLine(GetWorld(), BarL, BarFill, FillColour, false, -1.f, 0, 16.f);
+
 		if (Unit->IsRouting())
 		{
 			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 220.f);
@@ -69,6 +80,15 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 300.f);
 			DrawDebugSphere(GetWorld(), Base, 55.f, 8, FColor::Magenta, false, -1.f, 0, 8.f);
 		}
+	}
+
+	// On-screen team tally so the overall state of the battle is readable at a glance.
+	if (GEngine && bCombatHasRun)
+	{
+		GEngine->AddOnScreenDebugMessage(20, 0.f, FColor(120, 180, 255),
+			FString::Printf(TEXT("Ninja: %d"), LivingCountForTeam(ETeam::Ninja)));
+		GEngine->AddOnScreenDebugMessage(21, 0.f, FColor(230, 120, 120),
+			FString::Printf(TEXT("Skulkin: %d"), LivingCountForTeam(ETeam::Skulkin)));
 	}
 }
 

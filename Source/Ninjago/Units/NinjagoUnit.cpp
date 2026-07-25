@@ -390,6 +390,24 @@ void ANinjagoUnit::ApplyModelHeal(int32 ModelIndex, int32 Amount)
 	Models[ModelIndex].Hp = FMath::Min(MaxHp, Models[ModelIndex].Hp + Amount);
 }
 
+float ANinjagoUnit::GetStrengthFraction() const
+{
+	if (!bRowValid || InitialSize <= 0)
+	{
+		return 0.f;
+	}
+	int32 CurrentHp = 0;
+	for (const FNinjagoModel& M : Models)
+	{
+		if (M.bAlive)
+		{
+			CurrentHp += M.Hp;
+		}
+	}
+	const float MaxHp = static_cast<float>(InitialSize) * static_cast<float>(FMath::Max(1, CachedRow.HpPerModel));
+	return FMath::Clamp(static_cast<float>(CurrentHp) / MaxHp, 0.f, 1.f);
+}
+
 int32 ANinjagoUnit::PendingReviveCount() const
 {
 	int32 Count = 0;

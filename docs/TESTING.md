@@ -563,6 +563,26 @@ Tuning: `AutoRestartSeconds` in Project Settings -> Ninjago -> Battle (0 disable
 
 ---
 
+## v0.13 - Battle readability (branch `v0.13`)
+
+Each unit shows a health bar (green when full, red when nearly dead) reflecting its remaining
+strength (living models' HP over the unit maximum), and the screen shows a running Ninja vs Skulkin
+model tally. Both are debug-draw, no assets.
+
+### Readability battle (visual)
+
+Play the default battle.
+
+**Pass checks:**
+
+- [ ] A **health bar** floats over each unit and shrinks / reddens as the unit takes losses.
+- [ ] The on-screen **tally** ("Ninja: N / Skulkin: M") updates as models fall, so you can see which
+      side is winning at a glance.
+- [ ] The tally counts a mind-controlled unit for its true side (it uses allegiance), and counts a
+      reassembling Skulkin unit while it is down.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
