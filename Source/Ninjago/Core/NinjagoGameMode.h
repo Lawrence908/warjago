@@ -53,6 +53,8 @@ private:
 
 	void RunCombatTick();
 	void AcquireTargets();
+	void MoralePass();
 	void CheckWinCondition();
 	int32 LivingCountForTeam(ETeam Team) const;
+	ANinjagoUnit* NearestEnemyUnit(const ANinjagoUnit* For) const;
 };

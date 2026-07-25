@@ -167,9 +167,9 @@ void ANinjagoGameMode::RunCombatTick()
 
 	for (ANinjagoUnit* Atk : AllUnits)
 	{
-		if (!IsValid(Atk) || Atk->LivingModelCount() == 0)
+		if (!IsValid(Atk) || Atk->LivingModelCount() == 0 || Atk->IsRouting())
 		{
-			continue;
+			continue; // routing units flee and do not fight
 		}
 
 		// Ranged units search out to their weapon range; melee units only to engage range.
@@ -245,37 +245,63 @@ void ANinjagoGameMode::RunCombatTick()
 		Atk->MarkFighting(bEngaged);
 	}
 
+	MoralePass();
 	AcquireTargets();
+}
+
+ANinjagoUnit* ANinjagoGameMode::NearestEnemyUnit(const ANinjagoUnit* For) const
+{
+	if (!IsValid(For))
+	{
+		return nullptr;
+	}
+	ANinjagoUnit* Nearest = nullptr;
+	float BestDsq = TNumericLimits<float>::Max();
+	for (ANinjagoUnit* Enemy : AllUnits)
+	{
+		if (!IsValid(Enemy) || Enemy->GetTeam() == For->GetTeam() || Enemy->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		const float Dsq = FVector::DistSquared2D(For->GetActorLocation(), Enemy->GetActorLocation());
+		if (Dsq < BestDsq)
+		{
+			BestDsq = Dsq;
+			Nearest = Enemy;
+		}
+	}
+	return Nearest;
+}
+
+void ANinjagoGameMode::MoralePass()
+{
+	for (ANinjagoUnit* Unit : AllUnits)
+	{
+		if (!IsValid(Unit) || Unit->IsMoraleImmune() || Unit->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		const bool bInCombat = (Unit->GetState() == EUnitState::Fighting);
+		ANinjagoUnit* Enemy = NearestEnemyUnit(Unit);
+		const bool bHasEnemy = (Enemy != nullptr);
+		const FVector EnemyLoc = bHasEnemy ? Enemy->GetActorLocation() : FVector::ZeroVector;
+		Unit->UpdateMorale(bInCombat, bHasEnemy, EnemyLoc);
+	}
 }
 
 void ANinjagoGameMode::AcquireTargets()
 {
 	// Idle, un-ordered units advance to the nearest living enemy unit so the battle closes.
+	// Routing units are skipped: they flee, they do not seek fights.
 	for (ANinjagoUnit* Unit : AllUnits)
 	{
 		if (!IsValid(Unit) || Unit->LivingModelCount() == 0 || Unit->HasActiveOrder()
-			|| Unit->GetState() == EUnitState::Fighting)
+			|| Unit->IsRouting() || Unit->GetState() == EUnitState::Fighting)
 		{
 			continue;
 		}
 
-		ANinjagoUnit* Nearest = nullptr;
-		float BestDsq = TNumericLimits<float>::Max();
-		for (ANinjagoUnit* Enemy : AllUnits)
-		{
-			if (!IsValid(Enemy) || Enemy->GetTeam() == Unit->GetTeam() || Enemy->LivingModelCount() == 0)
-			{
-				continue;
-			}
-			const float Dsq = FVector::DistSquared2D(Unit->GetActorLocation(), Enemy->GetActorLocation());
-			if (Dsq < BestDsq)
-			{
-				BestDsq = Dsq;
-				Nearest = Enemy;
-			}
-		}
-
-		if (Nearest)
+		if (ANinjagoUnit* Nearest = NearestEnemyUnit(Unit))
 		{
 			Unit->OrderAttack(Nearest);
 		}
