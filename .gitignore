@@ -1,0 +1,32 @@
+# Unreal Engine generated directories
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+
+# Build products
+Build/
+
+# IDE / tooling
+.vs/
+.vscode/
+.idea/
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Python tool caches
+__pycache__/
+*.pyc
+
+# Local Claude Code settings (personal)
+.claude/settings.local.json
