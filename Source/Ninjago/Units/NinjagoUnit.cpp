@@ -136,7 +136,7 @@ void ANinjagoUnit::SteerModels(float DeltaSeconds)
 		return;
 	}
 
-	const float Speed = FMath::Max(0.f, CachedRow.SpeedCmS);
+	const float Speed = FMath::Max(0.f, EffSpeedCmS());
 	const int32 Count = Models.Num();
 
 	// Straight-line steer toward each model's formation slot.
@@ -201,6 +201,8 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 		AbilityCooldownRemaining = FMath::Max(0.f, AbilityCooldownRemaining - DeltaSeconds);
 	}
 
+	Modifiers.Tick(DeltaSeconds);
+
 	// Routing overrides orders: flee directly away from the threat at a panic run.
 	if (bRouting)
 	{
@@ -210,7 +212,7 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 			FVector Away = Anchor - FVector(FleeFromLocation.X, FleeFromLocation.Y, Anchor.Z);
 			if (Away.SizeSquared2D() > 1.f)
 			{
-				const float Speed = FMath::Max(0.f, CachedRow.SpeedCmS)
+				const float Speed = FMath::Max(0.f, EffSpeedCmS())
 					* GetDefault<UNinjagoSettings>()->MoraleRoutSpeedMultiplier;
 				SetActorLocation(Anchor + Away.GetSafeNormal2D() * Speed * DeltaSeconds);
 			}
@@ -239,7 +241,7 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 		const FVector RawTarget = bAttack ? AttackTarget->GetActorLocation() : OrderLocation;
 		FVector ToTarget = FVector(RawTarget.X, RawTarget.Y, Anchor.Z) - Anchor;
 		const float Dist = ToTarget.Size2D();
-		const float Speed = FMath::Max(0.f, CachedRow.SpeedCmS);
+		const float Speed = FMath::Max(0.f, EffSpeedCmS());
 
 		// Attack stop distance: melee closes to contact; a ranged unit with ammo halts inside its
 		// firing range (and closes to melee once its quivers are empty).
@@ -580,6 +582,29 @@ void ANinjagoUnit::ApplyAbilityHealInRadius(const FVector& Center, float Radius,
 	}
 }
 
+void ANinjagoUnit::ApplyModifierInRadius(const FVector& Center, float Radius, bool bEnemies,
+	ENinjagoStat Stat, float FlatAdd, float PercentAdd, float Duration)
+{
+	const float RadiusSq = Radius * Radius;
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		ANinjagoUnit* U = *It;
+		if (!IsValid(U) || U->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		const bool bMatch = bEnemies ? (U->GetTeam() != Team) : (U->GetTeam() == Team);
+		if (!bMatch)
+		{
+			continue;
+		}
+		if (FVector::DistSquared2D(Center, U->GetActorLocation()) <= RadiusSq)
+		{
+			U->AddModifier(Stat, FlatAdd, PercentAdd, Duration);
+		}
+	}
+}
+
 void ANinjagoUnit::AbilityChannelTick()
 {
 	if (RemainingChannelTicks <= 0 || LivingModelCount() == 0)
@@ -629,9 +654,56 @@ bool ANinjagoUnit::TryFireAbility()
 	{
 		ApplyAbilityHealInRadius(Centre, CachedAbility.RadiusCm, Mag.Value, Mag.bPercent);
 	}
+	else if (Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def") || Mag.Verb == TEXT("speed")
+		|| Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"))
+	{
+		// Timed stat buff/debuff. def=+3 is flat; speed=+100% / slow=50% are percent.
+		const float Dur = CachedAbility.DurationS > 0.f ? CachedAbility.DurationS : S->BuffDefaultDurationS;
+		const bool bEnemies = Target.Contains(TEXT("ENEMY"));
+		const float Flat = Mag.bPercent ? 0.f : static_cast<float>(Mag.Value);
+		const float Pct = Mag.bPercent ? static_cast<float>(Mag.Value) : 0.f;
+
+		auto ApplyStat = [&](ENinjagoStat Stat, float F, float P)
+		{
+			if (Target == TEXT("SELF"))
+			{
+				AddModifier(Stat, F, P, Dur);
+			}
+			else
+			{
+				ApplyModifierInRadius(Centre, CachedAbility.RadiusCm, bEnemies, Stat, F, P, Dur);
+			}
+		};
+
+		if (Mag.Verb == TEXT("atk"))
+		{
+			ApplyStat(ENinjagoStat::MeleeAttack, Flat, Pct);
+		}
+		else if (Mag.Verb == TEXT("def"))
+		{
+			ApplyStat(ENinjagoStat::MeleeDefence, Flat, Pct);
+		}
+		else if (Mag.Verb == TEXT("speed"))
+		{
+			ApplyStat(ENinjagoStat::Speed, Flat, Pct);
+		}
+		else if (Mag.Verb == TEXT("slow"))
+		{
+			ApplyStat(ENinjagoStat::Speed, -Flat, -Pct); // debuff
+		}
+		else if (Mag.Verb == TEXT("atkspeed"))
+		{
+			ApplyStat(ENinjagoStat::Damage, Flat, Pct); // more attacks ~= more damage over time
+		}
+		else // "buff" is compound: attack and defence both.
+		{
+			ApplyStat(ENinjagoStat::MeleeAttack, Flat, Pct);
+			ApplyStat(ENinjagoStat::MeleeDefence, Flat, Pct);
+		}
+	}
 	else
 	{
-		// Buffs, terrain, control, etc. are not implemented yet (e.g. Zane's Ice Wall).
+		// Terrain, control, stealth, etc. are not implemented yet (e.g. Zane's Ice Wall).
 		UE_LOG(LogNinjago, Warning, TEXT("%s: ability effect '%s' (%s) not yet implemented; on cooldown."),
 			*CachedAbility.DisplayName, *CachedAbility.Magnitude, *CachedAbility.Target);
 	}

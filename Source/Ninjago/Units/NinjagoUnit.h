@@ -9,6 +9,7 @@
 #include "Data/NinjagoUnitRow.h"
 #include "Data/NinjagoAbilityRow.h"
 #include "Units/NinjagoModel.h"
+#include "Combat/NinjagoModifiers.h"
 #include "NinjagoUnit.generated.h"
 
 class USceneComponent;
@@ -94,6 +95,19 @@ public:
 	/** Large unit (cavalry, monster, giant, vehicle), classified by ModelScale. */
 	bool IsLarge() const;
 
+	// --- Buffs / effective stats (v0.7) ---
+
+	int32 EffMeleeAttack() const { return FMath::RoundToInt(Modifiers.Apply(ENinjagoStat::MeleeAttack, CachedRow.MeleeAttack)); }
+	int32 EffMeleeDefence() const { return FMath::RoundToInt(Modifiers.Apply(ENinjagoStat::MeleeDefence, CachedRow.MeleeDefence)); }
+	int32 EffDamage() const { return FMath::RoundToInt(Modifiers.Apply(ENinjagoStat::Damage, CachedRow.Damage)); }
+	float EffSpeedCmS() const { return Modifiers.Apply(ENinjagoStat::Speed, CachedRow.SpeedCmS); }
+
+	/** Add a timed stat modifier (used by buff/debuff abilities). */
+	void AddModifier(ENinjagoStat Stat, float FlatAdd, float PercentAdd, float DurationSeconds)
+	{
+		Modifiers.Add(Stat, FlatAdd, PercentAdd, DurationSeconds);
+	}
+
 	/** Flag whether the unit has an engaged model this combat tick (drives Fighting state). */
 	void MarkFighting(bool bEngaged);
 
@@ -161,6 +175,9 @@ private:
 	// Charge state: true when the unit can still deliver a first-contact charge.
 	bool bChargePending = true;
 
+	// Active timed stat modifiers (buffs/debuffs).
+	FNinjagoModifiers Modifiers;
+
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;
 	bool bHasAbility = false;
@@ -179,6 +196,7 @@ private:
 	void ApplyAbilityDamageInRadius(const FVector& Center, float Radius, int32 Damage);
 	void ApplyAbilityChainDamage(const FVector& Center, float Radius, int32 Damage, int32 MaxTargets);
 	void ApplyAbilityHealInRadius(const FVector& Center, float Radius, int32 Amount, bool bPercent);
+	void ApplyModifierInRadius(const FVector& Center, float Radius, bool bEnemies, ENinjagoStat Stat, float FlatAdd, float PercentAdd, float Duration);
 
 	/** World location of formation slot SlotIndex, given the unit's transform. */
 	FVector SlotWorldLocation(int32 SlotIndex, int32 Count) const;

@@ -26,7 +26,8 @@ namespace
 	// and a large monster NIN_SAMURAIX (v0.5) for the Skulkin spears (Watchmen) to brace against.
 	// Skulkin are morale-immune by faction and never rout.
 	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX") };
-	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS") };
+	// HRO_WYPLASH adds a def+3 ally buff (v0.7) to the Skulkin line.
+	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH") };
 }
 
 ANinjagoGameMode::ANinjagoGameMode()
@@ -253,8 +254,8 @@ void ANinjagoGameMode::RunCombatTick()
 				const FNinjagoUnitRow& AR = Atk->GetRow();
 				const FNinjagoUnitRow& DR = BestDef->GetRow();
 				const int32 Dmg = FNinjagoCombatResolver::ResolveMelee(
-					AR.MeleeAttack, AR.Damage, AR.ChargeBonus, AR.ArmourPiercing,
-					DR.MeleeDefence, DR.Armour,
+					Atk->EffMeleeAttack(), Atk->EffDamage(), AR.ChargeBonus, AR.ArmourPiercing,
+					BestDef->EffMeleeDefence(), DR.Armour,
 					bCharging, bAtkSpear, bAtkLarge, BestDef->IsSpear(), BestDef->IsLarge(),
 					S->SpearAntiLargeBonus, P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
@@ -265,7 +266,9 @@ void ANinjagoGameMode::RunCombatTick()
 			else if (bRanged && Atk->TryConsumeAmmo(ai))
 			{
 				// Beyond melee but within range, and this model still has ammo: fire a shot.
-				const int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
+				const FNinjagoUnitRow& AR = Atk->GetRow();
+				const int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(
+					AR.RangedAttack, Atk->EffDamage(), AR.ArmourPiercing, BestDef->GetRow().Armour, P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
 				bEngaged = true;
 

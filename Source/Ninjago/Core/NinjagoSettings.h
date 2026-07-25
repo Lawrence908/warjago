@@ -78,6 +78,10 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1"))
 	int32 AbilityChainMaxTargets = 6;
 
+	/** Duration of a buff/debuff ability that does not specify its own duration (seconds). */
+	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1.0"))
+	float BuffDefaultDurationS = 12.0f;
+
 	// --- Morale (v0.3). A unit whose row Morale == 99 is immune and never routs. ---
 
 	/** Morale lost per model killed, per combat tick. */
