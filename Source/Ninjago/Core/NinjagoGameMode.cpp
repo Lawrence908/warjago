@@ -381,8 +381,18 @@ void ANinjagoGameMode::CheckWinCondition()
 		return;
 	}
 
-	const int32 Ninja = LivingCountForTeam(ETeam::Ninja);
-	const int32 Skulkin = LivingCountForTeam(ETeam::Skulkin);
+	// A team is only beaten when it has no living models AND none reassembling ("Already Dead").
+	int32 Ninja = 0;
+	int32 Skulkin = 0;
+	for (const ANinjagoUnit* Unit : AllUnits)
+	{
+		if (!IsValid(Unit))
+		{
+			continue;
+		}
+		const int32 Remaining = Unit->LivingModelCount() + Unit->PendingReviveCount();
+		((Unit->GetTeam() == ETeam::Ninja) ? Ninja : Skulkin) += Remaining;
+	}
 
 	if (Ninja > 0 && Skulkin > 0)
 	{

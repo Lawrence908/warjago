@@ -437,6 +437,32 @@ Tuning: `BuffDefaultDurationS` in Project Settings → Ninjago → Abilities.
 
 ---
 
+## v0.8 — Skulkin "Already Dead" revive (branch `v0.8`)
+
+The Skulkin faction mechanic: a slain Skulkin model collapses into a bone pile and **reassembles
+after 20 s at 50% HP, once per battle**. Combined with their morale immunity, Skulkin are a
+relentless horde; the Ninja heroes have to actually finish them off (twice).
+
+No new automation tests (this is stateful integration, verified by trace). Suite stays at 18.
+
+### Revive battle (visual)
+
+Play the default battle (it already fields Skulkin) and watch a Skulkin block after it takes losses.
+
+**Pass checks:**
+
+- [ ] Skulkin casualties **come back** about 20 seconds later (models reappear where they fell),
+      at roughly half health.
+- [ ] Each Skulkin model revives **at most once** — the second time it dies, it stays dead.
+- [ ] The battle is **not** declared over while a Skulkin unit still has models reassembling
+      (a unit at zero living but pending revives is not yet beaten).
+- [ ] Ninja units do **not** revive (no faction mechanic).
+- [ ] The battle still reaches a winner (total model-lives are finite: at most twice per Skulkin).
+
+Tuning: `ReviveDelaySeconds` and `ReviveHpFraction` in Project Settings → Ninjago → Revive.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
