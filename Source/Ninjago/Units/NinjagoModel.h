@@ -35,4 +35,11 @@ struct FNinjagoModel
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninjago|Model")
 	bool bAlive = true;
+
+	/** Skulkin "Already Dead": a model may reassemble once. Seconds until it does (0 = not pending). */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninjago|Model")
+	float ReviveTimer = 0.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninjago|Model")
+	bool bHasRevived = false;
 };

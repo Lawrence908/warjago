@@ -41,6 +41,10 @@ public:
 
 	const TArray<FNinjagoModel>& GetModels() const { return Models; }
 	int32 LivingModelCount() const;
+
+	/** Slain-but-reassembling models (Skulkin "Already Dead"). Such a unit is not yet beaten. */
+	int32 PendingReviveCount() const;
+
 	bool HasActiveOrder() const { return OrderType != EOrderType::NoOrder; }
 
 	/** Set the row + team before FinishSpawning (used by the game mode when spawning armies). */
@@ -177,6 +181,11 @@ private:
 
 	// Active timed stat modifiers (buffs/debuffs).
 	FNinjagoModifiers Modifiers;
+
+	// Skulkin "Already Dead": slain models reassemble once.
+	bool bReviveCapable = false;
+
+	void ProcessRevives(float DeltaSeconds);
 
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;

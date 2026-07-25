@@ -115,4 +115,14 @@ public:
 	/** Morale lost by a unit hit by a charge = charger's ChargeBonus * this scale. */
 	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0"))
 	float MoraleChargeShockScale = 2.0f;
+
+	// --- Skulkin "Already Dead" revive (v0.8) ---
+
+	/** Seconds a slain Skulkin model waits before reassembling (once per battle). */
+	UPROPERTY(config, EditAnywhere, Category="Revive", meta=(ClampMin="0.0"))
+	float ReviveDelaySeconds = 20.0f;
+
+	/** Fraction of max HP a reassembled model returns with. */
+	UPROPERTY(config, EditAnywhere, Category="Revive", meta=(ClampMin="0.01", ClampMax="1.0"))
+	float ReviveHpFraction = 0.5f;
 };

@@ -76,6 +76,9 @@ void ANinjagoUnit::InitialiseFromRow()
 	CurrentMorale = MaxMorale;
 	bRouting = false;
 
+	// Skulkin "Already Dead": their slain models reassemble once per battle.
+	bReviveCapable = (CachedRow.Faction == FName(TEXT("SKULKIN")));
+
 	UE_LOG(LogNinjago, Log, TEXT("Spawned %s (%s) with %d model(s) for team %d"),
 		*CachedRow.DisplayName, *UnitRowHandle.RowName.ToString(), Models.Num(), static_cast<int32>(Team));
 }
@@ -202,6 +205,7 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 	}
 
 	Modifiers.Tick(DeltaSeconds);
+	ProcessRevives(DeltaSeconds);
 
 	// Routing overrides orders: flee directly away from the threat at a panic run.
 	if (bRouting)
@@ -326,6 +330,11 @@ void ANinjagoUnit::ApplyModelDamage(int32 ModelIndex, int32 Damage)
 	{
 		M.Hp = 0;
 		M.bAlive = false;
+		// Schedule an "Already Dead" reassembly if this model has not used its revive yet.
+		if (bReviveCapable && !M.bHasRevived)
+		{
+			M.ReviveTimer = GetDefault<UNinjagoSettings>()->ReviveDelaySeconds;
+		}
 	}
 	if (LivingModelCount() == 0)
 	{
@@ -341,6 +350,51 @@ void ANinjagoUnit::ApplyModelHeal(int32 ModelIndex, int32 Amount)
 	}
 	const int32 MaxHp = FMath::Max(1, CachedRow.HpPerModel);
 	Models[ModelIndex].Hp = FMath::Min(MaxHp, Models[ModelIndex].Hp + Amount);
+}
+
+int32 ANinjagoUnit::PendingReviveCount() const
+{
+	int32 Count = 0;
+	for (const FNinjagoModel& M : Models)
+	{
+		if (!M.bAlive && M.ReviveTimer > 0.f)
+		{
+			++Count;
+		}
+	}
+	return Count;
+}
+
+void ANinjagoUnit::ProcessRevives(float DeltaSeconds)
+{
+	if (!bReviveCapable)
+	{
+		return;
+	}
+
+	const float HpFrac = GetDefault<UNinjagoSettings>()->ReviveHpFraction;
+	bool bAnyRevived = false;
+	for (FNinjagoModel& M : Models)
+	{
+		if (!M.bAlive && M.ReviveTimer > 0.f)
+		{
+			M.ReviveTimer -= DeltaSeconds;
+			if (M.ReviveTimer <= 0.f)
+			{
+				M.bAlive = true;
+				M.bHasRevived = true;
+				M.ReviveTimer = 0.f;
+				M.Hp = FMath::Max(1, FMath::RoundToInt(CachedRow.HpPerModel * HpFrac));
+				bAnyRevived = true;
+			}
+		}
+	}
+
+	if (bAnyRevived && State == EUnitState::Dead)
+	{
+		State = EUnitState::Idle;
+		LastLivingCount = LivingModelCount(); // don't count the revive as a morale event
+	}
 }
 
 bool ANinjagoUnit::HasAmmoRemaining() const
