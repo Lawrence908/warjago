@@ -99,8 +99,14 @@ void ANinjagoGameMode::StartPlay()
 
 	ProjectileFX = GetWorld()->SpawnActor<ANinjagoProjectileFX>();
 
+	const int32 NinjaStart = LivingCountForTeam(ETeam::Ninja);
+	const int32 SkulkinStart = LivingCountForTeam(ETeam::Skulkin);
 	UE_LOG(LogNinjago, Log, TEXT("Battle start: %d units (Ninja %d models, Skulkin %d models)"),
-		AllUnits.Num(), LivingCountForTeam(ETeam::Ninja), LivingCountForTeam(ETeam::Skulkin));
+		AllUnits.Num(), NinjaStart, SkulkinStart);
+	if (NinjaStart == 0 || SkulkinStart == 0)
+	{
+		UE_LOG(LogNinjago, Warning, TEXT("A side started with no models; the battle will resolve immediately. Check the roster."));
+	}
 
 	GetWorldTimerManager().SetTimer(CombatTimer, this, &ANinjagoGameMode::RunCombatTick, CombatInterval, true, CombatInterval);
 	GetWorldTimerManager().SetTimer(WinTimer, this, &ANinjagoGameMode::CheckWinCondition, 1.0f, true, 1.0f);
@@ -189,6 +195,8 @@ void ANinjagoGameMode::RunCombatTick()
 	{
 		return;
 	}
+	bCombatHasRun = true;
+	EngagedThisTick.Reset();
 
 	const UNinjagoSettings* S = GetDefault<UNinjagoSettings>();
 	FNinjagoCombatParams P;
@@ -278,6 +286,7 @@ void ANinjagoGameMode::RunCombatTick()
 				bEngaged = true;
 				bMeleeThisTick = true;
 				Struck.Add(BestDef);
+				EngagedThisTick.Add(BestDef); // the defender is in combat too (drives its morale)
 			}
 			else if (bRanged && Atk->TryConsumeAmmo(ai))
 			{
@@ -287,6 +296,7 @@ void ANinjagoGameMode::RunCombatTick()
 					AR.RangedAttack, Atk->EffDamage(), AR.ArmourPiercing, BestDef->GetRow().Armour, P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
 				bEngaged = true;
+				EngagedThisTick.Add(BestDef);
 
 				if (ProjectileFX)
 				{
@@ -298,6 +308,10 @@ void ANinjagoGameMode::RunCombatTick()
 		}
 
 		Atk->MarkFighting(bEngaged);
+		if (bEngaged)
+		{
+			EngagedThisTick.Add(Atk);
+		}
 
 		// Deliver the charge's morale shock to each unit struck on impact, then spend the charge.
 		if (bCharging && bMeleeThisTick)
@@ -314,8 +328,9 @@ void ANinjagoGameMode::RunCombatTick()
 		}
 	}
 
-	MoralePass();
+	// Abilities before morale, so casualties from AI casts this tick are felt this tick.
 	AbilityAIPass();
+	MoralePass();
 	AcquireTargets();
 }
 
@@ -364,8 +379,9 @@ void ANinjagoGameMode::MoralePass()
 		{
 			continue;
 		}
-		// A frozen unit is not "in combat" for morale purposes (its Fighting state may be stale).
-		const bool bInCombat = (Unit->GetState() == EUnitState::Fighting && !Unit->IsStunned());
+		// "In combat" = dealt or took a hit this tick (attackers and defenders), and not frozen.
+		// This means a unit under fire does not regen morale even if it has no target of its own.
+		const bool bInCombat = EngagedThisTick.Contains(Unit) && !Unit->IsStunned();
 		ANinjagoUnit* Enemy = NearestEnemyUnit(Unit);
 		const bool bHasEnemy = (Enemy != nullptr);
 		const FVector EnemyLoc = bHasEnemy ? Enemy->GetActorLocation() : FVector::ZeroVector;
@@ -397,7 +413,7 @@ int32 ANinjagoGameMode::LivingCountForTeam(ETeam Team) const
 	int32 Total = 0;
 	for (const ANinjagoUnit* Unit : AllUnits)
 	{
-		if (IsValid(Unit) && Unit->GetTeam() == Team)
+		if (IsValid(Unit) && Unit->GetAllegianceTeam() == Team)
 		{
 			Total += Unit->LivingModelCount();
 		}
@@ -407,9 +423,9 @@ int32 ANinjagoGameMode::LivingCountForTeam(ETeam Team) const
 
 void ANinjagoGameMode::CheckWinCondition()
 {
-	if (bResolved)
+	if (bResolved || !bCombatHasRun)
 	{
-		return;
+		return; // do not declare a winner before the first combat tick has actually run
 	}
 
 	// A team is only beaten when it has no living models AND none reassembling ("Already Dead").
@@ -434,6 +450,16 @@ void ANinjagoGameMode::CheckWinCondition()
 
 	bResolved = true;
 	GetWorldTimerManager().ClearTimer(CombatTimer);
+	GetWorldTimerManager().ClearTimer(WinTimer);
+
+	// Freeze the tableau under the result banner: stop the units ticking.
+	for (ANinjagoUnit* Unit : AllUnits)
+	{
+		if (IsValid(Unit))
+		{
+			Unit->SetActorTickEnabled(false);
+		}
+	}
 
 	FString Result;
 	if (Ninja == 0 && Skulkin == 0)

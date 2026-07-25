@@ -45,6 +45,10 @@ private:
 	FTimerHandle WinTimer;
 	FRandomStream CombatRng;
 	bool bResolved = false;
+	bool bCombatHasRun = false;
+
+	/** Units that dealt or took a hit this combat tick (drives the morale "in combat" flag). */
+	TSet<ANinjagoUnit*> EngagedThisTick;
 
 	void GatherUnits();
 	void SpawnFromSetup(const UNinjagoBattleSetup* Setup);
