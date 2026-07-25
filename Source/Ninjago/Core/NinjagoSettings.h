@@ -65,4 +65,34 @@ public:
 	/** Damage ticks per second for channeled (duration) abilities, e.g. Four-Armed Fury. */
 	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1.0"))
 	float AbilityChannelTicksPerSecond = 4.0f;
+
+	// --- Morale (v0.3). A unit whose row Morale == 99 is immune and never routs. ---
+
+	/** Morale lost per model killed, per combat tick. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0"))
+	float MoraleCasualtyShock = 5.0f;
+
+	/** Below this fraction of starting strength, the unit takes an extra morale penalty each tick. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0", ClampMax="1.0"))
+	float MoraleLowStrengthFraction = 0.5f;
+
+	/** Extra morale lost per tick while under-strength. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0"))
+	float MoraleLowStrengthPenalty = 5.0f;
+
+	/** Morale recovered per tick when not taking casualties and not in combat. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0"))
+	float MoraleRegenPerTick = 4.0f;
+
+	/** Rout when morale falls to this fraction of the unit's maximum. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0", ClampMax="1.0"))
+	float MoraleBreakFraction = 0.2f;
+
+	/** A routing unit rallies once morale recovers to this fraction of its maximum. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0", ClampMax="1.0"))
+	float MoraleRallyFraction = 0.5f;
+
+	/** Speed multiplier while routing (panic run). */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="1.0"))
+	float MoraleRoutSpeedMultiplier = 1.5f;
 };
