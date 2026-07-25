@@ -207,6 +207,18 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 	Modifiers.Tick(DeltaSeconds);
 	ProcessRevives(DeltaSeconds);
 
+	// Frozen/stunned: hold in place, take no actions, just keep rendering.
+	if (StunTimer > 0.f)
+	{
+		StunTimer = FMath::Max(0.f, StunTimer - DeltaSeconds);
+		if (Renderer)
+		{
+			const float StunScale = CachedRow.ModelScale > 0.f ? CachedRow.ModelScale : 1.f;
+			Renderer->UpdateInstances(Models, StunScale);
+		}
+		return;
+	}
+
 	// Routing overrides orders: flee directly away from the threat at a panic run.
 	if (bRouting)
 	{
@@ -536,7 +548,7 @@ void ANinjagoUnit::CacheAbility()
 
 bool ANinjagoUnit::CanFireAbility() const
 {
-	return bHasAbility && AbilityCooldownRemaining <= 0.f && LivingModelCount() > 0;
+	return bHasAbility && AbilityCooldownRemaining <= 0.f && LivingModelCount() > 0 && !IsStunned();
 }
 
 float ANinjagoUnit::GetAbilityCooldownFraction() const
@@ -659,6 +671,27 @@ void ANinjagoUnit::ApplyModifierInRadius(const FVector& Center, float Radius, bo
 	}
 }
 
+void ANinjagoUnit::ApplyStunInRadius(const FVector& Center, float Radius, float Seconds)
+{
+	if (Seconds <= 0.f || Radius <= 0.f)
+	{
+		return;
+	}
+	const float RadiusSq = Radius * Radius;
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		ANinjagoUnit* Enemy = *It;
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		if (FVector::DistSquared2D(Center, Enemy->GetActorLocation()) <= RadiusSq)
+		{
+			Enemy->ApplyStun(Seconds);
+		}
+	}
+}
+
 void ANinjagoUnit::AbilityChannelTick()
 {
 	if (RemainingChannelTicks <= 0 || LivingModelCount() == 0)
@@ -707,6 +740,11 @@ bool ANinjagoUnit::TryFireAbility()
 	else if (Mag.Verb == TEXT("heal"))
 	{
 		ApplyAbilityHealInRadius(Centre, CachedAbility.RadiusCm, Mag.Value, Mag.bPercent);
+	}
+	else if (Mag.Verb == TEXT("freeze"))
+	{
+		// freeze=6s -> stun enemies in radius for that many seconds.
+		ApplyStunInRadius(Centre, CachedAbility.RadiusCm, static_cast<float>(Mag.Value));
 	}
 	else if (Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def") || Mag.Verb == TEXT("speed")
 		|| Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"))

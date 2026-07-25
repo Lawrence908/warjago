@@ -99,6 +99,12 @@ public:
 	/** Large unit (cavalry, monster, giant, vehicle), classified by ModelScale. */
 	bool IsLarge() const;
 
+	// --- Crowd control (v0.9) ---
+
+	/** Frozen/stunned: cannot move, fight, or use abilities while this lasts. */
+	bool IsStunned() const { return StunTimer > 0.f; }
+	void ApplyStun(float Seconds) { StunTimer = FMath::Max(StunTimer, FMath::Max(0.f, Seconds)); }
+
 	// --- Buffs / effective stats (v0.7) ---
 
 	int32 EffMeleeAttack() const { return FMath::RoundToInt(Modifiers.Apply(ENinjagoStat::MeleeAttack, CachedRow.MeleeAttack)); }
@@ -185,7 +191,11 @@ private:
 	// Skulkin "Already Dead": slain models reassemble once.
 	bool bReviveCapable = false;
 
+	// Crowd control: seconds remaining frozen/stunned.
+	float StunTimer = 0.f;
+
 	void ProcessRevives(float DeltaSeconds);
+	void ApplyStunInRadius(const FVector& Center, float Radius, float Seconds);
 
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;

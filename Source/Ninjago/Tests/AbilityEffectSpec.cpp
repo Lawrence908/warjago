@@ -41,6 +41,12 @@ bool FNinjagoAbilityParseTest::RunTest(const FString&)
 		TestFalse(TEXT("terrain not numeric"), M.bNumeric);
 	}
 	{
+		// "freeze=6s" -> the seconds value stops at the trailing unit letter.
+		const FNinjagoAbilityMagnitude M = FNinjagoAbilityEffect::ParseMagnitude(TEXT("freeze=6s"));
+		TestEqual(TEXT("freeze verb"), M.Verb, FString(TEXT("freeze")));
+		TestEqual(TEXT("freeze seconds"), M.Value, 6);
+	}
+	{
 		const FNinjagoAbilityMagnitude M = FNinjagoAbilityEffect::ParseMagnitude(TEXT("no verb here"));
 		TestTrue(TEXT("no '=' -> empty verb"), M.Verb.IsEmpty());
 	}

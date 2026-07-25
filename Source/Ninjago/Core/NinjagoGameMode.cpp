@@ -25,7 +25,8 @@ namespace
 	// Default battle spans the systems: melee, ranged (v0.2), a breakable block for routing (v0.3),
 	// and a large monster NIN_SAMURAIX (v0.5) for the Skulkin spears (Watchmen) to brace against.
 	// Skulkin are morale-immune by faction and never rout.
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX") };
+	// LRD_ICEEMPEROR is a guest freeze-caster (v0.9): select him and press Space to freeze Skulkin.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR") };
 	// HRO_WYPLASH adds a def+3 ally buff (v0.7) to the Skulkin line.
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH") };
 }
@@ -42,15 +43,24 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Red flag above any unit that is currently routing, so a broken unit is easy to spot.
+	// Status markers above units: a red flag for routing, a cyan sphere for frozen.
 	for (ANinjagoUnit* Unit : AllUnits)
 	{
-		if (IsValid(Unit) && Unit->IsRouting() && Unit->LivingModelCount() > 0)
+		if (!IsValid(Unit) || Unit->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		if (Unit->IsRouting())
 		{
 			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 220.f);
 			DrawDebugLine(GetWorld(), Base, Base + FVector(0.f, 0.f, 180.f), FColor::Red, false, -1.f, 0, 12.f);
 			DrawDebugLine(GetWorld(), Base + FVector(0.f, 0.f, 180.f), Base + FVector(140.f, 0.f, 130.f), FColor::Red, false, -1.f, 0, 12.f);
 			DrawDebugLine(GetWorld(), Base + FVector(140.f, 0.f, 130.f), Base + FVector(0.f, 0.f, 90.f), FColor::Red, false, -1.f, 0, 12.f);
+		}
+		if (Unit->IsStunned())
+		{
+			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 260.f);
+			DrawDebugSphere(GetWorld(), Base, 70.f, 10, FColor::Cyan, false, -1.f, 0, 8.f);
 		}
 	}
 }
@@ -189,9 +199,9 @@ void ANinjagoGameMode::RunCombatTick()
 
 	for (ANinjagoUnit* Atk : AllUnits)
 	{
-		if (!IsValid(Atk) || Atk->LivingModelCount() == 0 || Atk->IsRouting())
+		if (!IsValid(Atk) || Atk->LivingModelCount() == 0 || Atk->IsRouting() || Atk->IsStunned())
 		{
-			continue; // routing units flee and do not fight
+			continue; // routing units flee, stunned units are frozen; neither fights
 		}
 
 		// Ranged units search out to their weapon range; melee units only to engage range.
@@ -349,7 +359,7 @@ void ANinjagoGameMode::AcquireTargets()
 	for (ANinjagoUnit* Unit : AllUnits)
 	{
 		if (!IsValid(Unit) || Unit->LivingModelCount() == 0 || Unit->HasActiveOrder()
-			|| Unit->IsRouting() || Unit->GetState() == EUnitState::Fighting)
+			|| Unit->IsRouting() || Unit->IsStunned() || Unit->GetState() == EUnitState::Fighting)
 		{
 			continue;
 		}
