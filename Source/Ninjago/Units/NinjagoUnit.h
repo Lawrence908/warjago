@@ -48,6 +48,9 @@ public:
 	/** Apply combat damage to one model; kills it at <= 0 HP. */
 	void ApplyModelDamage(int32 ModelIndex, int32 Damage);
 
+	/** Restore HP to one living model, capped at its per-model maximum. */
+	void ApplyModelHeal(int32 ModelIndex, int32 Amount);
+
 	// --- Ranged (v0.2) ---
 
 	/** True if this unit's row can shoot (has range and ammo). */
@@ -174,6 +177,8 @@ private:
 	void CacheAbility();
 	void AbilityChannelTick();
 	void ApplyAbilityDamageInRadius(const FVector& Center, float Radius, int32 Damage);
+	void ApplyAbilityChainDamage(const FVector& Center, float Radius, int32 Damage, int32 MaxTargets);
+	void ApplyAbilityHealInRadius(const FVector& Center, float Radius, int32 Amount, bool bPercent);
 
 	/** World location of formation slot SlotIndex, given the unit's transform. */
 	FVector SlotWorldLocation(int32 SlotIndex, int32 Count) const;

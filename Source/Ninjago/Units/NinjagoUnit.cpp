@@ -4,6 +4,7 @@
 #include "Units/NinjagoModelRenderer.h"
 #include "Units/NinjagoFormation.h"
 #include "Combat/NinjagoMoraleResolver.h"
+#include "Combat/NinjagoAbilityEffect.h"
 #include "Core/NinjagoSettings.h"
 #include "NinjagoLog.h"
 #include "Components/SceneComponent.h"
@@ -15,32 +16,6 @@
 namespace
 {
 	const TCHAR* AbilityTablePath = TEXT("/Game/Data/dt_abilities.dt_abilities");
-
-	// Pull the integer after "dmg=" out of a Magnitude string ("dmg=45", "dmg=40/hit").
-	int32 ParseDamageMagnitude(const FString& Magnitude)
-	{
-		const FString Key(TEXT("dmg="));
-		int32 Start = Magnitude.Find(Key, ESearchCase::IgnoreCase);
-		if (Start == INDEX_NONE)
-		{
-			return 0;
-		}
-		Start += Key.Len();
-		FString Digits;
-		for (int32 i = Start; i < Magnitude.Len(); ++i)
-		{
-			const TCHAR Ch = Magnitude[i];
-			if (Ch >= TEXT('0') && Ch <= TEXT('9'))
-			{
-				Digits.AppendChar(Ch);
-			}
-			else
-			{
-				break;
-			}
-		}
-		return Digits.IsEmpty() ? 0 : FCString::Atoi(*Digits);
-	}
 }
 
 ANinjagoUnit::ANinjagoUnit()
@@ -356,6 +331,16 @@ void ANinjagoUnit::ApplyModelDamage(int32 ModelIndex, int32 Damage)
 	}
 }
 
+void ANinjagoUnit::ApplyModelHeal(int32 ModelIndex, int32 Amount)
+{
+	if (!Models.IsValidIndex(ModelIndex) || !Models[ModelIndex].bAlive || Amount <= 0)
+	{
+		return;
+	}
+	const int32 MaxHp = FMath::Max(1, CachedRow.HpPerModel);
+	Models[ModelIndex].Hp = FMath::Min(MaxHp, Models[ModelIndex].Hp + Amount);
+}
+
 bool ANinjagoUnit::HasAmmoRemaining() const
 {
 	for (const FNinjagoModel& M : Models)
@@ -532,6 +517,69 @@ void ANinjagoUnit::ApplyAbilityDamageInRadius(const FVector& Center, float Radiu
 	}
 }
 
+void ANinjagoUnit::ApplyAbilityChainDamage(const FVector& Center, float Radius, int32 Damage, int32 MaxTargets)
+{
+	if (Damage <= 0 || Radius <= 0.f || MaxTargets <= 0)
+	{
+		return;
+	}
+
+	// Gather every living enemy model, then hit the nearest MaxTargets (the chain).
+	TArray<FVector> Locs;
+	TArray<ANinjagoUnit*> Owners;
+	TArray<int32> Indices;
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		ANinjagoUnit* Enemy = *It;
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		const TArray<FNinjagoModel>& EnemyModels = Enemy->GetModels();
+		for (int32 i = 0; i < EnemyModels.Num(); ++i)
+		{
+			if (EnemyModels[i].bAlive)
+			{
+				Locs.Add(EnemyModels[i].Location);
+				Owners.Add(Enemy);
+				Indices.Add(i);
+			}
+		}
+	}
+
+	const TArray<int32> Chain = FNinjagoAbilityEffect::SelectNearest(Locs, Center, MaxTargets, Radius);
+	for (int32 Sel : Chain)
+	{
+		Owners[Sel]->ApplyModelDamage(Indices[Sel], Damage);
+	}
+}
+
+void ANinjagoUnit::ApplyAbilityHealInRadius(const FVector& Center, float Radius, int32 Amount, bool bPercent)
+{
+	if (Amount <= 0 || Radius <= 0.f)
+	{
+		return;
+	}
+	const float RadiusSq = Radius * Radius;
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		ANinjagoUnit* Ally = *It;
+		if (!IsValid(Ally) || Ally->GetTeam() != Team || Ally->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		const int32 HealPerModel = bPercent ? (Ally->CachedRow.HpPerModel * Amount) / 100 : Amount;
+		const TArray<FNinjagoModel>& AllyModels = Ally->GetModels();
+		for (int32 i = 0; i < AllyModels.Num(); ++i)
+		{
+			if (AllyModels[i].bAlive && FVector::DistSquared2D(Center, AllyModels[i].Location) <= RadiusSq)
+			{
+				Ally->ApplyModelHeal(i, HealPerModel);
+			}
+		}
+	}
+}
+
 void ANinjagoUnit::AbilityChannelTick()
 {
 	if (RemainingChannelTicks <= 0 || LivingModelCount() == 0)
@@ -550,25 +598,47 @@ bool ANinjagoUnit::TryFireAbility()
 		return false;
 	}
 
-	const int32 Magnitude = ParseDamageMagnitude(CachedAbility.Magnitude);
+	const UNinjagoSettings* S = GetDefault<UNinjagoSettings>();
+	const FNinjagoAbilityMagnitude Mag = FNinjagoAbilityEffect::ParseMagnitude(CachedAbility.Magnitude);
+	const FString Target = CachedAbility.Target.ToUpper();
+	const FVector Centre = GetActorLocation(); // one button, no aiming: centred on the caster
 
-	// No aiming UI (one button): both v0.1 abilities are centred on the Lord.
-	if (CachedAbility.DurationS > 0.f)
+	if (Mag.Verb == TEXT("dmg"))
 	{
-		// Channeled: N ticks/sec for DurationS seconds, Magnitude damage per tick in radius.
-		const float Hz = FMath::Max(1.f, GetDefault<UNinjagoSettings>()->AbilityChannelTicksPerSecond);
-		ChannelDamagePerTick = Magnitude;
-		RemainingChannelTicks = FMath::Max(1, FMath::RoundToInt(CachedAbility.DurationS * Hz));
-		AbilityChannelTick(); // first hit immediately
-		GetWorldTimerManager().SetTimer(AbilityChannelTimer, this, &ANinjagoUnit::AbilityChannelTick, 1.f / Hz, true, 1.f / Hz);
+		if (Target == TEXT("ENEMY_UNIT"))
+		{
+			// Chains between the nearest enemies (e.g. Jay's Lightning Bolt).
+			ApplyAbilityChainDamage(Centre, CachedAbility.RadiusCm, Mag.Value, S->AbilityChainMaxTargets);
+		}
+		else if (CachedAbility.DurationS > 0.f)
+		{
+			// Channeled AoE: N ticks/sec for DurationS seconds (e.g. Four-Armed Fury).
+			const float Hz = FMath::Max(1.f, S->AbilityChannelTicksPerSecond);
+			ChannelDamagePerTick = Mag.Value;
+			RemainingChannelTicks = FMath::Max(1, FMath::RoundToInt(CachedAbility.DurationS * Hz));
+			AbilityChannelTick(); // first hit immediately
+			GetWorldTimerManager().SetTimer(AbilityChannelTimer, this, &ANinjagoUnit::AbilityChannelTick, 1.f / Hz, true, 1.f / Hz);
+		}
+		else
+		{
+			// Instant AoE (e.g. Kai's Fire Blast, Cole's Earthquake).
+			ApplyAbilityDamageInRadius(Centre, CachedAbility.RadiusCm, Mag.Value);
+		}
+	}
+	else if (Mag.Verb == TEXT("heal"))
+	{
+		ApplyAbilityHealInRadius(Centre, CachedAbility.RadiusCm, Mag.Value, Mag.bPercent);
 	}
 	else
 	{
-		ApplyAbilityDamageInRadius(GetActorLocation(), CachedAbility.RadiusCm, Magnitude);
+		// Buffs, terrain, control, etc. are not implemented yet (e.g. Zane's Ice Wall).
+		UE_LOG(LogNinjago, Warning, TEXT("%s: ability effect '%s' (%s) not yet implemented; on cooldown."),
+			*CachedAbility.DisplayName, *CachedAbility.Magnitude, *CachedAbility.Target);
 	}
 
 	AbilityCooldownRemaining = CachedAbility.CooldownS;
-	UE_LOG(LogNinjago, Log, TEXT("%s fired %s (radius %.0f, dmg %d, cd %.0fs)"),
-		*GetName(), *CachedAbility.DisplayName, CachedAbility.RadiusCm, Magnitude, CachedAbility.CooldownS);
+	UE_LOG(LogNinjago, Log, TEXT("%s fired %s (target %s, radius %.0f, mag %s, cd %.0fs)"),
+		*GetName(), *CachedAbility.DisplayName, *CachedAbility.Target, CachedAbility.RadiusCm,
+		*CachedAbility.Magnitude, CachedAbility.CooldownS);
 	return true;
 }

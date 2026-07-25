@@ -74,6 +74,10 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1.0"))
 	float AbilityChannelTicksPerSecond = 4.0f;
 
+	/** Max targets a chaining ability (e.g. Lightning Bolt) hits. */
+	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1"))
+	int32 AbilityChainMaxTargets = 6;
+
 	// --- Morale (v0.3). A unit whose row Morale == 99 is immune and never routs. ---
 
 	/** Morale lost per model killed, per combat tick. */
