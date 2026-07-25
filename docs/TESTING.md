@@ -463,6 +463,32 @@ Tuning: `ReviveDelaySeconds` and `ReviveHpFraction` in Project Settings → Ninj
 
 ---
 
+## v0.9 — Crowd control: freeze (branch `v0.9`)
+
+Freeze abilities (`freeze=Ns`) now stun the target: a frozen unit cannot move, fight, or use its
+ability for the duration. The default battle adds a **guest** freeze-caster, `LRD_ICEEMPEROR`, on
+the Ninja side (thematically a crossover, functionally a demo of freeze). Mind-control (`control=`)
+remains unimplemented.
+
+The freeze duration parse (`freeze=6s` → 6) is covered by the ability parser test; the stun state
+itself is stateful integration, verified by trace.
+
+### Freeze battle (visual)
+
+Play the default battle. Select `LRD_ICEEMPEROR` (LMB) and press Space near the Skulkin.
+
+**Pass checks:**
+
+- [ ] Skulkin units in range **freeze** — a **cyan sphere** appears above them and they stop moving
+      and fighting for ~6 seconds, then resume.
+- [ ] Frozen units can still be attacked (they are sitting ducks).
+- [ ] A frozen unit cannot fire its own ability while frozen (select one and try — nothing happens).
+- [ ] Freeze is a great counter to the Skulkin horde: it buys time against the relentless revive.
+
+Tuning: freeze length comes from the ability's magnitude (`freeze=6s`).
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

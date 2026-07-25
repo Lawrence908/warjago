@@ -14,7 +14,8 @@ UNIT_TABLE = "/Game/Data/dt_units"
 
 # Melee, ranged (v0.2), a breakable block NIN_SOLDIERS (v0.3), and a large monster
 # NIN_SAMURAIX (v0.5) for the Skulkin spears to brace against.
-NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS", "NIN_SAMURAIX"]
+# LRD_ICEEMPEROR is a guest freeze-caster (v0.9).
+NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS", "NIN_SAMURAIX", "LRD_ICEEMPEROR"]
 # HRO_WYPLASH carries a def+3 ally buff (v0.7).
 SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS", "HRO_WYPLASH"]
 
