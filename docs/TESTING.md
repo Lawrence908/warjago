@@ -402,6 +402,41 @@ Chain size: `AbilityChainMaxTargets` in Project Settings → Ninjago → Abiliti
 
 ---
 
+## v0.7 — Buffs and debuffs (branch `v0.7`)
+
+Units now carry timed stat modifiers, and buff/debuff abilities apply them. Effective attack,
+defence, damage, and speed all flow through the modifier stack into combat and movement. The
+default battle adds Skulkin `HRO_WYPLASH`, whose ability grants a `def=+3` buff to nearby allies.
+
+Supported ability verbs: `atk` / `def` (flat), `speed` / `slow` / `atkspeed` (percent), and
+`buff` (compound attack + defence). Duration comes from the ability, else
+`BuffDefaultDurationS`.
+
+### BU-tests — new automation tests
+
+Two modifier tests join the suite (18 total now). Run the M3 command and confirm:
+
+```
+Ninjago.Modifiers.FlatAndPercent ............. Passed
+Ninjago.Modifiers.Expiry ..................... Passed
+```
+
+### Buff battle (visual)
+
+Play the default battle. Select the Skulkin buffer (`HRO_WYPLASH`) and press Space.
+
+**Pass checks:**
+
+- [ ] Nearby Skulkin allies become **harder to kill** for a while (their defence is buffed), then
+      the effect wears off.
+- [ ] A speed buff visibly makes a unit **move faster** (and a slow debuff, slower) for its duration.
+- [ ] Buffs stack with everything else — a buffed line holds a charge better; a slowed enemy
+      reaches you later.
+
+Tuning: `BuffDefaultDurationS` in Project Settings → Ninjago → Abilities.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
