@@ -102,4 +102,56 @@ bool FNinjagoResolveDeterminismTest::RunTest(const FString&)
 	return true;
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoRangedHitChanceTest,
+	"Ninjago.Combat.RangedHitChanceClamp",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FNinjagoRangedHitChanceTest::RunTest(const FString&)
+{
+	const FNinjagoCombatParams P = DefaultParams();
+
+	// Accuracy scales the base chance and clamps to the shared [Min, Max] window.
+	const float Mid = FNinjagoCombatResolver::RangedHitChance(6, P);
+	TestEqual(TEXT("Accuracy 6 -> base + 6*perPoint"),
+		Mid, P.RangedHitChanceBase + 6.f * P.RangedHitChancePerPoint, KINDA_SMALL_NUMBER);
+
+	TestEqual(TEXT("Zero accuracy clamps up to HitChanceMin"),
+		FNinjagoCombatResolver::RangedHitChance(0, P), FMath::Max(P.HitChanceMin, P.RangedHitChanceBase), KINDA_SMALL_NUMBER);
+
+	TestEqual(TEXT("Huge accuracy clamps to HitChanceMax"),
+		FNinjagoCombatResolver::RangedHitChance(100, P), P.HitChanceMax, KINDA_SMALL_NUMBER);
+
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoRangedResolveTest,
+	"Ninjago.Combat.RangedResolveHitAndMiss",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FNinjagoRangedResolveTest::RunTest(const FString&)
+{
+	FRandomStream Rng(99);
+
+	FNinjagoCombatParams AlwaysHit = DefaultParams();
+	AlwaysHit.HitChanceMin = 1.0f;
+	AlwaysHit.HitChanceMax = 1.0f;
+
+	FNinjagoCombatParams AlwaysMiss = DefaultParams();
+	AlwaysMiss.HitChanceMin = 0.0f;
+	AlwaysMiss.HitChanceMax = 0.0f;
+
+	// A guaranteed ranged hit deals the same damage model as melee (floor + AP).
+	const int32 Hit = FNinjagoCombatResolver::ResolveRangedAttack(6, /*Dmg*/9, /*AP*/0, /*Armour*/5, AlwaysHit, Rng);
+	TestEqual(TEXT("Ranged hit uses the damage floor (9 vs armour 5 -> 1)"), Hit, AlwaysHit.MinDamage);
+
+	const int32 Miss = FNinjagoCombatResolver::ResolveRangedAttack(6, 9, 0, 5, AlwaysMiss, Rng);
+	TestEqual(TEXT("Guaranteed ranged miss deals zero"), Miss, 0);
+
+	// Armour-piercing arrows still bypass armour.
+	const int32 Piercing = FNinjagoCombatResolver::ResolveRangedAttack(5, /*Dmg*/9, /*AP*/4, /*Armour*/5, AlwaysHit, Rng);
+	TestEqual(TEXT("Ranged AP adds on top of the floor"), Piercing, 4 + AlwaysHit.MinDamage);
+
+	return true;
+}
+
 #endif // WITH_AUTOMATION_TESTS

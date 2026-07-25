@@ -47,6 +47,17 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Combat", meta=(ClampMin="1"))
 	int32 MinDamage = 1;
 
+	/** Ranged hit chance = clamp(RangedBase + RangedPerPoint * RangedAttack, HitChanceMin, HitChanceMax). */
+	UPROPERTY(config, EditAnywhere, Category="Combat|Ranged")
+	float RangedHitChanceBase = 0.15f;
+
+	UPROPERTY(config, EditAnywhere, Category="Combat|Ranged")
+	float RangedHitChancePerPoint = 0.06f;
+
+	/** A ranged unit halts at this fraction of its RangeCm to shoot (then closes when out of ammo). */
+	UPROPERTY(config, EditAnywhere, Category="Combat|Ranged", meta=(ClampMin="0.1", ClampMax="1.0"))
+	float RangedStandoffFraction = 0.8f;
+
 	/** Spacing between formation slots (cm). */
 	UPROPERTY(config, EditAnywhere, Category="Formation", meta=(ClampMin="1.0"))
 	float ModelSpacingCm = 90.0f;

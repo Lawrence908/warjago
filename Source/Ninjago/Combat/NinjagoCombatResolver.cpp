@@ -38,3 +38,30 @@ int32 FNinjagoCombatResolver::ResolveAttack(const FNinjagoUnitRow& Attacker, con
 		Defender.MeleeDefence, Defender.Armour,
 		Params, Rng);
 }
+
+float FNinjagoCombatResolver::RangedHitChance(int32 RangedAttack, const FNinjagoCombatParams& Params)
+{
+	const float Raw = Params.RangedHitChanceBase + Params.RangedHitChancePerPoint * static_cast<float>(RangedAttack);
+	return FMath::Clamp(Raw, Params.HitChanceMin, Params.HitChanceMax);
+}
+
+int32 FNinjagoCombatResolver::ResolveRangedAttack(
+	int32 AttackerRangedAttack, int32 AttackerDamage, int32 AttackerArmourPiercing,
+	int32 DefenderArmour, const FNinjagoCombatParams& Params, FRandomStream& Rng)
+{
+	const float Chance = RangedHitChance(AttackerRangedAttack, Params);
+	if (Rng.FRand() < Chance)
+	{
+		// Ranged damage reuses the melee damage model (floor + armour-piercing).
+		return DamageOnHit(AttackerDamage, AttackerArmourPiercing, DefenderArmour, Params);
+	}
+	return 0;
+}
+
+int32 FNinjagoCombatResolver::ResolveRangedAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
+	const FNinjagoCombatParams& Params, FRandomStream& Rng)
+{
+	return ResolveRangedAttack(
+		Attacker.RangedAttack, Attacker.Damage, Attacker.ArmourPiercing,
+		Defender.Armour, Params, Rng);
+}

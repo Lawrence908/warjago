@@ -18,6 +18,9 @@ struct FNinjagoCombatParams
 	float HitChanceMin = 0.10f;
 	float HitChanceMax = 0.90f;
 	int32 MinDamage = 1;
+	// Ranged tuning (v0.2). Clamp reuses HitChanceMin/Max.
+	float RangedHitChanceBase = 0.15f;
+	float RangedHitChancePerPoint = 0.06f;
 };
 
 /**
@@ -48,5 +51,19 @@ public:
 
 	/** Convenience overload reading stats straight off two unit rows. */
 	static int32 ResolveAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
+		const FNinjagoCombatParams& Params, FRandomStream& Rng);
+
+	// --- Ranged (v0.2) ---
+
+	/** Probability in [Min, Max] that a ranged shot of this accuracy lands. Distance-independent on the flat plane. */
+	static float RangedHitChance(int32 RangedAttack, const FNinjagoCombatParams& Params);
+
+	/** Roll one ranged shot. Returns damage on a hit, 0 on a miss. Damage reuses the melee damage model. */
+	static int32 ResolveRangedAttack(
+		int32 AttackerRangedAttack, int32 AttackerDamage, int32 AttackerArmourPiercing,
+		int32 DefenderArmour, const FNinjagoCombatParams& Params, FRandomStream& Rng);
+
+	/** Convenience overload reading stats straight off two unit rows. */
+	static int32 ResolveRangedAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
 		const FNinjagoCombatParams& Params, FRandomStream& Rng);
 };
