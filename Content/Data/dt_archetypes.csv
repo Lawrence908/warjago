@@ -1,0 +1,17 @@
+Name,Role,Size,Hp,Atk,Def,Charge,Dmg,Ap,Armour,Morale,Speed,Rng_atk,Rng,Ammo,Scale
+CHAFF,Cheap swarm,32,40,3,2,2,10,0,0,40,400,0,0,0,1.0
+LINE,Line infantry,24,60,5,4,4,14,0,2,55,380,0,0,0,1.0
+SHIELD,Shield wall,24,70,4,7,3,12,0,4,65,340,0,0,0,1.0
+SPEAR,Anti-large,24,60,4,6,5,13,6,2,60,360,0,0,0,1.0
+HEAVY,Heavy infantry,18,90,7,6,6,20,8,5,70,300,0,0,0,1.1
+ELITE,Elite infantry,16,110,9,8,8,24,10,5,80,400,0,0,0,1.1
+ARCHER,Missile,20,50,3,2,1,9,0,0,45,400,6,1600,14,1.0
+SPITTER,Area missile,20,50,3,3,1,9,4,0,45,380,5,900,10,1.0
+SKIRMISH,Fast skirmisher,20,50,4,3,3,12,0,1,50,520,4,1100,10,1.0
+CAV,Shock cavalry,12,130,6,5,15,18,6,3,70,650,0,0,0,1.4
+VEHICLE,Vehicle,4,400,6,6,14,30,12,7,99,500,0,0,0,2.2
+MONSTER,Monster,1,900,10,6,12,60,25,6,85,380,0,0,0,3.0
+GIANT,Giant,1,1600,11,5,14,90,50,7,90,300,0,0,0,4.5
+SWARM,Expendable swarm,48,20,2,1,1,5,0,0,30,480,0,0,0,0.7
+HERO,Hero (single),1,700,10,8,10,35,15,4,90,440,0,0,0,1.15
+LORD,Lord (single),1,1200,12,10,12,45,25,5,100,420,0,0,0,1.25
