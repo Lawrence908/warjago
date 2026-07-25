@@ -53,6 +53,17 @@ public:
 	static int32 ResolveAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
 		const FNinjagoCombatParams& Params, FRandomStream& Rng);
 
+	// --- Charge (v0.4): a first-contact strike adds ChargeBonus to the attacker's damage ---
+
+	static int32 ResolveChargeAttack(
+		int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
+		int32 DefenderMeleeDefence, int32 DefenderArmour,
+		const FNinjagoCombatParams& Params, FRandomStream& Rng);
+
+	/** Convenience overload reading stats straight off two unit rows. */
+	static int32 ResolveChargeAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
+		const FNinjagoCombatParams& Params, FRandomStream& Rng);
+
 	// --- Ranged (v0.2) ---
 
 	/** Probability in [Min, Max] that a ranged shot of this accuracy lands. Distance-independent on the flat plane. */

@@ -154,4 +154,28 @@ bool FNinjagoRangedResolveTest::RunTest(const FString&)
 	return true;
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoChargeAttackTest,
+	"Ninjago.Combat.ChargeAddsBonusDamage",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FNinjagoChargeAttackTest::RunTest(const FString&)
+{
+	FNinjagoCombatParams AlwaysHit = DefaultParams();
+	AlwaysHit.HitChanceMin = 1.0f;
+	AlwaysHit.HitChanceMax = 1.0f;
+
+	FRandomStream Rng(7);
+
+	// Against no armour, a charge deals exactly ChargeBonus more than a normal strike.
+	const int32 Normal = FNinjagoCombatResolver::ResolveAttack(/*Atk*/5, /*Dmg*/14, /*AP*/0, /*Def*/4, /*Armour*/0, AlwaysHit, Rng);
+	const int32 Charge = FNinjagoCombatResolver::ResolveChargeAttack(/*Atk*/5, /*Dmg*/14, /*Charge*/4, /*AP*/0, /*Def*/4, /*Armour*/0, AlwaysHit, Rng);
+	TestEqual(TEXT("Charge adds ChargeBonus to unarmoured damage"), Charge - Normal, 4);
+
+	// The charge bonus goes through the same floor + armour model (still never zero on a hit).
+	const int32 ChargeArmoured = FNinjagoCombatResolver::ResolveChargeAttack(5, 14, 4, 0, 4, /*Armour*/5, AlwaysHit, Rng);
+	TestTrue(TEXT("Charged hit is never zero"), ChargeArmoured >= AlwaysHit.MinDamage);
+
+	return true;
+}
+
 #endif // WITH_AUTOMATION_TESTS

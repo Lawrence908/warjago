@@ -39,6 +39,29 @@ int32 FNinjagoCombatResolver::ResolveAttack(const FNinjagoUnitRow& Attacker, con
 		Params, Rng);
 }
 
+int32 FNinjagoCombatResolver::ResolveChargeAttack(
+	int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
+	int32 DefenderMeleeDefence, int32 DefenderArmour,
+	const FNinjagoCombatParams& Params, FRandomStream& Rng)
+{
+	// Hit chance is unchanged; the charge adds its bonus to base damage on the impact strike.
+	const float Chance = HitChance(AttackerMeleeAttack, DefenderMeleeDefence, Params);
+	if (Rng.FRand() < Chance)
+	{
+		return DamageOnHit(AttackerDamage + FMath::Max(0, AttackerChargeBonus), AttackerArmourPiercing, DefenderArmour, Params);
+	}
+	return 0;
+}
+
+int32 FNinjagoCombatResolver::ResolveChargeAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
+	const FNinjagoCombatParams& Params, FRandomStream& Rng)
+{
+	return ResolveChargeAttack(
+		Attacker.MeleeAttack, Attacker.Damage, Attacker.ChargeBonus, Attacker.ArmourPiercing,
+		Defender.MeleeDefence, Defender.Armour,
+		Params, Rng);
+}
+
 float FNinjagoCombatResolver::RangedHitChance(int32 RangedAttack, const FNinjagoCombatParams& Params)
 {
 	const float Raw = Params.RangedHitChanceBase + Params.RangedHitChancePerPoint * static_cast<float>(RangedAttack);
