@@ -229,6 +229,43 @@ If all seven milestones and this smoke test pass, **v0.1 is verified**.
 
 ---
 
+## v0.2 — Ranged combat (branch `v0.2`)
+
+Ranged is additive: the default battle now includes an archer per side (`NIN_SHINTARO` for Ninja,
+`SKU_ENGINEERS` for Skulkin), spawned a rank behind the melee line.
+
+### RM-tests — new automation tests
+
+Two ranged tests join the M3 suite (8 total now). Run the same command as M3 and confirm:
+
+```
+Ninjago.Combat.RangedHitChanceClamp .......... Passed
+Ninjago.Combat.RangedResolveHitAndMiss ....... Passed
+```
+
+### Ranged battle (visual)
+
+1. Build; ensure `dt_units` is imported and `make_placeholder_meshes.py` has run.
+2. Play an **empty** level (the default battle now has archers), or run
+   `Tools/make_battle_setup.py` and use `DA_DefaultBattle`.
+
+**Pass checks:**
+
+- [ ] The two armies each have a unit that **starts behind** the others.
+- [ ] As the lines close, archers **fire from a distance** — you see **tracer bolts** arc between
+      the ranks (volleys on the 2s combat cadence).
+- [ ] Archers **hold at range** while shooting, then **charge into melee** once ammo runs out
+      (each archer model has a fixed number of shots).
+- [ ] Enemies struck by arrows take damage (models drop before the lines even meet).
+- [ ] The battle still resolves to a winner.
+
+Notes:
+- Ranged accuracy comes from the `RangedAttack` stat; damage reuses the melee floor + AP model.
+- Tracers are cosmetic (damage applies instantly), so a missed shot still shows a bolt.
+- Stand-off distance = `RangeCm * RangedStandoffFraction` (Project Settings → Ninjago → Combat|Ranged).
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
