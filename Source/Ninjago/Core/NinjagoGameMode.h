@@ -9,6 +9,7 @@
 #include "NinjagoGameMode.generated.h"
 
 class ANinjagoUnit;
+class ANinjagoProjectileFX;
 class UNinjagoBattleSetup;
 class UDataTable;
 
@@ -37,6 +38,7 @@ protected:
 
 private:
 	UPROPERTY() TArray<TObjectPtr<ANinjagoUnit>> AllUnits;
+	UPROPERTY() TObjectPtr<ANinjagoProjectileFX> ProjectileFX;
 
 	FTimerHandle CombatTimer;
 	FTimerHandle WinTimer;

@@ -7,6 +7,7 @@
 #include "Player/NinjagoPlayerController.h"
 #include "Units/NinjagoUnit.h"
 #include "Combat/NinjagoCombatResolver.h"
+#include "Effects/NinjagoProjectileFX.h"
 #include "NinjagoLog.h"
 
 #include "Engine/DataTable.h"
@@ -56,6 +57,8 @@ void ANinjagoGameMode::StartPlay()
 		}
 		GatherUnits();
 	}
+
+	ProjectileFX = GetWorld()->SpawnActor<ANinjagoProjectileFX>();
 
 	UE_LOG(LogNinjago, Log, TEXT("Battle start: %d units (Ninja %d models, Skulkin %d models)"),
 		AllUnits.Num(), LivingCountForTeam(ETeam::Ninja), LivingCountForTeam(ETeam::Skulkin));
@@ -218,6 +221,13 @@ void ANinjagoGameMode::RunCombatTick()
 				const int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
 				bEngaged = true;
+
+				if (ProjectileFX)
+				{
+					const FVector Chest(0.f, 0.f, 60.f);
+					const FVector Target = BestDef->GetModels()[BestIdx].Location + Chest;
+					ProjectileFX->FireShot(AtkModels[ai].Location + Chest, Target);
+				}
 			}
 		}
 
