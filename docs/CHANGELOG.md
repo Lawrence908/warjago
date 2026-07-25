@@ -4,7 +4,8 @@ A Total War-style LEGO Ninjago army battler, built for a seven-year-old. This fi
 version added. Per-version testing steps live in [`docs/TESTING.md`](TESTING.md).
 
 > **Important:** the project is developed on a Linux host with no engine installed. **v0.1 through
-> v0.9 are authored but not yet compiled or playtested.** The first Windows build (UE 5.7.4) is the
+> v0.14 (plus two review passes) are authored but not yet compiled or playtested.** The first
+> Windows build (UE 5.7.4) is the
 > real acceptance gate. Pure-logic systems are backed by headless automation tests and were
 > additionally checked with standalone math mirrors; the stateful/integration systems (marked below)
 > were verified by reasoning and traces, not tests.
@@ -12,11 +13,13 @@ version added. Per-version testing steps live in [`docs/TESTING.md`](TESTING.md)
 ## Branch model
 
 Each version is a cumulative branch off the previous one, so a later branch contains everything
-before it. `v0.9` is the fullest build.
+before it. `v0.14` is the fullest build.
 
 ```
-main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8 -> v0.9
+main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8
+     -> v0.9 -> v0.10 -> v0.11 -> v0.12 -> v0.13 -> v0.14
 ```
+(The two self-review passes are commits on the v0.11 branch, carried forward.)
 
 ## At a glance
 
@@ -31,6 +34,13 @@ main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8 -> v0.9
 | v0.7 | Buffs and debuffs | 18 | tests + mirror |
 | v0.8 | Skulkin "Already Dead" revive | 18 | trace (integration) |
 | v0.9 | Crowd control: freeze | 18 | trace + parser test |
+| v0.10 | Mind control | 18 | trace (integration) |
+| v0.11 | AI ability usage | 18 | trace (integration) |
+| review 1 | 5 integration-bug fixes (incl. one critical) | 18 | code review |
+| review 2 | spawn/lifecycle + math audit, 5 minor fixes | 18 | code review |
+| v0.12 | Battle restart and replay loop | 18 | trace |
+| v0.13 | Battle readability (health bars, tally) | 18 | trace + mirror |
+| v0.14 | Preset battle scenarios | 18 | trace |
 
 ---
 
@@ -106,35 +116,96 @@ The whole v0.1 scope, built in seven milestones (M1-M7).
 - Freeze abilities (`freeze=Ns`) stun the target: it holds in place and cannot fight, move, or cast
   for the duration. Combat and target acquisition skip stunned units; a cyan marker flags them.
 - Demo gains a guest freeze-caster, `LRD_ICEEMPEROR`, on the Ninja side. A strong counter to the
-  Skulkin revive. Mind-control (`control=`) remains unimplemented.
+  Skulkin revive.
+
+## v0.10 - Mind control _(integration)_
+
+- Control abilities (`control=`) convert an enemy unit to the caster's team. Because the whole
+  engine keys off a unit's team, a converted unit immediately turns on its former allies. Duration
+  comes from the ability; a duration of 0 (Helmet Command) is permanent.
+- `ENEMY_AOE` converts all in radius; `ENEMY_UNIT` / `ENEMY_HERO` the nearest one. Demo gains a
+  guest hypnotist, `LRD_SKALES`. A magenta marker flags controlled units.
+
+## v0.11 - AI ability usage _(integration)_
+
+- Units cast their own abilities during battle, so both armies fight with their full kit unattended:
+  offensive abilities fire when an enemy is in reach, support once the battle is joined; routing and
+  stunned units do not cast. This is the payoff that makes every ability system actually happen when
+  a child just watches.
+- The player's Spacebar still works as optional, better-timed control.
+
+## Self-review pass 1 - integration bugs
+
+A review of the cumulative code (not a compile) found and fixed five behavioural bugs, including
+one **critical, latent since v0.1**:
+
+- **Critical:** attack orders only cleared when the target *actor* was destroyed, but units are
+  never destroyed, so a unit whose target was wiped out stood on the corpse and never re-engaged.
+  Battles could stall and never declare a winner. Now the order clears when the target has no living
+  models or joins the unit's team.
+- Temporary mind control could end the battle early (win counted a borrowed unit for its captor);
+  the win now uses allegiance, so only permanent control transfers sides.
+- A frozen caster kept channelling; a stunned unit's stale state denied morale regen.
+- AI auto-cast could pre-empt the player's Spacebar (added a post-selection grace window).
+
+## Self-review pass 2 - spawn/lifecycle and math
+
+No critical bugs; the init order, resolvers, and morale math held up. Fixed five minor items: guard
+against declaring a winner before combat runs; freeze the tableau on a result; resolve abilities
+before the morale pass; count a unit under fire as "in combat" for morale; use allegiance in the
+start-of-battle tally too.
+
+## v0.12 - Battle restart and replay
+
+- The game loop closes: on a result the battle freezes under the banner, then **R** restarts at any
+  time and it **auto-restarts** after a few seconds so battles loop for a watching child. Restart
+  reloads the level for a fresh spawn. Pure C++, no assets.
+
+## v0.13 - Battle readability
+
+- A health bar over each unit (green when full, red when nearly dead), reflecting its remaining
+  strength so it reads for both regiments and single heroes, plus an on-screen Ninja vs Skulkin
+  model tally (allegiance-based). All debug-draw, no assets.
+
+## v0.14 - Preset battle scenarios
+
+- Number keys 1-4 pick a curated matchup for the empty-level auto-battle: Heroes vs Horde, Giant
+  Brawl, ranged Skirmish, and the full Grand Battle. The choice persists across restarts and the
+  scenario name shows on screen. Pure C++, no menu.
 
 ---
 
 ## Roadmap
 
-Ordered roughly by value, not commitment. The pure-combat-logic seam that made v0.2-v0.9 easy to
+Ordered roughly by value, not commitment. The pure-combat-logic seam that made v0.2-v0.9 combat easy to
 verify without a compiler is largely mined out, so most of these are more engine-coupled and
 lower-confidence to build without the editor.
 
 **Do first**
-- **Compile and playtest v0.9 on Windows.** Nine unverified phases is a lot to debug at once. Watch
-  the first-build items in `docs/TESTING.md` (target-settings enums, the Python material, the `Tier`
+- **Compile and playtest v0.14 on Windows.** Fourteen phases plus two review passes have never been
+  compiled. The reviews caught the critical bugs, but a green build is the real gate. Watch the
+  first-build items in `docs/TESTING.md` (target-settings enums, the Python material, the `Tier`
   import).
 
-**Playability and feel** (turns the demo into a toy)
-- Restart-battle key and auto-restart after a result (mostly pure C++).
-- Health bars over units, a real win screen, hit/death feedback (some UMG/material assets).
-- Sound cues.
+**Done since the first roadmap:** restart/replay loop (v0.12), health bars + team tally (v0.13),
+preset scenarios (v0.14), mind-control (v0.10), AI ability usage (v0.11).
 
-**More combat and ability classes** (bigger engine systems)
+**Playability and feel** (mostly presentation)
+- A real UMG win screen and menus (currently debug-draw / on-screen messages).
+- A proper selection decal and health bars as widgets (currently debug-draw).
+- Hit/death feedback and sound cues.
+
+**More combat and ability classes** (bigger engine systems, lower confidence to build blind)
 - Terrain: Zane's Ice Wall and obstacles. Needs blocking geometry and steering-around, which cuts
   against the current flat-plane/straight-line movement.
-- Mind-control (`control=full/partial`): temporary team switch of an enemy unit.
-- Summon/raise (Serpentine, Greenbones) and other faction mechanics.
+- Summon/raise (Serpentine Fangpyre, Greenbones) - spawns new units mid-battle; needs the game mode
+  to register units into the combat set at runtime.
+- Passive abilities and auras (continuous, always-on buffs from PASSIVE/AURA ability units).
 - Stealth and reveal.
 
 **Content**
-- Wire more of the 17 factions playable; a pre-battle army picker (UMG).
+- Wire more of the 17 factions playable; a pre-battle army picker (UMG). Preset scenarios (v0.14)
+  cover some of this without a menu.
 
 **Art**
 - Replace placeholder minifig primitives with real geometry from the LDraw parts library.
