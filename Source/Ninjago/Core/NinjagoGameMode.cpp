@@ -16,6 +16,7 @@
 #include "EngineUtils.h"
 #include "TimerManager.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 namespace
 {
@@ -474,6 +475,19 @@ void ANinjagoGameMode::CheckWinCondition()
 	UE_LOG(LogNinjago, Log, TEXT("Battle resolved: %s"), *Result);
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(/*Key*/ 1, /*Time*/ 1.0e9f, FColor::Yellow, Result);
+		GEngine->AddOnScreenDebugMessage(/*Key*/ 1, /*Time*/ 1.0e9f, FColor::Yellow, Result + TEXT("  -  press R to fight again"));
 	}
+
+	// Auto-restart so battles loop for a watching child; R restarts sooner.
+	const float AutoRestart = GetDefault<UNinjagoSettings>()->AutoRestartSeconds;
+	if (AutoRestart > 0.f)
+	{
+		GetWorldTimerManager().SetTimer(RestartTimer, this, &ANinjagoGameMode::RestartBattle, AutoRestart, false);
+	}
+}
+
+void ANinjagoGameMode::RestartBattle()
+{
+	// Reloading the level re-runs StartPlay and spawns a fresh battle.
+	UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this)));
 }

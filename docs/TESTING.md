@@ -540,6 +540,29 @@ Play the default battle and just watch (no need to select anything).
 
 ---
 
+## v0.12 - Battle flow: restart and replay (branch `v0.12`)
+
+The game loop closes: when a battle ends it freezes under the result banner, and you can fight
+again. Press **R** at any time to restart the battle, and it **auto-restarts** a few seconds after
+a result so battles loop for a watching child.
+
+Restart reloads the level, which re-runs the spawn and gives a fresh battle. Pure C++, no assets.
+
+### Restart battle (visual)
+
+Play the default battle.
+
+**Pass checks:**
+
+- [ ] Press **R** mid-battle: the battle restarts from the beginning.
+- [ ] Let a battle finish: the result shows ("... press R to fight again"), units freeze, and after
+      a few seconds the battle **auto-restarts**.
+- [ ] Pressing R after a result restarts immediately (before the auto-restart fires).
+
+Tuning: `AutoRestartSeconds` in Project Settings -> Ninjago -> Battle (0 disables auto-restart).
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

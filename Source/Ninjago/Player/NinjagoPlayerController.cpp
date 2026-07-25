@@ -12,6 +12,7 @@
 #include "InputModifiers.h"
 #include "InputActionValue.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 ANinjagoPlayerController::ANinjagoPlayerController()
 {
@@ -61,6 +62,9 @@ void ANinjagoPlayerController::BuildInput()
 	IA_Ability = NewObject<UInputAction>(this, TEXT("IA_Ability"));
 	IA_Ability->ValueType = EInputActionValueType::Boolean;
 
+	IA_Restart = NewObject<UInputAction>(this, TEXT("IA_Restart"));
+	IA_Restart->ValueType = EInputActionValueType::Boolean;
+
 	// WASD -> IA_Pan (2D). Digital keys land on X; swizzle to route forward/back onto Y, negate for
 	// the down/left directions.
 	auto AddSwizzle = [this](FEnhancedActionKeyMapping& Mapping)
@@ -94,6 +98,7 @@ void ANinjagoPlayerController::BuildInput()
 	MappingContext->MapKey(IA_Order, EKeys::RightMouseButton);
 	MappingContext->MapKey(IA_Deselect, EKeys::Escape);
 	MappingContext->MapKey(IA_Ability, EKeys::SpaceBar);
+	MappingContext->MapKey(IA_Restart, EKeys::R);
 }
 
 void ANinjagoPlayerController::SetupInputComponent()
@@ -108,6 +113,7 @@ void ANinjagoPlayerController::SetupInputComponent()
 		EIC->BindAction(IA_Order, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnOrder);
 		EIC->BindAction(IA_Deselect, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnDeselect);
 		EIC->BindAction(IA_Ability, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnAbility);
+		EIC->BindAction(IA_Restart, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnRestart);
 	}
 	else
 	{
@@ -174,6 +180,12 @@ void ANinjagoPlayerController::OnAbility(const FInputActionValue&)
 	{
 		Unit->TryFireAbility();
 	}
+}
+
+void ANinjagoPlayerController::OnRestart(const FInputActionValue&)
+{
+	// Reload the level for a fresh battle (works during or after a fight).
+	UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this)));
 }
 
 void ANinjagoPlayerController::SetSelected(ANinjagoUnit* Unit)

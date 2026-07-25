@@ -29,6 +29,10 @@ public:
 	virtual void StartPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	/** Reload the level to fight the battle again (bound to R, and to the auto-restart timer). */
+	UFUNCTION()
+	void RestartBattle();
+
 protected:
 	/** Optional battle definition. If unset, a default is loaded/synthesised for an empty level. */
 	UPROPERTY(EditAnywhere, Category="Ninjago")
@@ -43,6 +47,7 @@ private:
 
 	FTimerHandle CombatTimer;
 	FTimerHandle WinTimer;
+	FTimerHandle RestartTimer;
 	FRandomStream CombatRng;
 	bool bResolved = false;
 	bool bCombatHasRun = false;

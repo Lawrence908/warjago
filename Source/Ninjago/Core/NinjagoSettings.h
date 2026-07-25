@@ -129,4 +129,8 @@ public:
 	/** Fraction of max HP a reassembled model returns with. */
 	UPROPERTY(config, EditAnywhere, Category="Revive", meta=(ClampMin="0.01", ClampMax="1.0"))
 	float ReviveHpFraction = 0.5f;
+
+	/** Seconds after a result before the battle auto-restarts. 0 disables auto-restart (press R). */
+	UPROPERTY(config, EditAnywhere, Category="Battle", meta=(ClampMin="0.0"))
+	float AutoRestartSeconds = 8.0f;
 };

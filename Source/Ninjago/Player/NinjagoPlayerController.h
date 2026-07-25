@@ -42,6 +42,7 @@ private:
 	UPROPERTY() TObjectPtr<UInputAction> IA_Order;
 	UPROPERTY() TObjectPtr<UInputAction> IA_Deselect;
 	UPROPERTY() TObjectPtr<UInputAction> IA_Ability;
+	UPROPERTY() TObjectPtr<UInputAction> IA_Restart;
 
 	TWeakObjectPtr<ANinjagoUnit> Selected;
 
@@ -54,6 +55,7 @@ private:
 	void OnOrder(const FInputActionValue& Value);
 	void OnDeselect(const FInputActionValue& Value);
 	void OnAbility(const FInputActionValue& Value);
+	void OnRestart(const FInputActionValue& Value);
 
 	void SetSelected(ANinjagoUnit* Unit);
 	ANinjagoUnit* TraceUnitUnderCursor() const;
