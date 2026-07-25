@@ -200,6 +200,11 @@ void ANinjagoGameMode::RunCombatTick()
 		const TArray<FNinjagoModel>& AtkModels = Atk->GetModels();
 		bool bEngaged = false;
 
+		// A unit's first melee contact after advancing is a charge: bonus damage + morale shock.
+		const bool bCharging = Atk->IsChargePending();
+		bool bMeleeThisTick = false;
+		TSet<ANinjagoUnit*> Struck;
+
 		for (int32 ai = 0; ai < AtkModels.Num(); ++ai)
 		{
 			if (!AtkModels[ai].bAlive)
@@ -241,10 +246,14 @@ void ANinjagoGameMode::RunCombatTick()
 
 			if (BestDsq <= EngageRSq)
 			{
-				// In melee range: strike with melee stats.
-				const int32 Dmg = FNinjagoCombatResolver::ResolveAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
+				// In melee range: strike with melee stats, adding the charge bonus on first contact.
+				const int32 Dmg = bCharging
+					? FNinjagoCombatResolver::ResolveChargeAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng)
+					: FNinjagoCombatResolver::ResolveAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
 				bEngaged = true;
+				bMeleeThisTick = true;
+				Struck.Add(BestDef);
 			}
 			else if (bRanged && Atk->TryConsumeAmmo(ai))
 			{
@@ -263,6 +272,20 @@ void ANinjagoGameMode::RunCombatTick()
 		}
 
 		Atk->MarkFighting(bEngaged);
+
+		// Deliver the charge's morale shock to each unit struck on impact, then spend the charge.
+		if (bCharging && bMeleeThisTick)
+		{
+			const float Shock = static_cast<float>(FMath::Max(0, Atk->GetRow().ChargeBonus)) * S->MoraleChargeShockScale;
+			for (ANinjagoUnit* Hit : Struck)
+			{
+				if (IsValid(Hit))
+				{
+					Hit->ApplyMoraleShock(Shock);
+				}
+			}
+			Atk->ClearChargePending();
+		}
 	}
 
 	MoralePass();

@@ -301,6 +301,39 @@ speed). A unit whose row `Morale` is exactly 99 is immune; 100+ are high-but-bre
 
 ---
 
+## v0.4 — Charge impact (branch `v0.4`)
+
+Every unit has a `ChargeBonus`. On its **first melee contact** after advancing, a unit hits harder
+and delivers a **morale shock** to whatever it struck (charger's `ChargeBonus` ×
+`MoraleChargeShockScale`). Cavalry/monsters/Lords have big charge values; archers almost none.
+
+### CH-tests — new automation test
+
+One charge test joins the suite (13 total now). Run the M3 command and confirm:
+
+```
+Ninjago.Combat.ChargeAddsBonusDamage ......... Passed
+```
+
+### Charge battle (visual)
+
+Play the default battle (empty level). Watch the first moment the lines meet.
+
+**Pass checks:**
+
+- [ ] The **first hit** as units make contact is bigger than the steady melee that follows
+      (a spike of casualties on impact).
+- [ ] A charge into the breakable Ninja block (e.g. Samukai, ChargeBonus 12) makes it **break
+      sooner** than it would from attrition alone — the charge shock plus casualties tips it.
+- [ ] Immune units (Skulkin) still take charge **damage** but ignore the morale **shock**.
+- [ ] A unit that disengages and re-advances can **charge again** on the next contact (not a
+      one-time-per-battle thing).
+
+Tuning: `MoraleChargeShockScale` in Project Settings → Ninjago → Morale. Charge damage is the
+row's `ChargeBonus` added to base damage through the usual floor/armour model.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
