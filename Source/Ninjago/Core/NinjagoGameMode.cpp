@@ -31,6 +31,37 @@ namespace
 	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES") };
 	// HRO_WYPLASH adds a def+3 ally buff (v0.7) to the Skulkin line.
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH") };
+
+	// Which preset the code-default battle spawns. Persists across level reloads within a session.
+	int32 GScenarioIndex = 0;
+
+	// Fill the two army rosters and the display name for a preset scenario (keys 1-4 in play).
+	void GetScenario(int32 Index, TArray<FName>& OutNinja, TArray<FName>& OutSkulkin, FString& OutName)
+	{
+		switch (Index)
+		{
+		case 1:
+			OutName = TEXT("Heroes vs Horde");
+			OutNinja = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE") };
+			OutSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WARRIORS"), TEXT("SKU_MINERS"), TEXT("SKU_WATCHMEN") };
+			break;
+		case 2:
+			OutName = TEXT("Giant Brawl");
+			OutNinja = { TEXT("NIN_SAMURAIX"), TEXT("STO_GIANT"), TEXT("HRO_KAI") };
+			OutSkulkin = { TEXT("NDR_MECHDRAGON"), TEXT("SER_DEVOURER"), TEXT("LRD_SAMUKAI") };
+			break;
+		case 3:
+			OutName = TEXT("Skirmish (ranged)");
+			OutNinja = { TEXT("NIN_SHINTARO"), TEXT("STO_SCOUTS"), TEXT("NIN_SHINTARO") };
+			OutSkulkin = { TEXT("SKU_ENGINEERS"), TEXT("VER_ARCHERS"), TEXT("SKU_ENGINEERS") };
+			break;
+		default:
+			OutName = TEXT("Grand Battle");
+			OutNinja = DefaultNinja;
+			OutSkulkin = DefaultSkulkin;
+			break;
+		}
+	}
 }
 
 ANinjagoGameMode::ANinjagoGameMode()
@@ -82,13 +113,18 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 		}
 	}
 
-	// On-screen team tally so the overall state of the battle is readable at a glance.
-	if (GEngine && bCombatHasRun)
+	// On-screen team tally and scenario name so the state of the battle is readable at a glance.
+	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(20, 0.f, FColor(120, 180, 255),
-			FString::Printf(TEXT("Ninja: %d"), LivingCountForTeam(ETeam::Ninja)));
-		GEngine->AddOnScreenDebugMessage(21, 0.f, FColor(230, 120, 120),
-			FString::Printf(TEXT("Skulkin: %d"), LivingCountForTeam(ETeam::Skulkin)));
+		GEngine->AddOnScreenDebugMessage(19, 0.f, FColor(200, 200, 200),
+			FString::Printf(TEXT("%s   (keys 1-4 to switch battles, R to restart)"), *ActiveScenarioName));
+		if (bCombatHasRun)
+		{
+			GEngine->AddOnScreenDebugMessage(20, 0.f, FColor(120, 180, 255),
+				FString::Printf(TEXT("Ninja: %d"), LivingCountForTeam(ETeam::Ninja)));
+			GEngine->AddOnScreenDebugMessage(21, 0.f, FColor(230, 120, 120),
+				FString::Printf(TEXT("Skulkin: %d"), LivingCountForTeam(ETeam::Skulkin)));
+		}
 	}
 }
 
@@ -168,9 +204,20 @@ void ANinjagoGameMode::SpawnDefaultBattle()
 		UE_LOG(LogNinjago, Error, TEXT("SpawnDefaultBattle: dt_units not found at %s; run import_datatables.py."), UnitTablePath);
 		return;
 	}
+	TArray<FName> Ninja, Skulkin;
+	FString Name;
+	GetScenario(GScenarioIndex, Ninja, Skulkin, Name);
+	ActiveScenarioName = Name;
+
 	const float HalfSep = 1750.f;
-	SpawnArmyLine(Table, DefaultNinja,   ETeam::Ninja,   -HalfSep,   0.f, 900.f);
-	SpawnArmyLine(Table, DefaultSkulkin, ETeam::Skulkin,  HalfSep, 180.f, 900.f);
+	SpawnArmyLine(Table, Ninja,   ETeam::Ninja,   -HalfSep,   0.f, 900.f);
+	SpawnArmyLine(Table, Skulkin, ETeam::Skulkin,  HalfSep, 180.f, 900.f);
+}
+
+void ANinjagoGameMode::LoadScenario(int32 Index)
+{
+	GScenarioIndex = FMath::Max(0, Index);
+	RestartBattle(); // reload; the new StartPlay spawns the chosen scenario
 }
 
 void ANinjagoGameMode::SpawnArmyLine(UDataTable* Table, const TArray<FName>& Army, ETeam Team, float LineX, float Yaw, float UnitSpacing)

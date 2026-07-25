@@ -33,6 +33,9 @@ public:
 	UFUNCTION()
 	void RestartBattle();
 
+	/** Switch the code-default battle to a preset scenario (0..3) and restart (keys 1-4). */
+	void LoadScenario(int32 Index);
+
 protected:
 	/** Optional battle definition. If unset, a default is loaded/synthesised for an empty level. */
 	UPROPERTY(EditAnywhere, Category="Ninjago")
@@ -54,6 +57,9 @@ private:
 
 	/** Units that dealt or took a hit this combat tick (drives the morale "in combat" flag). */
 	TSet<ANinjagoUnit*> EngagedThisTick;
+
+	/** Display name of the current preset scenario. */
+	FString ActiveScenarioName = TEXT("Grand Battle");
 
 	void GatherUnits();
 	void SpawnFromSetup(const UNinjagoBattleSetup* Setup);

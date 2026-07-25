@@ -3,6 +3,7 @@
 #include "Player/NinjagoPlayerController.h"
 #include "Player/NinjagoCameraPawn.h"
 #include "Units/NinjagoUnit.h"
+#include "Core/NinjagoGameMode.h"
 #include "NinjagoLog.h"
 
 #include "EnhancedInputComponent.h"
@@ -65,6 +66,13 @@ void ANinjagoPlayerController::BuildInput()
 	IA_Restart = NewObject<UInputAction>(this, TEXT("IA_Restart"));
 	IA_Restart->ValueType = EInputActionValueType::Boolean;
 
+	IA_Scenarios.SetNum(4);
+	for (int32 i = 0; i < 4; ++i)
+	{
+		IA_Scenarios[i] = NewObject<UInputAction>(this, *FString::Printf(TEXT("IA_Scenario%d"), i + 1));
+		IA_Scenarios[i]->ValueType = EInputActionValueType::Boolean;
+	}
+
 	// WASD -> IA_Pan (2D). Digital keys land on X; swizzle to route forward/back onto Y, negate for
 	// the down/left directions.
 	auto AddSwizzle = [this](FEnhancedActionKeyMapping& Mapping)
@@ -99,6 +107,10 @@ void ANinjagoPlayerController::BuildInput()
 	MappingContext->MapKey(IA_Deselect, EKeys::Escape);
 	MappingContext->MapKey(IA_Ability, EKeys::SpaceBar);
 	MappingContext->MapKey(IA_Restart, EKeys::R);
+	MappingContext->MapKey(IA_Scenarios[0], EKeys::One);
+	MappingContext->MapKey(IA_Scenarios[1], EKeys::Two);
+	MappingContext->MapKey(IA_Scenarios[2], EKeys::Three);
+	MappingContext->MapKey(IA_Scenarios[3], EKeys::Four);
 }
 
 void ANinjagoPlayerController::SetupInputComponent()
@@ -114,6 +126,10 @@ void ANinjagoPlayerController::SetupInputComponent()
 		EIC->BindAction(IA_Deselect, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnDeselect);
 		EIC->BindAction(IA_Ability, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnAbility);
 		EIC->BindAction(IA_Restart, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnRestart);
+		EIC->BindAction(IA_Scenarios[0], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario1);
+		EIC->BindAction(IA_Scenarios[1], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario2);
+		EIC->BindAction(IA_Scenarios[2], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario3);
+		EIC->BindAction(IA_Scenarios[3], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario4);
 	}
 	else
 	{
@@ -187,6 +203,19 @@ void ANinjagoPlayerController::OnRestart(const FInputActionValue&)
 	// Reload the level for a fresh battle (works during or after a fight).
 	UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this)));
 }
+
+void ANinjagoPlayerController::LoadScenario(int32 Index)
+{
+	if (ANinjagoGameMode* GM = GetWorld()->GetAuthGameMode<ANinjagoGameMode>())
+	{
+		GM->LoadScenario(Index);
+	}
+}
+
+void ANinjagoPlayerController::OnScenario1(const FInputActionValue&) { LoadScenario(0); }
+void ANinjagoPlayerController::OnScenario2(const FInputActionValue&) { LoadScenario(1); }
+void ANinjagoPlayerController::OnScenario3(const FInputActionValue&) { LoadScenario(2); }
+void ANinjagoPlayerController::OnScenario4(const FInputActionValue&) { LoadScenario(3); }
 
 void ANinjagoPlayerController::SetSelected(ANinjagoUnit* Unit)
 {

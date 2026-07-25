@@ -43,6 +43,7 @@ private:
 	UPROPERTY() TObjectPtr<UInputAction> IA_Deselect;
 	UPROPERTY() TObjectPtr<UInputAction> IA_Ability;
 	UPROPERTY() TObjectPtr<UInputAction> IA_Restart;
+	UPROPERTY() TArray<TObjectPtr<UInputAction>> IA_Scenarios; // keys 1-4
 
 	TWeakObjectPtr<ANinjagoUnit> Selected;
 
@@ -56,6 +57,11 @@ private:
 	void OnDeselect(const FInputActionValue& Value);
 	void OnAbility(const FInputActionValue& Value);
 	void OnRestart(const FInputActionValue& Value);
+	void OnScenario1(const FInputActionValue& Value);
+	void OnScenario2(const FInputActionValue& Value);
+	void OnScenario3(const FInputActionValue& Value);
+	void OnScenario4(const FInputActionValue& Value);
+	void LoadScenario(int32 Index);
 
 	void SetSelected(ANinjagoUnit* Unit);
 	ANinjagoUnit* TraceUnitUnderCursor() const;

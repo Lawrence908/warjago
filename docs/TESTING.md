@@ -583,6 +583,34 @@ Play the default battle.
 
 ---
 
+## v0.14 - Preset battle scenarios (branch `v0.14`)
+
+Number keys pick a curated matchup (in the empty-level auto-battle). The chosen scenario persists
+across restarts within the session. Pure C++, no menu.
+
+| Key | Scenario | What |
+|---|---|---|
+| 1 | Heroes vs Horde | 4 ninja heroes vs a swarm of Skulkin |
+| 2 | Giant Brawl | monsters and giants smashing (guest big units) |
+| 3 | Skirmish (ranged) | archers and skirmishers trading fire |
+| 4 (or default) | Grand Battle | the full mixed roster with every mechanic |
+
+### Scenarios (visual)
+
+Play an empty level.
+
+**Pass checks:**
+
+- [ ] The on-screen header shows the scenario name and "keys 1-4 to switch battles, R to restart".
+- [ ] Press **2**: the battle reloads as a clash of giant units.
+- [ ] Press **1**: a few heroes face a Skulkin horde; **3**: a ranged skirmish.
+- [ ] The choice sticks across R restarts until you press another number.
+
+Note: scenarios drive the code-default (empty-level) battle. A level with hand-placed units or an
+assigned Battle Setup uses those instead.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
