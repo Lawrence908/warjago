@@ -53,6 +53,19 @@ public:
 	static int32 ResolveAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
 		const FNinjagoCombatParams& Params, FRandomStream& Rng);
 
+	/**
+	 * Unified melee strike with all v0.4/v0.5 modifiers (charge, anti-large, spear brace).
+	 *  - A charging attacker adds ChargeBonus, UNLESS the defender is a spear bracing a large
+	 *    attacker (spears negate the charge of large units).
+	 *  - A spear attacker adds AntiLargeBonus when striking a large defender.
+	 * Hit chance is unchanged; the effective damage runs through the usual floor + armour model.
+	 */
+	static int32 ResolveMelee(
+		int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
+		int32 DefenderMeleeDefence, int32 DefenderArmour,
+		bool bCharging, bool bAttackerSpear, bool bAttackerLarge, bool bDefenderSpear, bool bDefenderLarge,
+		int32 AntiLargeBonus, const FNinjagoCombatParams& Params, FRandomStream& Rng);
+
 	// --- Charge (v0.4): a first-contact strike adds ChargeBonus to the attacker's damage ---
 
 	static int32 ResolveChargeAttack(

@@ -39,6 +39,35 @@ int32 FNinjagoCombatResolver::ResolveAttack(const FNinjagoUnitRow& Attacker, con
 		Params, Rng);
 }
 
+int32 FNinjagoCombatResolver::ResolveMelee(
+	int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
+	int32 DefenderMeleeDefence, int32 DefenderArmour,
+	bool bCharging, bool bAttackerSpear, bool bAttackerLarge, bool bDefenderSpear, bool bDefenderLarge,
+	int32 AntiLargeBonus, const FNinjagoCombatParams& Params, FRandomStream& Rng)
+{
+	int32 EffDamage = AttackerDamage;
+
+	// Anti-large: spears hit large targets harder.
+	if (bAttackerSpear && bDefenderLarge)
+	{
+		EffDamage += FMath::Max(0, AntiLargeBonus);
+	}
+
+	// Charge bonus applies on first contact, unless a spear defender braces a large charger.
+	const bool bBraced = bDefenderSpear && bAttackerLarge;
+	if (bCharging && !bBraced)
+	{
+		EffDamage += FMath::Max(0, AttackerChargeBonus);
+	}
+
+	const float Chance = HitChance(AttackerMeleeAttack, DefenderMeleeDefence, Params);
+	if (Rng.FRand() < Chance)
+	{
+		return DamageOnHit(EffDamage, AttackerArmourPiercing, DefenderArmour, Params);
+	}
+	return 0;
+}
+
 int32 FNinjagoCombatResolver::ResolveChargeAttack(
 	int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
 	int32 DefenderMeleeDefence, int32 DefenderArmour,

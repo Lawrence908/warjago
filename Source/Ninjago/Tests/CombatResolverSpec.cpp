@@ -178,4 +178,39 @@ bool FNinjagoChargeAttackTest::RunTest(const FString&)
 	return true;
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoSpearAntiLargeTest,
+	"Ninjago.Combat.SpearsBraceAndAntiLarge",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FNinjagoSpearAntiLargeTest::RunTest(const FString&)
+{
+	FNinjagoCombatParams AlwaysHit = DefaultParams();
+	AlwaysHit.HitChanceMin = 1.0f;
+	AlwaysHit.HitChanceMax = 1.0f;
+	FRandomStream Rng(11);
+
+	const int32 AntiLarge = 10;
+	// Spear (attacker) vs large (defender): base + anti-large bonus, no armour.
+	const int32 SpearVsLarge = FNinjagoCombatResolver::ResolveMelee(5, /*Dmg*/13, /*Charge*/0, /*AP*/0, 4, /*Armour*/0,
+		/*Charging*/false, /*AtkSpear*/true, /*AtkLarge*/false, /*DefSpear*/false, /*DefLarge*/true, AntiLarge, AlwaysHit, Rng);
+	TestEqual(TEXT("Spear vs large adds the anti-large bonus"), SpearVsLarge, 13 + AntiLarge);
+
+	// Same spear vs a non-large target: no bonus.
+	const int32 SpearVsSmall = FNinjagoCombatResolver::ResolveMelee(5, 13, 0, 0, 4, 0,
+		false, true, false, false, /*DefLarge*/false, AntiLarge, AlwaysHit, Rng);
+	TestEqual(TEXT("Spear vs non-large gets no bonus"), SpearVsSmall, 13);
+
+	// Large charger into a spear defender: the spear braces, charge bonus negated.
+	const int32 Braced = FNinjagoCombatResolver::ResolveMelee(5, 13, /*Charge*/12, 0, 4, 0,
+		/*Charging*/true, /*AtkSpear*/false, /*AtkLarge*/true, /*DefSpear*/true, /*DefLarge*/false, AntiLarge, AlwaysHit, Rng);
+	TestEqual(TEXT("Spear braces: large charge bonus negated"), Braced, 13);
+
+	// Same charge into a non-spear defender: charge bonus applies.
+	const int32 Unbraced = FNinjagoCombatResolver::ResolveMelee(5, 13, 12, 0, 4, 0,
+		true, false, true, /*DefSpear*/false, false, AntiLarge, AlwaysHit, Rng);
+	TestEqual(TEXT("Non-spear takes the full charge"), Unbraced, 13 + 12);
+
+	return true;
+}
+
 #endif // WITH_AUTOMATION_TESTS
