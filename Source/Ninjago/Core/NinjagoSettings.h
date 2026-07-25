@@ -47,6 +47,14 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Combat", meta=(ClampMin="1"))
 	int32 MinDamage = 1;
 
+	/** A unit whose ModelScale is at least this is "large" (cavalry, monsters, giants, vehicles). */
+	UPROPERTY(config, EditAnywhere, Category="Combat|Melee", meta=(ClampMin="1.0"))
+	float LargeModelScaleThreshold = 1.4f;
+
+	/** Bonus damage a spear unit adds when striking a large target (anti-large). */
+	UPROPERTY(config, EditAnywhere, Category="Combat|Melee", meta=(ClampMin="0"))
+	int32 SpearAntiLargeBonus = 10;
+
 	/** Ranged hit chance = clamp(RangedBase + RangedPerPoint * RangedAttack, HitChanceMin, HitChanceMax). */
 	UPROPERTY(config, EditAnywhere, Category="Combat|Ranged")
 	float RangedHitChanceBase = 0.15f;

@@ -442,6 +442,11 @@ void ANinjagoUnit::MarkFighting(bool bEngaged)
 	}
 }
 
+bool ANinjagoUnit::IsLarge() const
+{
+	return bRowValid && CachedRow.ModelScale >= GetDefault<UNinjagoSettings>()->LargeModelScaleThreshold;
+}
+
 void ANinjagoUnit::ApplyMoraleShock(float Amount)
 {
 	if (bMoraleImmune || Amount <= 0.f)

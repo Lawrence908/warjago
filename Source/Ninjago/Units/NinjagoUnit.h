@@ -83,6 +83,14 @@ public:
 	bool IsChargePending() const { return bChargePending; }
 	void ClearChargePending() { bChargePending = false; }
 
+	// --- Spears / anti-large (v0.5) ---
+
+	/** Spear archetype: braces against large chargers and hits large targets harder. */
+	bool IsSpear() const { return bRowValid && CachedRow.Archetype == FName(TEXT("SPEAR")); }
+
+	/** Large unit (cavalry, monster, giant, vehicle), classified by ModelScale. */
+	bool IsLarge() const;
+
 	/** Flag whether the unit has an engaged model this combat tick (drives Fighting state). */
 	void MarkFighting(bool bEngaged);
 
