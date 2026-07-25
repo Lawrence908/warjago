@@ -62,6 +62,18 @@ public:
 	/** Spend one shot from a model; returns true if it had ammo. */
 	bool TryConsumeAmmo(int32 ModelIndex);
 
+	// --- Morale (v0.3) ---
+
+	bool IsMoraleImmune() const { return bMoraleImmune; }
+	bool IsRouting() const { return bRouting; }
+	float GetMoraleFraction() const { return MaxMorale > 0.f ? CurrentMorale / MaxMorale : 1.f; }
+
+	/**
+	 * Advance morale one combat tick and update routing. bInCombat marks whether the unit was
+	 * engaged this tick; NearestEnemyLoc feeds the flee direction when it routs.
+	 */
+	void UpdateMorale(bool bInCombat, bool bHasEnemy, const FVector& NearestEnemyLoc);
+
 	/** Flag whether the unit has an engaged model this combat tick (drives Fighting state). */
 	void MarkFighting(bool bEngaged);
 
@@ -115,6 +127,16 @@ private:
 	EOrderType OrderType = EOrderType::NoOrder;
 	FVector OrderLocation = FVector::ZeroVector;
 	TWeakObjectPtr<ANinjagoUnit> AttackTarget;
+
+	// Morale state
+	float MaxMorale = 0.f;
+	float CurrentMorale = 0.f;
+	bool bMoraleImmune = false;
+	bool bRouting = false;
+	int32 InitialSize = 1;
+	int32 LastLivingCount = 0;
+	FVector FleeFromLocation = FVector::ZeroVector;
+	bool bHasFleeSource = false;
 
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;

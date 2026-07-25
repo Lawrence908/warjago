@@ -3,6 +3,7 @@
 #include "Units/NinjagoUnit.h"
 #include "Units/NinjagoModelRenderer.h"
 #include "Units/NinjagoFormation.h"
+#include "Combat/NinjagoMoraleResolver.h"
 #include "Core/NinjagoSettings.h"
 #include "NinjagoLog.h"
 #include "Components/SceneComponent.h"
@@ -91,6 +92,14 @@ void ANinjagoUnit::InitialiseFromRow()
 	BuildModels();
 	SizeSelectionVolume();
 	CacheAbility();
+
+	// Morale init: Morale == 99 is the "immune" flag, not a value.
+	InitialSize = Models.Num();
+	LastLivingCount = InitialSize;
+	MaxMorale = static_cast<float>(CachedRow.Morale);
+	bMoraleImmune = (CachedRow.Morale == 99);
+	CurrentMorale = MaxMorale;
+	bRouting = false;
 
 	UE_LOG(LogNinjago, Log, TEXT("Spawned %s (%s) with %d model(s) for team %d"),
 		*CachedRow.DisplayName, *UnitRowHandle.RowName.ToString(), Models.Num(), static_cast<int32>(Team));
@@ -215,6 +224,29 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 	if (AbilityCooldownRemaining > 0.f)
 	{
 		AbilityCooldownRemaining = FMath::Max(0.f, AbilityCooldownRemaining - DeltaSeconds);
+	}
+
+	// Routing overrides orders: flee directly away from the threat at a panic run.
+	if (bRouting)
+	{
+		if (bHasFleeSource)
+		{
+			const FVector Anchor = GetActorLocation();
+			FVector Away = Anchor - FVector(FleeFromLocation.X, FleeFromLocation.Y, Anchor.Z);
+			if (Away.SizeSquared2D() > 1.f)
+			{
+				const float Speed = FMath::Max(0.f, CachedRow.SpeedCmS)
+					* GetDefault<UNinjagoSettings>()->MoraleRoutSpeedMultiplier;
+				SetActorLocation(Anchor + Away.GetSafeNormal2D() * Speed * DeltaSeconds);
+			}
+		}
+		SteerModels(DeltaSeconds);
+		if (Renderer)
+		{
+			const float RoutScale = CachedRow.ModelScale > 0.f ? CachedRow.ModelScale : 1.f;
+			Renderer->UpdateInstances(Models, RoutScale);
+		}
+		return;
 	}
 
 	// Advance the unit anchor toward a move/attack order; models steer to their slots relative to
@@ -343,6 +375,52 @@ bool ANinjagoUnit::TryConsumeAmmo(int32 ModelIndex)
 	}
 	--Models[ModelIndex].Ammo;
 	return true;
+}
+
+void ANinjagoUnit::UpdateMorale(bool bInCombat, bool bHasEnemy, const FVector& NearestEnemyLoc)
+{
+	const int32 Living = LivingModelCount();
+	if (bMoraleImmune || Living == 0)
+	{
+		LastLivingCount = Living;
+		return;
+	}
+
+	const int32 Lost = FMath::Max(0, LastLivingCount - Living);
+	LastLivingCount = Living;
+	const float Frac = static_cast<float>(Living) / static_cast<float>(FMath::Max(1, InitialSize));
+
+	const UNinjagoSettings* S = GetDefault<UNinjagoSettings>();
+	FNinjagoMoraleParams P;
+	P.CasualtyShock = S->MoraleCasualtyShock;
+	P.LowStrengthFraction = S->MoraleLowStrengthFraction;
+	P.LowStrengthPenalty = S->MoraleLowStrengthPenalty;
+	P.RegenPerTick = S->MoraleRegenPerTick;
+	P.BreakFraction = S->MoraleBreakFraction;
+	P.RallyFraction = S->MoraleRallyFraction;
+
+	CurrentMorale = FNinjagoMoraleResolver::StepMorale(CurrentMorale, MaxMorale, Lost, Frac, bInCombat, P);
+	const bool bNow = FNinjagoMoraleResolver::ResolveRouting(CurrentMorale, MaxMorale, bRouting, P);
+
+	if (bNow && !bRouting)
+	{
+		UE_LOG(LogNinjago, Log, TEXT("%s breaks and routs!"), *CachedRow.DisplayName);
+		OrderType = EOrderType::NoOrder;
+		AttackTarget.Reset();
+	}
+	else if (!bNow && bRouting)
+	{
+		UE_LOG(LogNinjago, Log, TEXT("%s rallies."), *CachedRow.DisplayName);
+		State = EUnitState::Idle;
+	}
+
+	bRouting = bNow;
+	if (bRouting)
+	{
+		State = EUnitState::Routing;
+		bHasFleeSource = bHasEnemy;
+		FleeFromLocation = NearestEnemyLoc;
+	}
 }
 
 void ANinjagoUnit::MarkFighting(bool bEngaged)

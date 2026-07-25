@@ -20,6 +20,7 @@ enum class EUnitState : uint8
 	Idle,
 	Moving,
 	Fighting,
+	Routing,
 	Dead
 };
 
