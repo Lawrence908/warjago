@@ -515,6 +515,31 @@ Play the default battle. Select `LRD_SKALES` (LMB) and press Space near a Skulki
 
 ---
 
+## v0.11 - AI ability usage (branch `v0.11`)
+
+Units now cast their own abilities during the battle, so both armies use their full kit without the
+player. Each combat tick, any unit whose ability is off cooldown and has a worthwhile target fires
+it: offensive abilities (damage, freeze, control, slow) when an enemy is within reach; support
+abilities (heal, buffs) once the battle is joined. Routing and stunned units do not cast.
+
+The player's Spacebar still works and simply lets you pre-empt with better timing.
+
+Stateful integration, verified by trace; suite stays at 18.
+
+### AI ability battle (visual)
+
+Play the default battle and just watch (no need to select anything).
+
+**Pass checks:**
+
+- [ ] As the lines meet, abilities go off on **both sides** on their own: Fire Blasts, chained
+      lightning, freezes (cyan markers), buffs, mind-control (magenta markers), Samukai's Fury.
+- [ ] Abilities respect cooldowns (they do not spam - each fires roughly once per its cooldown).
+- [ ] You can still select a hero and press Space to fire early yourself.
+- [ ] Casters do not fire at spawn before anyone is in range, nor while routing/frozen.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

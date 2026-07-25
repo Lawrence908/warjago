@@ -315,7 +315,21 @@ void ANinjagoGameMode::RunCombatTick()
 	}
 
 	MoralePass();
+	AbilityAIPass();
 	AcquireTargets();
+}
+
+void ANinjagoGameMode::AbilityAIPass()
+{
+	// Units cast their own abilities when it is worthwhile, so both armies fight with their full
+	// kit. The player's Spacebar still works as optional, better-timed control.
+	for (ANinjagoUnit* Unit : AllUnits)
+	{
+		if (IsValid(Unit) && Unit->ShouldAIFireAbility())
+		{
+			Unit->TryFireAbility();
+		}
+	}
 }
 
 ANinjagoUnit* ANinjagoGameMode::NearestEnemyUnit(const ANinjagoUnit* For) const
