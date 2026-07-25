@@ -12,8 +12,9 @@ import unreal
 DEST = "/Game/Data/DA_DefaultBattle"
 UNIT_TABLE = "/Game/Data/dt_units"
 
-# Melee, ranged (v0.2), and a breakable block NIN_SOLDIERS (v0.3) so routing is visible.
-NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS"]
+# Melee, ranged (v0.2), a breakable block NIN_SOLDIERS (v0.3), and a large monster
+# NIN_SAMURAIX (v0.5) for the Skulkin spears to brace against.
+NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS", "NIN_SAMURAIX"]
 SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS"]
 
 

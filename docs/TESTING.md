@@ -334,6 +334,37 @@ row's `ChargeBonus` added to base damage through the usual floor/armour model.
 
 ---
 
+## v0.5 — Spears and anti-large (branch `v0.5`)
+
+Spear units (`SPEAR` archetype: `SKU_WATCHMEN`, `NIN_SOLDIERS`) counter large units (cavalry,
+monsters, giants, vehicles, classified by `ModelScale >= 1.4`). The default battle adds the Ninja
+monster `NIN_SAMURAIX` so the Skulkin spears have something to brace against.
+
+### SP-tests — new automation test
+
+One spear test joins the suite (14 total now). Run the M3 command and confirm:
+
+```
+Ninjago.Combat.SpearsBraceAndAntiLarge ....... Passed
+```
+
+### Spear battle (visual)
+
+Play the default battle (empty level). Watch the Ninja monster (a much larger minifig) hit the line.
+
+**Pass checks:**
+
+- [ ] When the large monster charges the Skulkin **spear** block (Watchmen), it does **not** get
+      its big charge spike — the spears brace (compare to it charging a non-spear block).
+- [ ] The spear block **out-damages** the monster relative to how a normal block would (anti-large
+      bonus), so a lone monster into braced spears is a bad trade.
+- [ ] Non-spear units are still hammered by the charge as before.
+
+Tuning: `LargeModelScaleThreshold` and `SpearAntiLargeBonus` in Project Settings → Ninjago →
+Combat|Melee.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
