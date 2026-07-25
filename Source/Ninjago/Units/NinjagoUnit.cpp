@@ -79,6 +79,8 @@ void ANinjagoUnit::InitialiseFromRow()
 	// Skulkin "Already Dead": their slain models reassemble once per battle.
 	bReviveCapable = (CachedRow.Faction == FName(TEXT("SKULKIN")));
 
+	OriginalTeam = Team; // for reverting mind control
+
 	UE_LOG(LogNinjago, Log, TEXT("Spawned %s (%s) with %d model(s) for team %d"),
 		*CachedRow.DisplayName, *UnitRowHandle.RowName.ToString(), Models.Num(), static_cast<int32>(Team));
 }
@@ -206,6 +208,20 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 
 	Modifiers.Tick(DeltaSeconds);
 	ProcessRevives(DeltaSeconds);
+
+	// Mind control wears off: revert to the original team.
+	if (bControlled && !bControlPermanent)
+	{
+		ControlTimer -= DeltaSeconds;
+		if (ControlTimer <= 0.f)
+		{
+			Team = OriginalTeam;
+			bControlled = false;
+			ControlTimer = 0.f;
+			ClearOrdersForRetarget();
+			UE_LOG(LogNinjago, Log, TEXT("%s breaks free of control"), *CachedRow.DisplayName);
+		}
+	}
 
 	// Frozen/stunned: hold in place, take no actions, just keep rendering.
 	if (StunTimer > 0.f)
@@ -671,6 +687,68 @@ void ANinjagoUnit::ApplyModifierInRadius(const FVector& Center, float Radius, bo
 	}
 }
 
+void ANinjagoUnit::ClearOrdersForRetarget()
+{
+	OrderType = EOrderType::NoOrder;
+	AttackTarget.Reset();
+	State = EUnitState::Idle;
+	bChargePending = true;
+	bRouting = false;
+}
+
+void ANinjagoUnit::ApplyControl(ETeam NewTeam, float Duration)
+{
+	if (NewTeam == Team)
+	{
+		return;
+	}
+	Team = NewTeam;
+	bControlled = true;
+	bControlPermanent = (Duration <= 0.f);
+	ControlTimer = bControlPermanent ? 0.f : Duration;
+	ClearOrdersForRetarget(); // fight for the new side from scratch
+	UE_LOG(LogNinjago, Log, TEXT("%s is now controlled by team %d%s"),
+		*CachedRow.DisplayName, static_cast<int32>(NewTeam), bControlPermanent ? TEXT(" (permanent)") : TEXT(""));
+}
+
+void ANinjagoUnit::ApplyControlToEnemies(const FVector& Center, float Radius, bool bSingleTarget, float Duration)
+{
+	const float RadiusSq = Radius * Radius;
+	ANinjagoUnit* Nearest = nullptr;
+	float BestDsq = RadiusSq;
+
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		ANinjagoUnit* Enemy = *It;
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		const float Dsq = FVector::DistSquared2D(Center, Enemy->GetActorLocation());
+		if (Dsq > RadiusSq)
+		{
+			continue;
+		}
+		if (bSingleTarget)
+		{
+			if (Dsq < BestDsq)
+			{
+				BestDsq = Dsq;
+				Nearest = Enemy;
+			}
+		}
+		else
+		{
+			Enemy->ApplyControl(Team, Duration);
+		}
+	}
+
+	if (bSingleTarget && Nearest)
+	{
+		Nearest->ApplyControl(Team, Duration);
+	}
+}
+
 void ANinjagoUnit::ApplyStunInRadius(const FVector& Center, float Radius, float Seconds)
 {
 	if (Seconds <= 0.f || Radius <= 0.f)
@@ -745,6 +823,13 @@ bool ANinjagoUnit::TryFireAbility()
 	{
 		// freeze=6s -> stun enemies in radius for that many seconds.
 		ApplyStunInRadius(Centre, CachedAbility.RadiusCm, static_cast<float>(Mag.Value));
+	}
+	else if (Mag.Verb == TEXT("control"))
+	{
+		// Convert enemies to this unit's team. DurationS <= 0 (e.g. Helmet Command) is permanent.
+		// ENEMY_AOE affects all in radius; ENEMY_UNIT / ENEMY_HERO take the nearest one.
+		const bool bSingle = !Target.Contains(TEXT("AOE"));
+		ApplyControlToEnemies(Centre, CachedAbility.RadiusCm, bSingle, CachedAbility.DurationS);
 	}
 	else if (Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def") || Mag.Verb == TEXT("speed")
 		|| Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"))

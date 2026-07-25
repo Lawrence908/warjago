@@ -105,6 +105,12 @@ public:
 	bool IsStunned() const { return StunTimer > 0.f; }
 	void ApplyStun(float Seconds) { StunTimer = FMath::Max(StunTimer, FMath::Max(0.f, Seconds)); }
 
+	// --- Mind control (v0.10) ---
+
+	/** Temporarily (or permanently, Duration <= 0) fight for NewTeam. */
+	void ApplyControl(ETeam NewTeam, float Duration);
+	bool IsControlled() const { return bControlled; }
+
 	// --- Buffs / effective stats (v0.7) ---
 
 	int32 EffMeleeAttack() const { return FMath::RoundToInt(Modifiers.Apply(ENinjagoStat::MeleeAttack, CachedRow.MeleeAttack)); }
@@ -194,8 +200,16 @@ private:
 	// Crowd control: seconds remaining frozen/stunned.
 	float StunTimer = 0.f;
 
+	// Mind control: fighting for a team other than the one spawned on.
+	ETeam OriginalTeam = ETeam::Ninja;
+	bool bControlled = false;
+	bool bControlPermanent = false;
+	float ControlTimer = 0.f;
+
 	void ProcessRevives(float DeltaSeconds);
 	void ApplyStunInRadius(const FVector& Center, float Radius, float Seconds);
+	void ApplyControlToEnemies(const FVector& Center, float Radius, bool bSingleTarget, float Duration);
+	void ClearOrdersForRetarget();
 
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;
