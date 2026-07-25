@@ -266,6 +266,41 @@ Notes:
 
 ---
 
+## v0.3 — Morale and routing (branch `v0.3`)
+
+Units now have morale (the row `Morale`; **exactly 99 means immune**). The default battle gains a
+breakable Ninja block (`NIN_SOLDIERS`, morale 66); Skulkin are all immune and never rout.
+
+### MO-tests — new automation tests
+
+Four morale tests join the suite (12 total now). Run the M3 command and confirm:
+
+```
+Ninjago.Morale.CasualtiesLowerMorale ......... Passed
+Ninjago.Morale.UnderStrengthPenalty .......... Passed
+Ninjago.Morale.RecoversWhenSafe .............. Passed
+Ninjago.Morale.BreakAndRallyHysteresis ....... Passed
+```
+
+### Routing battle (visual)
+
+1. Build; ensure `dt_units` is imported and placeholders exist.
+2. Play an **empty** level (the default battle now includes the breakable block).
+
+**Pass checks:**
+
+- [ ] As the Ninja soldier block takes casualties, at some point it **breaks and flees** away from
+      the enemy (a **red flag** appears above a routing unit).
+- [ ] A routing unit **stops fighting** while it runs.
+- [ ] Skulkin units **never rout** no matter how many they lose (immune by faction).
+- [ ] If a routed unit escapes and survives, it may **rally** (red flag disappears) and re-engage.
+- [ ] The battle still resolves to a winner.
+
+Tuning lives in Project Settings → Ninjago → Morale (casualty shock, break/rally fractions, rout
+speed). A unit whose row `Morale` is exactly 99 is immune; 100+ are high-but-breakable.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
