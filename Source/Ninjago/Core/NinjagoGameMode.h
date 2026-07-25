@@ -27,6 +27,7 @@ public:
 	ANinjagoGameMode();
 
 	virtual void StartPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	/** Optional battle definition. If unset, a default is loaded/synthesised for an empty level. */

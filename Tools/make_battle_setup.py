@@ -12,8 +12,8 @@ import unreal
 DEST = "/Game/Data/DA_DefaultBattle"
 UNIT_TABLE = "/Game/Data/dt_units"
 
-# Melee eight plus a ranged unit per side (v0.2) so a battle demonstrates both.
-NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO"]
+# Melee, ranged (v0.2), and a breakable block NIN_SOLDIERS (v0.3) so routing is visible.
+NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS"]
 SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS"]
 
 

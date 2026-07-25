@@ -15,14 +15,16 @@
 #include "Engine/Engine.h"
 #include "EngineUtils.h"
 #include "TimerManager.h"
+#include "DrawDebugHelpers.h"
 
 namespace
 {
 	const TCHAR* DefaultBattlePath = TEXT("/Game/Data/DA_DefaultBattle.DA_DefaultBattle");
 	const TCHAR* UnitTablePath = TEXT("/Game/Data/dt_units.dt_units");
 
-	// Default v0.1 melee eight plus a ranged unit per side (v0.2) so a battle shows both.
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO") };
+	// Default battle: melee, ranged (v0.2), and a breakable block (NIN_SOLDIERS, morale 66) so
+	// routing (v0.3) is visible. Skulkin are morale-immune by faction and never rout.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS") };
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS") };
 }
 
@@ -31,6 +33,24 @@ ANinjagoGameMode::ANinjagoGameMode()
 	DefaultPawnClass = ANinjagoCameraPawn::StaticClass();
 	PlayerControllerClass = ANinjagoPlayerController::StaticClass();
 	CombatRng.Initialize(20260725);
+	PrimaryActorTick.bCanEverTick = true; // draws routing markers
+}
+
+void ANinjagoGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	// Red flag above any unit that is currently routing, so a broken unit is easy to spot.
+	for (ANinjagoUnit* Unit : AllUnits)
+	{
+		if (IsValid(Unit) && Unit->IsRouting() && Unit->LivingModelCount() > 0)
+		{
+			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 220.f);
+			DrawDebugLine(GetWorld(), Base, Base + FVector(0.f, 0.f, 180.f), FColor::Red, false, -1.f, 0, 12.f);
+			DrawDebugLine(GetWorld(), Base + FVector(0.f, 0.f, 180.f), Base + FVector(140.f, 0.f, 130.f), FColor::Red, false, -1.f, 0, 12.f);
+			DrawDebugLine(GetWorld(), Base + FVector(140.f, 0.f, 130.f), Base + FVector(0.f, 0.f, 90.f), FColor::Red, false, -1.f, 0, 12.f);
+		}
+	}
 }
 
 void ANinjagoGameMode::StartPlay()
