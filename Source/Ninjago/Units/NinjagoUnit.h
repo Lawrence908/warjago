@@ -74,6 +74,15 @@ public:
 	 */
 	void UpdateMorale(bool bInCombat, bool bHasEnemy, const FVector& NearestEnemyLoc);
 
+	/** Immediate morale loss (e.g. from being charged); ignored by immune units. */
+	void ApplyMoraleShock(float Amount);
+
+	// --- Charge (v0.4) ---
+
+	/** True until this unit delivers its first-contact charge; reset when it re-advances. */
+	bool IsChargePending() const { return bChargePending; }
+	void ClearChargePending() { bChargePending = false; }
+
 	/** Flag whether the unit has an engaged model this combat tick (drives Fighting state). */
 	void MarkFighting(bool bEngaged);
 
@@ -137,6 +146,9 @@ private:
 	int32 LastLivingCount = 0;
 	FVector FleeFromLocation = FVector::ZeroVector;
 	bool bHasFleeSource = false;
+
+	// Charge state: true when the unit can still deliver a first-contact charge.
+	bool bChargePending = true;
 
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;

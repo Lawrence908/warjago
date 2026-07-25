@@ -322,6 +322,7 @@ void ANinjagoUnit::OrderMoveTo(const FVector& WorldTarget)
 	OrderLocation = WorldTarget;
 	AttackTarget.Reset();
 	State = EUnitState::Moving;
+	bChargePending = true; // advancing again: this unit can charge on the next contact
 	// The anchor advances toward OrderLocation in Tick; models follow their slots.
 }
 
@@ -437,7 +438,17 @@ void ANinjagoUnit::MarkFighting(bool bEngaged)
 	else if (State == EUnitState::Fighting)
 	{
 		State = EUnitState::Idle;
+		bChargePending = true; // disengaged; a fresh contact can charge again
 	}
+}
+
+void ANinjagoUnit::ApplyMoraleShock(float Amount)
+{
+	if (bMoraleImmune || Amount <= 0.f)
+	{
+		return;
+	}
+	CurrentMorale = FMath::Max(0.f, CurrentMorale - Amount);
 }
 
 void ANinjagoUnit::OrderAttack(ANinjagoUnit* Target)
@@ -449,6 +460,7 @@ void ANinjagoUnit::OrderAttack(ANinjagoUnit* Target)
 	OrderType = EOrderType::Attack;
 	AttackTarget = Target;
 	State = EUnitState::Moving;
+	bChargePending = true; // advancing to a new target: charge on contact
 	UE_LOG(LogNinjago, Verbose, TEXT("%s ordered to attack %s"), *GetName(), *Target->GetName());
 }
 
