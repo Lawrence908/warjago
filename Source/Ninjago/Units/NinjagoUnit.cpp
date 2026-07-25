@@ -601,6 +601,46 @@ void ANinjagoUnit::ApplyAbilityDamageInRadius(const FVector& Center, float Radiu
 	}
 }
 
+bool ANinjagoUnit::ShouldAIFireAbility() const
+{
+	if (!CanFireAbility() || IsRouting())
+	{
+		return false;
+	}
+
+	const FNinjagoAbilityMagnitude Mag = FNinjagoAbilityEffect::ParseMagnitude(CachedAbility.Magnitude);
+
+	const bool bOffensive = (Mag.Verb == TEXT("dmg") || Mag.Verb == TEXT("freeze")
+		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow"));
+	const bool bSupport = (Mag.Verb == TEXT("heal") || Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def")
+		|| Mag.Verb == TEXT("speed") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"));
+	if (!bOffensive && !bSupport)
+	{
+		return false; // unsupported effect (terrain, etc.)
+	}
+
+	// Offensive: fire when an enemy is within the ability's reach. Support: fire once the battle is
+	// joined (an enemy is reasonably close), so buffs/heals are not wasted at spawn.
+	const float EngageR = GetDefault<UNinjagoSettings>()->EngageRangeCm;
+	const float SupportProxyCm = 1500.f;
+	const float CheckR = bOffensive ? FMath::Max(CachedAbility.RadiusCm, EngageR) : SupportProxyCm;
+	const float CheckRsq = CheckR * CheckR;
+
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		const ANinjagoUnit* Other = *It;
+		if (!IsValid(Other) || Other == this || Other->GetTeam() == Team || Other->LivingModelCount() == 0)
+		{
+			continue;
+		}
+		if (FVector::DistSquared2D(GetActorLocation(), Other->GetActorLocation()) <= CheckRsq)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void ANinjagoUnit::ApplyAbilityChainDamage(const FVector& Center, float Radius, int32 Damage, int32 MaxTargets)
 {
 	if (Damage <= 0 || Radius <= 0.f || MaxTargets <= 0)

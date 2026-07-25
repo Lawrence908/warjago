@@ -138,6 +138,9 @@ public:
 	/** 0 = ready, 1 = just fired (fraction of cooldown remaining), for the cooldown indicator. */
 	float GetAbilityCooldownFraction() const;
 
+	/** AI heuristic: is it worth firing the ability now (off cooldown, valid targets nearby)? */
+	bool ShouldAIFireAbility() const;
+
 	const FNinjagoAbilityRow& GetAbility() const { return CachedAbility; }
 
 	/** Issue a straight-line move to a world location. */
