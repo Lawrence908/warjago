@@ -22,9 +22,10 @@ namespace
 	const TCHAR* DefaultBattlePath = TEXT("/Game/Data/DA_DefaultBattle.DA_DefaultBattle");
 	const TCHAR* UnitTablePath = TEXT("/Game/Data/dt_units.dt_units");
 
-	// Default battle: melee, ranged (v0.2), and a breakable block (NIN_SOLDIERS, morale 66) so
-	// routing (v0.3) is visible. Skulkin are morale-immune by faction and never rout.
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS") };
+	// Default battle spans the systems: melee, ranged (v0.2), a breakable block for routing (v0.3),
+	// and a large monster NIN_SAMURAIX (v0.5) for the Skulkin spears (Watchmen) to brace against.
+	// Skulkin are morale-immune by faction and never rout.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX") };
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS") };
 }
 
@@ -202,6 +203,8 @@ void ANinjagoGameMode::RunCombatTick()
 
 		// A unit's first melee contact after advancing is a charge: bonus damage + morale shock.
 		const bool bCharging = Atk->IsChargePending();
+		const bool bAtkSpear = Atk->IsSpear();
+		const bool bAtkLarge = Atk->IsLarge();
 		bool bMeleeThisTick = false;
 		TSet<ANinjagoUnit*> Struck;
 
@@ -246,10 +249,14 @@ void ANinjagoGameMode::RunCombatTick()
 
 			if (BestDsq <= EngageRSq)
 			{
-				// In melee range: strike with melee stats, adding the charge bonus on first contact.
-				const int32 Dmg = bCharging
-					? FNinjagoCombatResolver::ResolveChargeAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng)
-					: FNinjagoCombatResolver::ResolveAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
+				// In melee range: unified strike with charge, anti-large, and spear-brace modifiers.
+				const FNinjagoUnitRow& AR = Atk->GetRow();
+				const FNinjagoUnitRow& DR = BestDef->GetRow();
+				const int32 Dmg = FNinjagoCombatResolver::ResolveMelee(
+					AR.MeleeAttack, AR.Damage, AR.ChargeBonus, AR.ArmourPiercing,
+					DR.MeleeDefence, DR.Armour,
+					bCharging, bAtkSpear, bAtkLarge, BestDef->IsSpear(), BestDef->IsLarge(),
+					S->SpearAntiLargeBonus, P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
 				bEngaged = true;
 				bMeleeThisTick = true;
