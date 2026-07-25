@@ -365,6 +365,43 @@ Combat|Melee.
 
 ---
 
+## v0.6 — Ability variety (branch `v0.6`)
+
+Abilities now dispatch on their `Magnitude` verb and `Target`, so more of the roster works. The
+four ninja heroes each have a distinct Space power:
+
+| Hero | Ability | Effect |
+|---|---|---|
+| Kai | Fire Blast | instant AoE damage (700 cm) |
+| Cole | Earthquake | instant AoE damage around Cole (800 cm) |
+| Jay | Lightning Bolt | chains damage to the nearest enemies (up to 6, 1400 cm) |
+| Zane | Ice Wall | terrain effect — **not implemented yet** (logs a warning) |
+
+Heal powers (`heal=` on ally-targeted abilities) also work now, restoring HP to nearby friendly
+models, though no default-battle unit uses one.
+
+### AB-tests — new automation tests
+
+Two ability tests join the suite (16 total now). Run the M3 command and confirm:
+
+```
+Ninjago.Ability.ParseMagnitude ............... Passed
+Ninjago.Ability.SelectNearest ................ Passed
+```
+
+### Ability battle (visual)
+
+Play the default battle. Select each ninja hero (LMB) and press Space:
+
+- [ ] **Kai / Cole**: a burst of damage drops nearby enemies.
+- [ ] **Jay**: damage lands on a handful of the **nearest** enemies (the chain), out to a long range.
+- [ ] **Zane**: nothing happens yet; the Output Log shows "ability effect ... not yet implemented".
+- [ ] All respect their cooldowns (the bar over the selected hero).
+
+Chain size: `AbilityChainMaxTargets` in Project Settings → Ninjago → Abilities.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
