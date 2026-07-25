@@ -12,8 +12,9 @@ import unreal
 DEST = "/Game/Data/DA_DefaultBattle"
 UNIT_TABLE = "/Game/Data/dt_units"
 
-NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE"]
-SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI"]
+# Melee eight plus a ranged unit per side (v0.2) so a battle demonstrates both.
+NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO"]
+SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS"]
 
 
 def main():

@@ -21,8 +21,9 @@ namespace
 	const TCHAR* DefaultBattlePath = TEXT("/Game/Data/DA_DefaultBattle.DA_DefaultBattle");
 	const TCHAR* UnitTablePath = TEXT("/Game/Data/dt_units.dt_units");
 
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE") };
-	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI") };
+	// Default v0.1 melee eight plus a ranged unit per side (v0.2) so a battle shows both.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO") };
+	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS") };
 }
 
 ANinjagoGameMode::ANinjagoGameMode()
@@ -109,11 +110,21 @@ void ANinjagoGameMode::SpawnDefaultBattle()
 
 void ANinjagoGameMode::SpawnArmyLine(UDataTable* Table, const TArray<FName>& Army, ETeam Team, float LineX, float Yaw, float UnitSpacing)
 {
+	static const FString Ctx(TEXT("SpawnArmyLine"));
+	const float BackRankOffset = 800.f; // ranged units start a rank behind the melee line
 	const int32 N = Army.Num();
 	for (int32 i = 0; i < N; ++i)
 	{
 		const float Y = (i - (N - 1) * 0.5f) * UnitSpacing;
-		SpawnUnit(Table, Army[i], Team, FVector(LineX, Y, 0.f), FRotator(0.f, Yaw, 0.f));
+		float X = LineX;
+		if (const FNinjagoUnitRow* Row = Table->FindRow<FNinjagoUnitRow>(Army[i], Ctx))
+		{
+			if (Row->RangeCm > 0.f && Row->Ammo > 0)
+			{
+				X += FMath::Sign(LineX) * BackRankOffset; // push archers away from the enemy
+			}
+		}
+		SpawnUnit(Table, Army[i], Team, FVector(X, Y, 0.f), FRotator(0.f, Yaw, 0.f));
 	}
 }
 
