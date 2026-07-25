@@ -489,6 +489,32 @@ Tuning: freeze length comes from the ability's magnitude (`freeze=6s`).
 
 ---
 
+## v0.10 - Mind control (branch `v0.10`)
+
+Control abilities (`control=`) convert an enemy unit to fight for the caster's team. Duration comes
+from the ability; a duration of 0 (e.g. Helmet Command) is **permanent**. `ENEMY_AOE` converts every
+enemy in radius; `ENEMY_UNIT` / `ENEMY_HERO` takes the nearest one. The demo adds a **guest**
+hypnotist, `LRD_SKALES`, on the Ninja side.
+
+Because the whole game keys off a unit's team, a converted unit immediately turns on its former
+allies. (Partial control is simplified to a full convert for the duration.)
+
+Stateful integration, verified by trace; suite stays at 18.
+
+### Mind-control battle (visual)
+
+Play the default battle. Select `LRD_SKALES` (LMB) and press Space near a Skulkin unit.
+
+**Pass checks:**
+
+- [ ] A Skulkin unit in range turns and **fights for your side** (a **magenta sphere** marks it).
+- [ ] It attacks its former Skulkin allies while controlled.
+- [ ] After the duration it **reverts** to Skulkin (marker clears) and fights you again.
+- [ ] Permanent control (a `dur=0` ability) never reverts. Controlling an enemy also shifts the win
+      count: convert enough and their side runs out.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

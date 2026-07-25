@@ -26,7 +26,8 @@ namespace
 	// and a large monster NIN_SAMURAIX (v0.5) for the Skulkin spears (Watchmen) to brace against.
 	// Skulkin are morale-immune by faction and never rout.
 	// LRD_ICEEMPEROR is a guest freeze-caster (v0.9): select him and press Space to freeze Skulkin.
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR") };
+	// LRD_SKALES is a guest hypnotist (v0.10): select him and press Space to mind-control a Skulkin unit.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES") };
 	// HRO_WYPLASH adds a def+3 ally buff (v0.7) to the Skulkin line.
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH") };
 }
@@ -61,6 +62,11 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 		{
 			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 260.f);
 			DrawDebugSphere(GetWorld(), Base, 70.f, 10, FColor::Cyan, false, -1.f, 0, 8.f);
+		}
+		if (Unit->IsControlled())
+		{
+			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 300.f);
+			DrawDebugSphere(GetWorld(), Base, 55.f, 8, FColor::Magenta, false, -1.f, 0, 8.f);
 		}
 	}
 }
