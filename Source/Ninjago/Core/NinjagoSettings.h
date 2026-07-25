@@ -95,4 +95,8 @@ public:
 	/** Speed multiplier while routing (panic run). */
 	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="1.0"))
 	float MoraleRoutSpeedMultiplier = 1.5f;
+
+	/** Morale lost by a unit hit by a charge = charger's ChargeBonus * this scale. */
+	UPROPERTY(config, EditAnywhere, Category="Morale", meta=(ClampMin="0.0"))
+	float MoraleChargeShockScale = 2.0f;
 };
