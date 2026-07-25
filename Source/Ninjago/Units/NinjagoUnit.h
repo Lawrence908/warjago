@@ -111,6 +111,13 @@ public:
 	void ApplyControl(ETeam NewTeam, float Duration);
 	bool IsControlled() const { return bControlled; }
 
+	/**
+	 * The team a unit truly belongs to for win purposes: its current team, except a *temporarily*
+	 * controlled unit still counts for its original side (it is borrowed, not destroyed). Permanent
+	 * control does transfer allegiance.
+	 */
+	ETeam GetAllegianceTeam() const { return (bControlled && !bControlPermanent) ? OriginalTeam : Team; }
+
 	// --- Buffs / effective stats (v0.7) ---
 
 	int32 EffMeleeAttack() const { return FMath::RoundToInt(Modifiers.Apply(ENinjagoStat::MeleeAttack, CachedRow.MeleeAttack)); }
@@ -140,6 +147,9 @@ public:
 
 	/** AI heuristic: is it worth firing the ability now (off cooldown, valid targets nearby)? */
 	bool ShouldAIFireAbility() const;
+
+	/** The player selected this unit: hold off AI auto-cast briefly so their Spacebar wins the timing. */
+	void NotifyPlayerSelected();
 
 	const FNinjagoAbilityRow& GetAbility() const { return CachedAbility; }
 
@@ -202,6 +212,9 @@ private:
 
 	// Crowd control: seconds remaining frozen/stunned.
 	float StunTimer = 0.f;
+
+	// Seconds during which the AI defers ability auto-cast after a player selection.
+	float PlayerCastGrace = 0.f;
 
 	// Mind control: fighting for a team other than the one spawned on.
 	ETeam OriginalTeam = ETeam::Ninja;

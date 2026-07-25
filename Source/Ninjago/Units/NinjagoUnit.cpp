@@ -209,6 +209,11 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 	Modifiers.Tick(DeltaSeconds);
 	ProcessRevives(DeltaSeconds);
 
+	if (PlayerCastGrace > 0.f)
+	{
+		PlayerCastGrace = FMath::Max(0.f, PlayerCastGrace - DeltaSeconds);
+	}
+
 	// Mind control wears off: revert to the original team.
 	if (bControlled && !bControlPermanent)
 	{
@@ -260,9 +265,14 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 
 	// Advance the unit anchor toward a move/attack order; models steer to their slots relative to
 	// it, so the regiment walks in formation rather than teleporting. Combat itself lands in M6.
-	if (OrderType == EOrderType::Attack && !AttackTarget.IsValid())
+	// Drop the attack order once the target is gone: destroyed, wiped out (no living models, so it
+	// will not be found and the unit would otherwise stand on the corpse), or turned to our side by
+	// mind control. Clearing it lets AcquireTargets send the unit to the next enemy.
+	if (OrderType == EOrderType::Attack
+		&& (!AttackTarget.IsValid() || AttackTarget->LivingModelCount() == 0 || AttackTarget->GetTeam() == GetTeam()))
 	{
 		OrderType = EOrderType::NoOrder;
+		AttackTarget.Reset();
 		State = EUnitState::Idle;
 	}
 
@@ -601,9 +611,15 @@ void ANinjagoUnit::ApplyAbilityDamageInRadius(const FVector& Center, float Radiu
 	}
 }
 
+void ANinjagoUnit::NotifyPlayerSelected()
+{
+	PlayerCastGrace = GetDefault<UNinjagoSettings>()->PlayerAbilityGraceSeconds;
+}
+
 bool ANinjagoUnit::ShouldAIFireAbility() const
 {
-	if (!CanFireAbility() || IsRouting())
+	// Defer to the player right after they select this unit, so their Spacebar wins the timing.
+	if (!CanFireAbility() || IsRouting() || PlayerCastGrace > 0.f)
 	{
 		return false;
 	}
@@ -816,6 +832,10 @@ void ANinjagoUnit::AbilityChannelTick()
 	{
 		GetWorldTimerManager().ClearTimer(AbilityChannelTimer);
 		return;
+	}
+	if (IsStunned())
+	{
+		return; // paused while frozen; the timer keeps ticking and resumes when the stun ends
 	}
 	ApplyAbilityDamageInRadius(GetActorLocation(), CachedAbility.RadiusCm, ChannelDamagePerTick);
 	--RemainingChannelTicks;

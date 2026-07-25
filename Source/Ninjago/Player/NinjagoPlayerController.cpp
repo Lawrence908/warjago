@@ -181,6 +181,7 @@ void ANinjagoPlayerController::SetSelected(ANinjagoUnit* Unit)
 	Selected = Unit;
 	if (Unit)
 	{
+		Unit->NotifyPlayerSelected(); // brief AI auto-cast hold so the player can time the ability
 		UE_LOG(LogNinjago, Verbose, TEXT("Selected %s"), *Unit->GetName());
 	}
 }

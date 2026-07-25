@@ -82,6 +82,10 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1.0"))
 	float BuffDefaultDurationS = 12.0f;
 
+	/** After the player selects a unit, the AI will not auto-cast its ability for this long. */
+	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="0.0"))
+	float PlayerAbilityGraceSeconds = 6.0f;
+
 	// --- Morale (v0.3). A unit whose row Morale == 99 is immune and never routs. ---
 
 	/** Morale lost per model killed, per combat tick. */

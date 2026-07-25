@@ -364,7 +364,8 @@ void ANinjagoGameMode::MoralePass()
 		{
 			continue;
 		}
-		const bool bInCombat = (Unit->GetState() == EUnitState::Fighting);
+		// A frozen unit is not "in combat" for morale purposes (its Fighting state may be stale).
+		const bool bInCombat = (Unit->GetState() == EUnitState::Fighting && !Unit->IsStunned());
 		ANinjagoUnit* Enemy = NearestEnemyUnit(Unit);
 		const bool bHasEnemy = (Enemy != nullptr);
 		const FVector EnemyLoc = bHasEnemy ? Enemy->GetActorLocation() : FVector::ZeroVector;
@@ -421,7 +422,9 @@ void ANinjagoGameMode::CheckWinCondition()
 			continue;
 		}
 		const int32 Remaining = Unit->LivingModelCount() + Unit->PendingReviveCount();
-		((Unit->GetTeam() == ETeam::Ninja) ? Ninja : Skulkin) += Remaining;
+		// Use allegiance, not current team, so temporarily mind-controlled units are not counted as
+		// having destroyed their own side.
+		((Unit->GetAllegianceTeam() == ETeam::Ninja) ? Ninja : Skulkin) += Remaining;
 	}
 
 	if (Ninja > 0 && Skulkin > 0)
