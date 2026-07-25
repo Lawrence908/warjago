@@ -145,8 +145,11 @@ void ANinjagoGameMode::RunCombatTick()
 	P.HitChanceMin = S->HitChanceMin;
 	P.HitChanceMax = S->HitChanceMax;
 	P.MinDamage = S->MinDamage;
+	P.RangedHitChanceBase = S->RangedHitChanceBase;
+	P.RangedHitChancePerPoint = S->RangedHitChancePerPoint;
 
-	const float EngageRSq = S->EngageRangeCm * S->EngageRangeCm;
+	const float EngageR = S->EngageRangeCm;
+	const float EngageRSq = EngageR * EngageR;
 
 	for (ANinjagoUnit* Atk : AllUnits)
 	{
@@ -154,6 +157,11 @@ void ANinjagoGameMode::RunCombatTick()
 		{
 			continue;
 		}
+
+		// Ranged units search out to their weapon range; melee units only to engage range.
+		const bool bRanged = Atk->IsRangedUnit();
+		const float SearchR = bRanged ? FMath::Max(EngageR, Atk->GetRangeCm()) : EngageR;
+		const float SearchRSq = SearchR * SearchR;
 
 		const TArray<FNinjagoModel>& AtkModels = Atk->GetModels();
 		bool bEngaged = false;
@@ -167,7 +175,7 @@ void ANinjagoGameMode::RunCombatTick()
 
 			ANinjagoUnit* BestDef = nullptr;
 			int32 BestIdx = INDEX_NONE;
-			float BestDsq = EngageRSq;
+			float BestDsq = SearchRSq;
 
 			for (ANinjagoUnit* Def : AllUnits)
 			{
@@ -192,11 +200,24 @@ void ANinjagoGameMode::RunCombatTick()
 				}
 			}
 
-			if (BestIdx != INDEX_NONE)
+			if (BestIdx == INDEX_NONE)
 			{
-				bEngaged = true;
+				continue;
+			}
+
+			if (BestDsq <= EngageRSq)
+			{
+				// In melee range: strike with melee stats.
 				const int32 Dmg = FNinjagoCombatResolver::ResolveAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
 				BestDef->ApplyModelDamage(BestIdx, Dmg);
+				bEngaged = true;
+			}
+			else if (bRanged && Atk->TryConsumeAmmo(ai))
+			{
+				// Beyond melee but within range, and this model still has ammo: fire a shot.
+				const int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(Atk->GetRow(), BestDef->GetRow(), P, CombatRng);
+				BestDef->ApplyModelDamage(BestIdx, Dmg);
+				bEngaged = true;
 			}
 		}
 

@@ -48,6 +48,20 @@ public:
 	/** Apply combat damage to one model; kills it at <= 0 HP. */
 	void ApplyModelDamage(int32 ModelIndex, int32 Damage);
 
+	// --- Ranged (v0.2) ---
+
+	/** True if this unit's row can shoot (has range and ammo). */
+	bool IsRangedUnit() const { return bRowValid && CachedRow.RangeCm > 0.f && CachedRow.Ammo > 0; }
+
+	/** Row-defined maximum ranged range (cm), 0 for melee-only. */
+	float GetRangeCm() const { return bRowValid ? CachedRow.RangeCm : 0.f; }
+
+	/** True if any living model still has ammo. */
+	bool HasAmmoRemaining() const;
+
+	/** Spend one shot from a model; returns true if it had ammo. */
+	bool TryConsumeAmmo(int32 ModelIndex);
+
 	/** Flag whether the unit has an engaged model this combat tick (drives Fighting state). */
 	void MarkFighting(bool bEngaged);
 

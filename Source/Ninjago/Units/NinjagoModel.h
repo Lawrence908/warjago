@@ -25,6 +25,10 @@ struct FNinjagoModel
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninjago|Model")
 	int32 Hp = 0;
 
+	/** Ranged shots remaining for this model (0 for melee-only units). */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninjago|Model")
+	int32 Ammo = 0;
+
 	/** Index into the unit's formation, or INDEX_NONE for a single entity. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ninjago|Model")
 	int32 SlotIndex = INDEX_NONE;

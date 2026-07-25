@@ -107,6 +107,7 @@ void ANinjagoUnit::BuildModels()
 		FNinjagoModel M;
 		M.SlotIndex = (Count == 1) ? INDEX_NONE : i;
 		M.Hp = FMath::Max(1, CachedRow.HpPerModel);
+		M.Ammo = FMath::Max(0, CachedRow.Ammo);
 		M.Yaw = Yaw;
 		M.Location = SlotWorldLocation(i, Count);
 		M.bAlive = true;
@@ -233,8 +234,18 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 		const float Dist = ToTarget.Size2D();
 		const float Speed = FMath::Max(0.f, CachedRow.SpeedCmS);
 
-		// For attack orders, stop short at contact range and hold (M6 resolves the fight there).
-		const float StopDist = bAttack ? GetDefault<UNinjagoSettings>()->EngageRangeCm : 0.f;
+		// Attack stop distance: melee closes to contact; a ranged unit with ammo halts inside its
+		// firing range (and closes to melee once its quivers are empty).
+		float StopDist = 0.f;
+		if (bAttack)
+		{
+			const UNinjagoSettings* S = GetDefault<UNinjagoSettings>();
+			StopDist = S->EngageRangeCm;
+			if (IsRangedUnit() && HasAmmoRemaining())
+			{
+				StopDist = FMath::Max(StopDist, CachedRow.RangeCm * S->RangedStandoffFraction);
+			}
+		}
 
 		if (Dist <= FMath::Max(StopDist, Speed * DeltaSeconds))
 		{
@@ -310,6 +321,28 @@ void ANinjagoUnit::ApplyModelDamage(int32 ModelIndex, int32 Damage)
 	{
 		State = EUnitState::Dead;
 	}
+}
+
+bool ANinjagoUnit::HasAmmoRemaining() const
+{
+	for (const FNinjagoModel& M : Models)
+	{
+		if (M.bAlive && M.Ammo > 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ANinjagoUnit::TryConsumeAmmo(int32 ModelIndex)
+{
+	if (!Models.IsValidIndex(ModelIndex) || !Models[ModelIndex].bAlive || Models[ModelIndex].Ammo <= 0)
+	{
+		return false;
+	}
+	--Models[ModelIndex].Ammo;
+	return true;
 }
 
 void ANinjagoUnit::MarkFighting(bool bEngaged)
