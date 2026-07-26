@@ -4,7 +4,7 @@ A Total War-style LEGO Ninjago army battler, built for a seven-year-old. This fi
 version added. Per-version testing steps live in [`docs/TESTING.md`](TESTING.md).
 
 > **Important:** the project is developed on a Linux host with no engine installed. **v0.1 through
-> v0.14 (plus two review passes) are authored but not yet compiled or playtested.** The first
+> v0.16 (plus three review passes) are authored but not yet compiled or playtested.** The first
 > Windows build (UE 5.7.4) is the
 > real acceptance gate. Pure-logic systems are backed by headless automation tests and were
 > additionally checked with standalone math mirrors; the stateful/integration systems (marked below)
@@ -13,13 +13,13 @@ version added. Per-version testing steps live in [`docs/TESTING.md`](TESTING.md)
 ## Branch model
 
 Each version is a cumulative branch off the previous one, so a later branch contains everything
-before it. `v0.14` is the fullest build.
+before it. `v0.16` is the fullest build.
 
 ```
-main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8
-     -> v0.9 -> v0.10 -> v0.11 -> v0.12 -> v0.13 -> v0.14
+main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8 -> v0.9
+     -> v0.10 -> v0.11 -> v0.12 -> v0.13 -> v0.14 -> v0.15 -> v0.16
 ```
-(The two self-review passes are commits on the v0.11 branch, carried forward.)
+(Review passes 1 and 2 are commits on the v0.11 branch; review pass 3 is on v0.15.)
 
 ## At a glance
 
@@ -41,6 +41,9 @@ main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8
 | v0.12 | Battle restart and replay loop | 18 | trace |
 | v0.13 | Battle readability (health bars, tally) | 18 | trace + mirror |
 | v0.14 | Preset battle scenarios | 18 | trace |
+| v0.15 | Resurrection (Reform) | 18 | trace |
+| review 3 | v0.10-v0.15 audit, 2 fixes | 18 | code review |
+| v0.16 | Battle MVP and kill stats | 18 | trace |
 
 ---
 
@@ -173,6 +176,26 @@ start-of-battle tally too.
   Brawl, ranged Skirmish, and the full Grand Battle. The choice persists across restarts and the
   scenario name shows on screen. Pure C++, no menu.
 
+## v0.15 - Resurrection _(integration)_
+
+- Reform abilities (`revive=N%`) rebuild a destroyed friendly unit: every model returns at N% HP
+  with fresh morale, ammo, and formation. No new unit is spawned (the destroyed unit is already
+  tracked), so it avoids the mid-battle registration and iterator hazards of summoning. The AI casts
+  it only when a destroyed ally is in range, and it cannot un-lose a battle. Demo gains a guest
+  resurrector, `HRO_MACHIA`.
+
+## Self-review pass 3 - v0.10 through v0.15
+
+No critical bugs; the newest phases integrate cleanly (no crashes, allegiance and iteration handled).
+Fixed two items: a destroyed unit no longer drifts its anchor toward a stale order (which had made
+reformed and reviving units reappear away from where they fell); and Reform no longer refunds a
+Skulkin model's once-per-battle self-revive.
+
+## v0.16 - Battle MVP and kill stats
+
+- Each unit counts the enemy models it kills across melee, ranged, and abilities (ability kills go to
+  the caster), and the result banner crowns the top killer as the battle MVP. Pure counters.
+
 ---
 
 ## Roadmap
@@ -182,13 +205,14 @@ verify without a compiler is largely mined out, so most of these are more engine
 lower-confidence to build without the editor.
 
 **Do first**
-- **Compile and playtest v0.14 on Windows.** Fourteen phases plus two review passes have never been
+- **Compile and playtest on Windows.** Sixteen phases plus three review passes have never been
   compiled. The reviews caught the critical bugs, but a green build is the real gate. Watch the
   first-build items in `docs/TESTING.md` (target-settings enums, the Python material, the `Tier`
   import).
 
-**Done since the first roadmap:** restart/replay loop (v0.12), health bars + team tally (v0.13),
-preset scenarios (v0.14), mind-control (v0.10), AI ability usage (v0.11).
+**Done since the first roadmap:** mind-control (v0.10), AI ability usage (v0.11), restart/replay
+loop (v0.12), health bars + team tally (v0.13), preset scenarios (v0.14), resurrection (v0.15),
+battle MVP (v0.16), and three self-review passes.
 
 **Playability and feel** (mostly presentation)
 - A real UMG win screen and menus (currently debug-draw / on-screen messages).
