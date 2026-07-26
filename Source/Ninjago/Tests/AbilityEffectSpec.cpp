@@ -47,6 +47,12 @@ bool FNinjagoAbilityParseTest::RunTest(const FString&)
 		TestEqual(TEXT("freeze seconds"), M.Value, 6);
 	}
 	{
+		// "crit=x3" -> multiplier notation, value 3.
+		const FNinjagoAbilityMagnitude M = FNinjagoAbilityEffect::ParseMagnitude(TEXT("crit=x3"));
+		TestEqual(TEXT("crit verb"), M.Verb, FString(TEXT("crit")));
+		TestEqual(TEXT("crit multiplier"), M.Value, 3);
+	}
+	{
 		const FNinjagoAbilityMagnitude M = FNinjagoAbilityEffect::ParseMagnitude(TEXT("no verb here"));
 		TestTrue(TEXT("no '=' -> empty verb"), M.Verb.IsEmpty());
 	}

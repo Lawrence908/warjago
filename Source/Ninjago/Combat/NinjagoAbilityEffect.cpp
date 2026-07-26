@@ -26,6 +26,10 @@ FNinjagoAbilityMagnitude FNinjagoAbilityEffect::ParseMagnitude(const FString& Ma
 		Sign = -1;
 		i = 1;
 	}
+	else if (Rest.StartsWith(TEXT("x")) || Rest.StartsWith(TEXT("X")))
+	{
+		i = 1; // multiplier notation, e.g. "x3"
+	}
 
 	FString Digits;
 	while (i < Rest.Len() && FChar::IsDigit(Rest[i]))

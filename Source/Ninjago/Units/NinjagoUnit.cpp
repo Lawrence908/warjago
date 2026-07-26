@@ -214,6 +214,16 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 		PlayerCastGrace = FMath::Max(0.f, PlayerCastGrace - DeltaSeconds);
 	}
 
+	if (StealthTimer > 0.f)
+	{
+		StealthTimer = FMath::Max(0.f, StealthTimer - DeltaSeconds);
+		if (StealthTimer <= 0.f)
+		{
+			bStealthed = false;  // reveal when the vanish wears off
+			bCritPending = false; // an unused crit is lost
+		}
+	}
+
 	// Mind control wears off: revert to the original team.
 	if (bControlled && !bControlPermanent)
 	{
@@ -329,7 +339,8 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 
 	if (Renderer)
 	{
-		const float ModelScale = CachedRow.ModelScale > 0.f ? CachedRow.ModelScale : 1.f;
+		// Stealthed units render at zero scale (invisible); a shimmer marker shows the player where.
+		const float ModelScale = bStealthed ? 0.f : (CachedRow.ModelScale > 0.f ? CachedRow.ModelScale : 1.f);
 		Renderer->UpdateInstances(Models, ModelScale);
 	}
 }
@@ -723,7 +734,7 @@ bool ANinjagoUnit::ShouldAIFireAbility() const
 	}
 
 	const bool bOffensive = (Mag.Verb == TEXT("dmg") || Mag.Verb == TEXT("freeze")
-		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow"));
+		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("crit"));
 	const bool bSupport = (Mag.Verb == TEXT("heal") || Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def")
 		|| Mag.Verb == TEXT("speed") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"));
 	if (!bOffensive && !bSupport)
@@ -840,6 +851,27 @@ void ANinjagoUnit::ApplyModifierInRadius(const FVector& Center, float Radius, bo
 			U->AddModifier(Stat, FlatAdd, PercentAdd, Duration);
 		}
 	}
+}
+
+void ANinjagoUnit::ApplyVanish(float Seconds, int32 Multiplier)
+{
+	bStealthed = true;
+	StealthTimer = FMath::Max(0.1f, Seconds);
+	bCritPending = true;
+	CritMultiplier = FMath::Max(2, Multiplier);
+}
+
+int32 ANinjagoUnit::ConsumeCritMultiplier()
+{
+	if (!bCritPending)
+	{
+		return 1;
+	}
+	// The crit strike reveals the unit.
+	bCritPending = false;
+	bStealthed = false;
+	StealthTimer = 0.f;
+	return CritMultiplier;
 }
 
 void ANinjagoUnit::ClearOrdersForRetarget()
@@ -990,6 +1022,12 @@ bool ANinjagoUnit::TryFireAbility()
 		{
 			Dead->RebuildUnit(Mag.Value);
 		}
+	}
+	else if (Mag.Verb == TEXT("crit"))
+	{
+		// Vanish: hide for the duration and make the next attack a critical (crit=x3).
+		const float Dur = CachedAbility.DurationS > 0.f ? CachedAbility.DurationS : 8.f;
+		ApplyVanish(Dur, Mag.Value);
 	}
 	else if (Mag.Verb == TEXT("control"))
 	{

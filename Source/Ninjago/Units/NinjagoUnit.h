@@ -115,6 +115,17 @@ public:
 	bool IsStunned() const { return StunTimer > 0.f; }
 	void ApplyStun(float Seconds) { StunTimer = FMath::Max(StunTimer, FMath::Max(0.f, Seconds)); }
 
+	// --- Stealth / Vanish (v0.17) ---
+
+	/** Hidden: cannot be targeted by enemies while this lasts. */
+	bool IsStealthed() const { return bStealthed; }
+
+	/** Vanish: hide for Seconds and make the next attack a critical of the given multiplier. */
+	void ApplyVanish(float Seconds, int32 Multiplier);
+
+	/** Damage multiplier for this unit's current attack: the crit value once, then 1 (and reveal). */
+	int32 ConsumeCritMultiplier();
+
 	// --- Mind control (v0.10) ---
 
 	/** Temporarily (or permanently, Duration <= 0) fight for NewTeam. */
@@ -225,6 +236,12 @@ private:
 
 	// Crowd control: seconds remaining frozen/stunned.
 	float StunTimer = 0.f;
+
+	// Stealth: hidden (untargetable) with a pending critical strike.
+	bool bStealthed = false;
+	float StealthTimer = 0.f;
+	bool bCritPending = false;
+	int32 CritMultiplier = 1;
 
 	// Seconds during which the AI defers ability auto-cast after a player selection.
 	float PlayerCastGrace = 0.f;

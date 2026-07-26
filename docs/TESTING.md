@@ -653,6 +653,31 @@ Play the default battle to a conclusion.
 
 ---
 
+## v0.17 - Vanish (stealth strike) (branch `v0.17`)
+
+Vanish (`crit=xN`) makes a unit invisible for its duration and turns the next attack into a
+critical of that multiplier (x3). While cloaked the unit cannot be targeted or sought by enemies;
+its models are hidden and a faint shimmer shows the player where it is. The strike reveals it. The
+demo adds a Ninja with Vanish, `HRO_RONIN`.
+
+The `crit=x3` multiplier parse is covered by the ability parser test; the stealth state is stateful
+integration, verified by trace.
+
+### Vanish battle (visual)
+
+Play the default battle. Select `HRO_RONIN` (LMB) and press Space near the enemy.
+
+**Pass checks:**
+
+- [ ] Ronin **vanishes**: his minifig disappears, replaced by a **shimmer** sphere.
+- [ ] Enemies stop targeting/advancing on him while cloaked (they cannot see him).
+- [ ] His next hit is a **critical** (a big damage spike) and he **reappears**.
+- [ ] If ~10s pass without attacking, he reappears anyway (the crit is lost).
+
+Simplification: the crit multiplies the attack's damage; it is not forced to be a guaranteed hit.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

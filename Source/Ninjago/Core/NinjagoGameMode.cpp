@@ -28,7 +28,8 @@ namespace
 	// Skulkin are morale-immune by faction and never rout.
 	// LRD_ICEEMPEROR is a guest freeze-caster (v0.9): select him and press Space to freeze Skulkin.
 	// LRD_SKALES is a guest hypnotist (v0.10): select him and press Space to mind-control a Skulkin unit.
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES") };
+	// HRO_RONIN is a Ninja with Vanish (v0.17): select him, press Space to cloak and land a crit.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES"), TEXT("HRO_RONIN") };
 	// HRO_WYPLASH adds a def+3 ally buff (v0.7); HRO_MACHIA is a guest resurrector (v0.15) that can
 	// reform a destroyed Skulkin unit at 60% HP.
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH"), TEXT("HRO_MACHIA") };
@@ -85,15 +86,18 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 			continue;
 		}
 
-		const float Frac = Unit->GetStrengthFraction();
-		const FVector BarBase = Unit->GetActorLocation() + FVector(0.f, 0.f, 175.f);
-		const float HalfW = 120.f;
-		const FVector BarL = BarBase - FVector(HalfW, 0.f, 0.f);
-		const FVector BarR = BarBase + FVector(HalfW, 0.f, 0.f);
-		const FVector BarFill = BarL + (BarR - BarL) * Frac;
-		const FColor FillColour(static_cast<uint8>((1.f - Frac) * 255.f), static_cast<uint8>(Frac * 255.f), 40);
-		DrawDebugLine(GetWorld(), BarL, BarR, FColor(25, 25, 25), false, -1.f, 0, 16.f);
-		DrawDebugLine(GetWorld(), BarL, BarFill, FillColour, false, -1.f, 0, 16.f);
+		if (!Unit->IsStealthed()) // a vanished unit shows only a shimmer, no health bar
+		{
+			const float Frac = Unit->GetStrengthFraction();
+			const FVector BarBase = Unit->GetActorLocation() + FVector(0.f, 0.f, 175.f);
+			const float HalfW = 120.f;
+			const FVector BarL = BarBase - FVector(HalfW, 0.f, 0.f);
+			const FVector BarR = BarBase + FVector(HalfW, 0.f, 0.f);
+			const FVector BarFill = BarL + (BarR - BarL) * Frac;
+			const FColor FillColour(static_cast<uint8>((1.f - Frac) * 255.f), static_cast<uint8>(Frac * 255.f), 40);
+			DrawDebugLine(GetWorld(), BarL, BarR, FColor(25, 25, 25), false, -1.f, 0, 16.f);
+			DrawDebugLine(GetWorld(), BarL, BarFill, FillColour, false, -1.f, 0, 16.f);
+		}
 
 		if (Unit->IsRouting())
 		{
@@ -111,6 +115,12 @@ void ANinjagoGameMode::Tick(float DeltaSeconds)
 		{
 			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 300.f);
 			DrawDebugSphere(GetWorld(), Base, 55.f, 8, FColor::Magenta, false, -1.f, 0, 8.f);
+		}
+		if (Unit->IsStealthed())
+		{
+			// A faint shimmer shows the player where their invisible (vanished) unit is.
+			const FVector Base = Unit->GetActorLocation() + FVector(0.f, 0.f, 90.f);
+			DrawDebugSphere(GetWorld(), Base, 90.f, 12, FColor(180, 180, 220), false, -1.f, 0, 2.f);
 		}
 	}
 
@@ -315,9 +325,10 @@ void ANinjagoGameMode::RunCombatTick()
 
 			for (ANinjagoUnit* Def : AllUnits)
 			{
-				if (!IsValid(Def) || Def->GetTeam() == Atk->GetTeam() || Def->LivingModelCount() == 0)
+				if (!IsValid(Def) || Def->GetTeam() == Atk->GetTeam() || Def->LivingModelCount() == 0
+					|| Def->IsStealthed())
 				{
-					continue;
+					continue; // a vanished unit cannot be targeted
 				}
 				const TArray<FNinjagoModel>& DefModels = Def->GetModels();
 				for (int32 di = 0; di < DefModels.Num(); ++di)
@@ -346,11 +357,12 @@ void ANinjagoGameMode::RunCombatTick()
 				// In melee range: unified strike with charge, anti-large, and spear-brace modifiers.
 				const FNinjagoUnitRow& AR = Atk->GetRow();
 				const FNinjagoUnitRow& DR = BestDef->GetRow();
-				const int32 Dmg = FNinjagoCombatResolver::ResolveMelee(
+				int32 Dmg = FNinjagoCombatResolver::ResolveMelee(
 					Atk->EffMeleeAttack(), Atk->EffDamage(), AR.ChargeBonus, AR.ArmourPiercing,
 					BestDef->EffMeleeDefence(), DR.Armour,
 					bCharging, bAtkSpear, bAtkLarge, BestDef->IsSpear(), BestDef->IsLarge(),
 					S->SpearAntiLargeBonus, P, CombatRng);
+				Dmg *= Atk->ConsumeCritMultiplier(); // Vanish crit (x1 for everyone else)
 				if (BestDef->ApplyModelDamage(BestIdx, Dmg))
 				{
 					Atk->AddKill();
@@ -364,8 +376,9 @@ void ANinjagoGameMode::RunCombatTick()
 			{
 				// Beyond melee but within range, and this model still has ammo: fire a shot.
 				const FNinjagoUnitRow& AR = Atk->GetRow();
-				const int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(
+				int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(
 					AR.RangedAttack, Atk->EffDamage(), AR.ArmourPiercing, BestDef->GetRow().Armour, P, CombatRng);
+				Dmg *= Atk->ConsumeCritMultiplier(); // Vanish crit (x1 for everyone else)
 				if (BestDef->ApplyModelDamage(BestIdx, Dmg))
 				{
 					Atk->AddKill();
@@ -432,9 +445,10 @@ ANinjagoUnit* ANinjagoGameMode::NearestEnemyUnit(const ANinjagoUnit* For) const
 	float BestDsq = TNumericLimits<float>::Max();
 	for (ANinjagoUnit* Enemy : AllUnits)
 	{
-		if (!IsValid(Enemy) || Enemy->GetTeam() == For->GetTeam() || Enemy->LivingModelCount() == 0)
+		if (!IsValid(Enemy) || Enemy->GetTeam() == For->GetTeam() || Enemy->LivingModelCount() == 0
+			|| Enemy->IsStealthed())
 		{
-			continue;
+			continue; // cannot seek a vanished enemy
 		}
 		const float Dsq = FVector::DistSquared2D(For->GetActorLocation(), Enemy->GetActorLocation());
 		if (Dsq < BestDsq)
