@@ -123,6 +123,9 @@ public:
 	/** Vanish: hide for Seconds and make the next attack a critical of the given multiplier. */
 	void ApplyVanish(float Seconds, int32 Multiplier);
 
+	/** Reveal a stealthed unit (e.g. a passive "Quiet One" on its first attack). */
+	void Reveal() { bStealthed = false; StealthTimer = 0.f; }
+
 	/** True if the next attack is a pending Vanish critical (peek; does not consume). */
 	bool HasCritPending() const { return bCritPending; }
 
@@ -263,6 +266,7 @@ private:
 	// Ability state
 	FNinjagoAbilityRow CachedAbility;
 	bool bHasAbility = false;
+	bool bIsPassive = false; // ability is always-on (PASSIVE), not player/AI activated
 	float AbilityCooldownRemaining = 0.f;
 	FTimerHandle AbilityChannelTimer;
 	int32 RemainingChannelTicks = 0;

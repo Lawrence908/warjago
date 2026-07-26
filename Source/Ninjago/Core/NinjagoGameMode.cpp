@@ -28,8 +28,9 @@ namespace
 	// Skulkin are morale-immune by faction and never rout.
 	// LRD_ICEEMPEROR is a guest freeze-caster (v0.9): select him and press Space to freeze Skulkin.
 	// LRD_SKALES is a guest hypnotist (v0.10): select him and press Space to mind-control a Skulkin unit.
-	// HRO_RONIN is a Ninja with Vanish (v0.17): select him, press Space to cloak and land a crit.
-	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES"), TEXT("HRO_RONIN") };
+	// HRO_RONIN is a Ninja with Vanish (v0.17). LRD_HARUMI is a guest with passive stealth (v0.19):
+	// she starts invisible and reveals for good on her first strike.
+	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES"), TEXT("HRO_RONIN"), TEXT("LRD_HARUMI") };
 	// HRO_WYPLASH adds a def+3 ally buff (v0.7); HRO_MACHIA is a guest resurrector (v0.15) that can
 	// reform a destroyed Skulkin unit at 60% HP.
 	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH"), TEXT("HRO_MACHIA") };
@@ -401,6 +402,7 @@ void ANinjagoGameMode::RunCombatTick()
 		if (bEngaged)
 		{
 			EngagedThisTick.Add(Atk);
+			Atk->Reveal(); // a passive-stealth unit reveals once it attacks (vanish self-reveals earlier)
 		}
 
 		// Deliver the charge's morale shock to each unit struck on impact, then spend the charge.

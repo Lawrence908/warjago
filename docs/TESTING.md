@@ -678,6 +678,49 @@ Play the default battle. Select `HRO_RONIN` (LMB) and press Space near the enemy
 
 ---
 
+## v0.18 - Unit info panel (branch `v0.17`)
+
+Selecting a unit shows an on-screen info panel: its name, flavour text (the row `Notes`), a stat
+line (models, strength %, attack, damage, defence, kills), and its ability with the Space hint. It
+clears when you deselect. On-screen text, no assets.
+
+### Info panel (visual)
+
+Play the default battle and left-click a unit.
+
+**Pass checks:**
+
+- [ ] An info panel appears: e.g. "Kai" / "Master of Fire." / "Models 1/1  Str 100% ..." /
+      "Ability: Fire Blast [Space]".
+- [ ] The stat line updates as the unit takes losses and scores kills.
+- [ ] Selecting a different unit swaps the panel; Esc (deselect) clears it.
+
+---
+
+## v0.19 - Passive stealth (The Quiet One) (branch `v0.17`)
+
+A unit with a PASSIVE `stealth=true` ability starts the battle invisible and stays cloaked (fully
+untargetable, using the same stealth handling as Vanish) until it makes its **first attack**, then
+reveals for good. Passive abilities are never fired by Space or the AI. The demo adds a guest
+assassin, `LRD_HARUMI`.
+
+Stateful integration, verified by trace; suite stays at 18.
+
+### Passive stealth (visual)
+
+Play the default battle and watch the Ninja side.
+
+**Pass checks:**
+
+- [ ] One Ninja unit (`LRD_HARUMI`) is **invisible from the start** - only a shimmer, no minifig,
+      no health bar.
+- [ ] Enemies ignore her while she closes in (untargetable by attacks and abilities alike).
+- [ ] When she lands her **first strike** she **reveals** and stays visible for the rest of the
+      battle.
+- [ ] Pressing Space while she is selected does nothing (a passive ability is not activatable).
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

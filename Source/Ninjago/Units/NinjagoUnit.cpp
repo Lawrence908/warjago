@@ -667,12 +667,19 @@ void ANinjagoUnit::CacheAbility()
 	{
 		CachedAbility = *Row;
 		bHasAbility = true;
+		bIsPassive = CachedAbility.Type.Equals(TEXT("PASSIVE"), ESearchCase::IgnoreCase);
+
+		// Passive stealth ("The Quiet One"): start cloaked, revealed for good on the first attack.
+		if (bIsPassive && FNinjagoAbilityEffect::ParseMagnitude(CachedAbility.Magnitude).Verb == TEXT("stealth"))
+		{
+			bStealthed = true;
+		}
 	}
 }
 
 bool ANinjagoUnit::CanFireAbility() const
 {
-	return bHasAbility && AbilityCooldownRemaining <= 0.f && LivingModelCount() > 0 && !IsStunned();
+	return bHasAbility && !bIsPassive && AbilityCooldownRemaining <= 0.f && LivingModelCount() > 0 && !IsStunned();
 }
 
 float ANinjagoUnit::GetAbilityCooldownFraction() const

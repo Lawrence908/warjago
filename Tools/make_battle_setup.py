@@ -14,8 +14,9 @@ UNIT_TABLE = "/Game/Data/dt_units"
 
 # Melee, ranged (v0.2), a breakable block NIN_SOLDIERS (v0.3), and a large monster
 # NIN_SAMURAIX (v0.5) for the Skulkin spears to brace against.
-# Guest casters: LRD_ICEEMPEROR (freeze, v0.9), LRD_SKALES (mind control, v0.10), HRO_RONIN (vanish, v0.17).
-NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS", "NIN_SAMURAIX", "LRD_ICEEMPEROR", "LRD_SKALES", "HRO_RONIN"]
+# Guests: LRD_ICEEMPEROR (freeze v0.9), LRD_SKALES (mind control v0.10), HRO_RONIN (vanish v0.17),
+# LRD_HARUMI (passive stealth v0.19).
+NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS", "NIN_SAMURAIX", "LRD_ICEEMPEROR", "LRD_SKALES", "HRO_RONIN", "LRD_HARUMI"]
 # HRO_WYPLASH carries a def+3 ally buff (v0.7); HRO_MACHIA is a guest resurrector (v0.15).
 SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS", "HRO_WYPLASH", "HRO_MACHIA"]
 
