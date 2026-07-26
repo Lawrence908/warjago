@@ -228,6 +228,18 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 		}
 	}
 
+	// Fully destroyed (models may still be reviving via ProcessRevives above): render the collapsed
+	// instances but take no movement, so a dead unit's anchor does not drift toward a stale order.
+	if (LivingModelCount() == 0)
+	{
+		if (Renderer)
+		{
+			const float DeadScale = CachedRow.ModelScale > 0.f ? CachedRow.ModelScale : 1.f;
+			Renderer->UpdateInstances(Models, DeadScale);
+		}
+		return;
+	}
+
 	// Frozen/stunned: hold in place, take no actions, just keep rendering.
 	if (StunTimer > 0.f)
 	{
@@ -423,7 +435,7 @@ void ANinjagoUnit::RebuildUnit(int32 HpPercent)
 		M.Hp = Hp;
 		M.Ammo = FMath::Max(0, CachedRow.Ammo);
 		M.ReviveTimer = 0.f;
-		M.bHasRevived = false;
+		// Keep bHasRevived: reform does not refund a Skulkin model's once-per-battle self-revive.
 		M.Location = SlotWorldLocation(M.SlotIndex == INDEX_NONE ? 0 : i, Count);
 		M.Yaw = GetActorRotation().Yaw;
 	}
