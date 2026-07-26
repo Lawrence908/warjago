@@ -53,8 +53,12 @@ public:
 	/** Set the row + team before FinishSpawning (used by the game mode when spawning armies). */
 	void ConfigureSpawn(UDataTable* Table, FName RowName, ETeam InTeam);
 
-	/** Apply combat damage to one model; kills it at <= 0 HP. */
-	void ApplyModelDamage(int32 ModelIndex, int32 Damage);
+	/** Apply combat damage to one model; kills it at <= 0 HP. Returns true if this call killed it. */
+	bool ApplyModelDamage(int32 ModelIndex, int32 Damage);
+
+	/** Enemy models this unit has killed this battle (for the MVP tally). */
+	int32 GetKillCount() const { return KillCount; }
+	void AddKill(int32 Count = 1) { KillCount += Count; }
 
 	/** Restore HP to one living model, capped at its per-model maximum. */
 	void ApplyModelHeal(int32 ModelIndex, int32 Amount);
@@ -209,6 +213,9 @@ private:
 
 	// Charge state: true when the unit can still deliver a first-contact charge.
 	bool bChargePending = true;
+
+	// Enemy models killed this battle.
+	int32 KillCount = 0;
 
 	// Active timed stat modifiers (buffs/debuffs).
 	FNinjagoModifiers Modifiers;

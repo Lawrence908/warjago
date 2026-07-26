@@ -364,22 +364,24 @@ void ANinjagoUnit::ConfigureSpawn(UDataTable* Table, FName RowName, ETeam InTeam
 	Team = InTeam;
 }
 
-void ANinjagoUnit::ApplyModelDamage(int32 ModelIndex, int32 Damage)
+bool ANinjagoUnit::ApplyModelDamage(int32 ModelIndex, int32 Damage)
 {
 	if (!Models.IsValidIndex(ModelIndex))
 	{
-		return;
+		return false;
 	}
 	FNinjagoModel& M = Models[ModelIndex];
 	if (!M.bAlive)
 	{
-		return;
+		return false;
 	}
 	M.Hp -= FMath::Max(0, Damage);
+	bool bKilled = false;
 	if (M.Hp <= 0)
 	{
 		M.Hp = 0;
 		M.bAlive = false;
+		bKilled = true;
 		// Schedule an "Already Dead" reassembly if this model has not used its revive yet.
 		if (bReviveCapable && !M.bHasRevived)
 		{
@@ -390,6 +392,7 @@ void ANinjagoUnit::ApplyModelDamage(int32 ModelIndex, int32 Damage)
 	{
 		State = EUnitState::Dead;
 	}
+	return bKilled;
 }
 
 void ANinjagoUnit::ApplyModelHeal(int32 ModelIndex, int32 Amount)
@@ -689,7 +692,10 @@ void ANinjagoUnit::ApplyAbilityDamageInRadius(const FVector& Center, float Radiu
 		{
 			if (EnemyModels[i].bAlive && FVector::DistSquared2D(Center, EnemyModels[i].Location) <= RadiusSq)
 			{
-				Enemy->ApplyModelDamage(i, Damage);
+				if (Enemy->ApplyModelDamage(i, Damage))
+				{
+					AddKill();
+				}
 			}
 		}
 	}
@@ -780,7 +786,10 @@ void ANinjagoUnit::ApplyAbilityChainDamage(const FVector& Center, float Radius, 
 	const TArray<int32> Chain = FNinjagoAbilityEffect::SelectNearest(Locs, Center, MaxTargets, Radius);
 	for (int32 Sel : Chain)
 	{
-		Owners[Sel]->ApplyModelDamage(Indices[Sel], Damage);
+		if (Owners[Sel]->ApplyModelDamage(Indices[Sel], Damage))
+		{
+			AddKill();
+		}
 	}
 }
 

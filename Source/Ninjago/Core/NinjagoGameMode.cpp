@@ -351,7 +351,10 @@ void ANinjagoGameMode::RunCombatTick()
 					BestDef->EffMeleeDefence(), DR.Armour,
 					bCharging, bAtkSpear, bAtkLarge, BestDef->IsSpear(), BestDef->IsLarge(),
 					S->SpearAntiLargeBonus, P, CombatRng);
-				BestDef->ApplyModelDamage(BestIdx, Dmg);
+				if (BestDef->ApplyModelDamage(BestIdx, Dmg))
+				{
+					Atk->AddKill();
+				}
 				bEngaged = true;
 				bMeleeThisTick = true;
 				Struck.Add(BestDef);
@@ -363,7 +366,10 @@ void ANinjagoGameMode::RunCombatTick()
 				const FNinjagoUnitRow& AR = Atk->GetRow();
 				const int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(
 					AR.RangedAttack, Atk->EffDamage(), AR.ArmourPiercing, BestDef->GetRow().Armour, P, CombatRng);
-				BestDef->ApplyModelDamage(BestIdx, Dmg);
+				if (BestDef->ApplyModelDamage(BestIdx, Dmg))
+				{
+					Atk->AddKill();
+				}
 				bEngaged = true;
 				EngagedThisTick.Add(BestDef);
 
@@ -538,6 +544,22 @@ void ANinjagoGameMode::CheckWinCondition()
 	else
 	{
 		Result = (Skulkin == 0) ? TEXT("Ninja win") : TEXT("Skulkin win");
+	}
+
+	// Battle MVP: the unit that killed the most enemy models.
+	ANinjagoUnit* Mvp = nullptr;
+	int32 BestKills = 0;
+	for (ANinjagoUnit* Unit : AllUnits)
+	{
+		if (IsValid(Unit) && Unit->GetKillCount() > BestKills)
+		{
+			BestKills = Unit->GetKillCount();
+			Mvp = Unit;
+		}
+	}
+	if (Mvp)
+	{
+		Result += FString::Printf(TEXT("   -   MVP: %s (%d kills)"), *Mvp->GetRow().DisplayName, BestKills);
 	}
 
 	UE_LOG(LogNinjago, Log, TEXT("Battle resolved: %s"), *Result);

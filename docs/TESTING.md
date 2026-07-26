@@ -635,6 +635,24 @@ Play the default battle and let a Skulkin unit be wiped out.
 
 ---
 
+## v0.16 - Battle MVP and kill stats (branch `v0.16`)
+
+Each unit tracks how many enemy models it kills (melee, ranged, and abilities), and the result
+banner crowns the battle MVP: "Ninja win  -  MVP: Kai (37 kills)". Pure counters, no assets.
+
+### MVP (visual)
+
+Play the default battle to a conclusion.
+
+**Pass checks:**
+
+- [ ] The result banner names an **MVP** and a kill count.
+- [ ] The MVP is a unit that did a lot of work (a hero or a big block usually); a Lord ability that
+      wipes a crowd (e.g. Samukai's Fury) credits its caster.
+- [ ] Kills come from melee, ranged, and ability damage alike.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
