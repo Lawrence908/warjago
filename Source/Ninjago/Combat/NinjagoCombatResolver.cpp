@@ -43,7 +43,7 @@ int32 FNinjagoCombatResolver::ResolveMelee(
 	int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
 	int32 DefenderMeleeDefence, int32 DefenderArmour,
 	bool bCharging, bool bAttackerSpear, bool bAttackerLarge, bool bDefenderSpear, bool bDefenderLarge,
-	int32 AntiLargeBonus, const FNinjagoCombatParams& Params, FRandomStream& Rng)
+	int32 AntiLargeBonus, const FNinjagoCombatParams& Params, FRandomStream& Rng, bool bGuaranteedHit)
 {
 	int32 EffDamage = AttackerDamage;
 
@@ -61,7 +61,7 @@ int32 FNinjagoCombatResolver::ResolveMelee(
 	}
 
 	const float Chance = HitChance(AttackerMeleeAttack, DefenderMeleeDefence, Params);
-	if (Rng.FRand() < Chance)
+	if (bGuaranteedHit || Rng.FRand() < Chance)
 	{
 		return DamageOnHit(EffDamage, AttackerArmourPiercing, DefenderArmour, Params);
 	}
@@ -99,10 +99,10 @@ float FNinjagoCombatResolver::RangedHitChance(int32 RangedAttack, const FNinjago
 
 int32 FNinjagoCombatResolver::ResolveRangedAttack(
 	int32 AttackerRangedAttack, int32 AttackerDamage, int32 AttackerArmourPiercing,
-	int32 DefenderArmour, const FNinjagoCombatParams& Params, FRandomStream& Rng)
+	int32 DefenderArmour, const FNinjagoCombatParams& Params, FRandomStream& Rng, bool bGuaranteedHit)
 {
 	const float Chance = RangedHitChance(AttackerRangedAttack, Params);
-	if (Rng.FRand() < Chance)
+	if (bGuaranteedHit || Rng.FRand() < Chance)
 	{
 		// Ranged damage reuses the melee damage model (floor + armour-piercing).
 		return DamageOnHit(AttackerDamage, AttackerArmourPiercing, DefenderArmour, Params);

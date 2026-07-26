@@ -671,10 +671,10 @@ Play the default battle. Select `HRO_RONIN` (LMB) and press Space near the enemy
 
 - [ ] Ronin **vanishes**: his minifig disappears, replaced by a **shimmer** sphere.
 - [ ] Enemies stop targeting/advancing on him while cloaked (they cannot see him).
-- [ ] His next hit is a **critical** (a big damage spike) and he **reappears**.
+- [ ] His next hit is a **guaranteed critical** (a big damage spike) and he **reappears**.
 - [ ] If ~10s pass without attacking, he reappears anyway (the crit is lost).
-
-Simplification: the crit multiplies the attack's damage; it is not forced to be a guaranteed hit.
+- [ ] While cloaked, enemy **abilities** (Fire Blast, freeze, hypnosis, etc.) cannot hit him either,
+      and the enemy AI does not react to him.
 
 ---
 

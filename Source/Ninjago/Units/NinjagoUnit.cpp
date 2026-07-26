@@ -694,7 +694,7 @@ void ANinjagoUnit::ApplyAbilityDamageInRadius(const FVector& Center, float Radiu
 	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
 	{
 		ANinjagoUnit* Enemy = *It;
-		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0 || Enemy->IsStealthed())
 		{
 			continue;
 		}
@@ -752,7 +752,7 @@ bool ANinjagoUnit::ShouldAIFireAbility() const
 	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
 	{
 		const ANinjagoUnit* Other = *It;
-		if (!IsValid(Other) || Other == this || Other->GetTeam() == Team || Other->LivingModelCount() == 0)
+		if (!IsValid(Other) || Other == this || Other->GetTeam() == Team || Other->LivingModelCount() == 0 || Other->IsStealthed())
 		{
 			continue;
 		}
@@ -778,7 +778,7 @@ void ANinjagoUnit::ApplyAbilityChainDamage(const FVector& Center, float Radius, 
 	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
 	{
 		ANinjagoUnit* Enemy = *It;
-		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0 || Enemy->IsStealthed())
 		{
 			continue;
 		}
@@ -842,7 +842,7 @@ void ANinjagoUnit::ApplyModifierInRadius(const FVector& Center, float Radius, bo
 			continue;
 		}
 		const bool bMatch = bEnemies ? (U->GetTeam() != Team) : (U->GetTeam() == Team);
-		if (!bMatch)
+		if (!bMatch || (bEnemies && U->IsStealthed())) // cannot debuff a vanished enemy
 		{
 			continue;
 		}
@@ -907,7 +907,7 @@ void ANinjagoUnit::ApplyControlToEnemies(const FVector& Center, float Radius, bo
 	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
 	{
 		ANinjagoUnit* Enemy = *It;
-		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0 || Enemy->IsStealthed())
 		{
 			continue;
 		}
@@ -946,7 +946,7 @@ void ANinjagoUnit::ApplyStunInRadius(const FVector& Center, float Radius, float 
 	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
 	{
 		ANinjagoUnit* Enemy = *It;
-		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0)
+		if (!IsValid(Enemy) || Enemy->GetTeam() == Team || Enemy->LivingModelCount() == 0 || Enemy->IsStealthed())
 		{
 			continue;
 		}

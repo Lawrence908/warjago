@@ -357,11 +357,12 @@ void ANinjagoGameMode::RunCombatTick()
 				// In melee range: unified strike with charge, anti-large, and spear-brace modifiers.
 				const FNinjagoUnitRow& AR = Atk->GetRow();
 				const FNinjagoUnitRow& DR = BestDef->GetRow();
+				const bool bCrit = Atk->HasCritPending(); // a Vanish crit is a guaranteed hit
 				int32 Dmg = FNinjagoCombatResolver::ResolveMelee(
 					Atk->EffMeleeAttack(), Atk->EffDamage(), AR.ChargeBonus, AR.ArmourPiercing,
 					BestDef->EffMeleeDefence(), DR.Armour,
 					bCharging, bAtkSpear, bAtkLarge, BestDef->IsSpear(), BestDef->IsLarge(),
-					S->SpearAntiLargeBonus, P, CombatRng);
+					S->SpearAntiLargeBonus, P, CombatRng, bCrit);
 				Dmg *= Atk->ConsumeCritMultiplier(); // Vanish crit (x1 for everyone else)
 				if (BestDef->ApplyModelDamage(BestIdx, Dmg))
 				{
@@ -376,8 +377,9 @@ void ANinjagoGameMode::RunCombatTick()
 			{
 				// Beyond melee but within range, and this model still has ammo: fire a shot.
 				const FNinjagoUnitRow& AR = Atk->GetRow();
+				const bool bCrit = Atk->HasCritPending();
 				int32 Dmg = FNinjagoCombatResolver::ResolveRangedAttack(
-					AR.RangedAttack, Atk->EffDamage(), AR.ArmourPiercing, BestDef->GetRow().Armour, P, CombatRng);
+					AR.RangedAttack, Atk->EffDamage(), AR.ArmourPiercing, BestDef->GetRow().Armour, P, CombatRng, bCrit);
 				Dmg *= Atk->ConsumeCritMultiplier(); // Vanish crit (x1 for everyone else)
 				if (BestDef->ApplyModelDamage(BestIdx, Dmg))
 				{

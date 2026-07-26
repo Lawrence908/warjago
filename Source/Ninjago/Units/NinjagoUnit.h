@@ -123,6 +123,9 @@ public:
 	/** Vanish: hide for Seconds and make the next attack a critical of the given multiplier. */
 	void ApplyVanish(float Seconds, int32 Multiplier);
 
+	/** True if the next attack is a pending Vanish critical (peek; does not consume). */
+	bool HasCritPending() const { return bCritPending; }
+
 	/** Damage multiplier for this unit's current attack: the crit value once, then 1 (and reveal). */
 	int32 ConsumeCritMultiplier();
 

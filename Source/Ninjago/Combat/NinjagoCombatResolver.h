@@ -64,7 +64,7 @@ public:
 		int32 AttackerMeleeAttack, int32 AttackerDamage, int32 AttackerChargeBonus, int32 AttackerArmourPiercing,
 		int32 DefenderMeleeDefence, int32 DefenderArmour,
 		bool bCharging, bool bAttackerSpear, bool bAttackerLarge, bool bDefenderSpear, bool bDefenderLarge,
-		int32 AntiLargeBonus, const FNinjagoCombatParams& Params, FRandomStream& Rng);
+		int32 AntiLargeBonus, const FNinjagoCombatParams& Params, FRandomStream& Rng, bool bGuaranteedHit = false);
 
 	// --- Charge (v0.4): a first-contact strike adds ChargeBonus to the attacker's damage ---
 
@@ -85,7 +85,7 @@ public:
 	/** Roll one ranged shot. Returns damage on a hit, 0 on a miss. Damage reuses the melee damage model. */
 	static int32 ResolveRangedAttack(
 		int32 AttackerRangedAttack, int32 AttackerDamage, int32 AttackerArmourPiercing,
-		int32 DefenderArmour, const FNinjagoCombatParams& Params, FRandomStream& Rng);
+		int32 DefenderArmour, const FNinjagoCombatParams& Params, FRandomStream& Rng, bool bGuaranteedHit = false);
 
 	/** Convenience overload reading stats straight off two unit rows. */
 	static int32 ResolveRangedAttack(const FNinjagoUnitRow& Attacker, const FNinjagoUnitRow& Defender,
