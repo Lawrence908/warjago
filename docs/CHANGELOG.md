@@ -4,22 +4,23 @@ A Total War-style LEGO Ninjago army battler, built for a seven-year-old. This fi
 version added. Per-version testing steps live in [`docs/TESTING.md`](TESTING.md).
 
 > **Important:** the project is developed on a Linux host with no engine installed. **v0.1 through
-> v0.16 (plus three review passes) are authored but not yet compiled or playtested.** The first
-> Windows build (UE 5.7.4) is the
+> v0.22 (plus six review passes) are authored but not yet compiled or playtested.** Every ability
+> verb in the data is now implemented. The first Windows build (UE 5.7.4) is the
 > real acceptance gate. Pure-logic systems are backed by headless automation tests and were
 > additionally checked with standalone math mirrors; the stateful/integration systems (marked below)
 > were verified by reasoning and traces, not tests.
 
 ## Branch model
 
-Each version is a cumulative branch off the previous one, so a later branch contains everything
-before it. `v0.16` is the fullest build.
+Each version was a cumulative branch off the previous one. As of the consolidation, **`main`
+contains everything through v0.22** and is the feature-complete baseline; the per-version branches
+remain as history.
 
 ```
-main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8 -> v0.9
-     -> v0.10 -> v0.11 -> v0.12 -> v0.13 -> v0.14 -> v0.15 -> v0.16
+main == v0.1 -> ... -> v0.16 -> v0.17 -> v0.18 -> v0.19 -> v0.20 -> v0.21 -> v0.22
 ```
-(Review passes 1 and 2 are commits on the v0.11 branch; review pass 3 is on v0.15.)
+(Review passes 1-2 are on the v0.11 branch, pass 3 on v0.15; the Vanish, Summon, and Terrain
+pre-commit reviews are folded into their own commits on v0.17.)
 
 ## At a glance
 
@@ -44,6 +45,12 @@ main -> v0.1 -> v0.2 -> v0.3 -> v0.4 -> v0.5 -> v0.6 -> v0.7 -> v0.8 -> v0.9
 | v0.15 | Resurrection (Reform) | 18 | trace |
 | review 3 | v0.10-v0.15 audit, 2 fixes | 18 | code review |
 | v0.16 | Battle MVP and kill stats | 18 | trace |
+| v0.17 | Vanish (stealth strike) | 18 | trace + review (2 fixes) |
+| v0.18 | Selected-unit info panel | 18 | trace |
+| v0.19 | Passive stealth (Quiet One) | 18 | trace |
+| v0.20 | Controls help overlay | 18 | trace |
+| v0.21 | Summon | 18 | trace + review (1 fix) |
+| v0.22 | Terrain: Ice Wall | 18 | trace + review (1 fix) |
 
 ---
 
@@ -196,6 +203,48 @@ Skulkin model's once-per-battle self-revive.
 - Each unit counts the enemy models it kills across melee, ranged, and abilities (ability kills go to
   the caster), and the result banner crowns the top killer as the battle MVP. Pure counters.
 
+## v0.17 - Vanish (stealth strike) _(integration)_
+
+- An active ability hides a unit (fully untargetable) for its duration and makes the next attack a
+  guaranteed critical, which reveals it; a timeout reveals it too. Models render invisible with a
+  shimmer marker. Demo gains a Ninja with Vanish, `HRO_RONIN`.
+- **Pre-commit review** fixed two gaps: stealth was leaking through enemy abilities and AI detection
+  (now consistent across melee, ranged, and every ability path), and the "guaranteed" crit could
+  whiff (now a real guaranteed hit).
+
+## v0.18 - Selected-unit info panel
+
+- Selecting a unit shows its name, flavour text, a live stat line (models, strength, attack, damage,
+  defence, kills), and its ability with the Space hint. On-screen text, clears on deselect.
+
+## v0.19 - Passive stealth (The Quiet One) _(integration)_
+
+- A unit with a PASSIVE `stealth` ability starts the battle cloaked (reusing the Vanish stealth
+  handling) and reveals for good on its first attack. Passive abilities are never fired by Space or
+  the AI. Demo gains a guest assassin, `LRD_HARUMI`.
+
+## v0.20 - Controls help overlay
+
+- An on-screen controls list, shown by default and toggled with H, so the game is playable without
+  the docs.
+
+## v0.21 - Summon _(integration)_
+
+- A summon ability calls in a temporary monster (a giant serpent) to fight for the caster's team,
+  vanishing after its lifetime. The spawn is queued and joins the combat set only at safe points
+  (never mid-iteration), avoiding array corruption. Demo gains a guest summoner, `LRD_CLOUSE`.
+- **Pre-commit review** fixed a race where a summon cast on the tick its summoner died could be lost
+  to a premature win (the win count now flushes pending summons first).
+
+## v0.22 - Terrain: Ice Wall _(integration)_
+
+- Zane's Ice Wall raises a temporary line-segment barrier. Unit movement is clamped so it never
+  crosses (units stop and wait, there is no pathfinding), and combat targets whose line crosses a
+  wall are skipped, so it is a real barrier - no movement or attacks through it. The last
+  unimplemented ability class; Zane was already in the demo.
+- **Pre-commit review** confirmed no crash/logic bug (geometry sound, the clamp converges) and added
+  the no-attacks-through-wall rule so the wall shields rather than just repositioning the clash.
+
 ---
 
 ## Roadmap
@@ -205,31 +254,26 @@ verify without a compiler is largely mined out, so most of these are more engine
 lower-confidence to build without the editor.
 
 **Do first**
-- **Compile and playtest on Windows.** Sixteen phases plus three review passes have never been
-  compiled. The reviews caught the critical bugs, but a green build is the real gate. Watch the
-  first-build items in `docs/TESTING.md` (target-settings enums, the Python material, the `Tier`
-  import).
+- **Compile and playtest on Windows.** Twenty-two phases plus six review passes have never been
+  compiled. The reviews caught and fixed the real bugs, but a green build is the acceptance gate.
+  Watch the first-build items in `docs/TESTING.md` (target-settings enums, the Python material, the
+  `Tier` import).
 
-**Done since the first roadmap:** mind-control (v0.10), AI ability usage (v0.11), restart/replay
-loop (v0.12), health bars + team tally (v0.13), preset scenarios (v0.14), resurrection (v0.15),
-battle MVP (v0.16), and three self-review passes.
+**The mechanic space is essentially complete.** Every ability verb in the data is implemented
+(damage, chain, heal, buffs, freeze, mind-control, resurrection, vanish, passive stealth, summon,
+terrain), alongside the full combat model, faction mechanics, AI, replay loop, and a debug-draw
+readability/usability layer. What remains needs a compiler, art, or audio.
 
-**Playability and feel** (mostly presentation)
-- A real UMG win screen and menus (currently debug-draw / on-screen messages).
-- A proper selection decal and health bars as widgets (currently debug-draw).
+**Playability and feel** (mostly presentation, needs UMG/assets)
+- A real UMG win screen, menus, and a pre-battle army picker (currently debug-draw / number keys).
+- Selection decal, health bars, and the info/help panels as proper widgets (currently debug-draw).
 - Hit/death feedback and sound cues.
 
-**More combat and ability classes** (bigger engine systems, lower confidence to build blind)
-- Terrain: Zane's Ice Wall and obstacles. Needs blocking geometry and steering-around, which cuts
-  against the current flat-plane/straight-line movement.
-- Summon/raise (Serpentine Fangpyre, Greenbones) - spawns new units mid-battle; needs the game mode
-  to register units into the combat set at runtime.
-- Passive abilities and auras (continuous, always-on buffs from PASSIVE/AURA ability units).
-- Stealth and reveal.
-
-**Content**
-- Wire more of the 17 factions playable; a pre-battle army picker (UMG). Preset scenarios (v0.14)
-  cover some of this without a menu.
+**Deeper systems** (larger, lower-confidence without the editor)
+- Real pathfinding so units route *around* the Ice Wall and each other, instead of stopping at it.
+- Passive raise-on-death auras (enemies dying near a raiser rise as your units) - the one summon
+  variant not built, since it spawns per-death.
+- A translucent/emissive material so stealth and abilities can fade/glow instead of using markers.
 
 **Art**
 - Replace placeholder minifig primitives with real geometry from the LDraw parts library.
