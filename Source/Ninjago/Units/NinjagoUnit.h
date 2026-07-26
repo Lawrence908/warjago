@@ -266,6 +266,7 @@ private:
 	float ControlTimer = 0.f;
 
 	void ProcessRevives(float DeltaSeconds);
+	FVector BlockedMove(const FVector& From, const FVector& To) const; // stop at any Ice Wall
 	void ApplyStunInRadius(const FVector& Center, float Radius, float Seconds);
 	void ApplyControlToEnemies(const FVector& Center, float Radius, bool bSingleTarget, float Duration);
 	void ClearOrdersForRetarget();

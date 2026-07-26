@@ -761,6 +761,32 @@ Play the default battle. Select `LRD_CLOUSE` and press Space (or let the AI cast
 
 ---
 
+## v0.22 - Terrain: Ice Wall (branch `v0.17`)
+
+Zane's Ice Wall (`terrain=wall`) raises a temporary barrier ahead of him. Units cannot walk through
+it (they stop and wait, there is no pathfinding) and cannot attack through it either, so it is a
+real shield: enemies stopped on the far side cannot reach the Ninja behind it. The wall is a line
+segment; unit movement is clamped and combat targets whose line crosses a wall are skipped. Zane is
+already in the default Ninja roster, so his ability now works.
+
+Approximation: only the unit anchor is blocked for movement (individual models can cluster at the
+wall), and blocked units wait rather than pathing around. Abilities/magic still pass over the wall.
+This is the last unimplemented ability class.
+
+### Ice Wall (visual)
+
+Play the default battle. Select `HRO_ZANE` and press Space (or let the AI cast it as enemies close).
+
+**Pass checks:**
+
+- [ ] A cyan **wall** appears ahead of Zane.
+- [ ] Enemy units advancing into it **stop** at the wall instead of passing through.
+- [ ] Units on opposite sides of the wall **do not attack through it** (it is a real barrier).
+- [ ] After ~25s the wall **disappears** and the blocked units resume advancing.
+- [ ] Units are not permanently stuck or jittering against the wall (they hold, then move once it is gone).
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

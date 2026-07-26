@@ -13,6 +13,15 @@ class ANinjagoProjectileFX;
 class UNinjagoBattleSetup;
 class UDataTable;
 
+/** A temporary line-segment barrier (Zane's Ice Wall) that units cannot walk through. */
+struct FNinjagoWall
+{
+	FVector Center = FVector::ZeroVector;
+	FVector Dir = FVector::ForwardVector; // unit vector along the wall, in XY
+	float HalfLength = 500.f;
+	float Remaining = 0.f;
+};
+
 /**
  * v0.1 game mode. Installs the battle camera + player controller, spawns both armies (from a
  * UNinjagoBattleSetup, or a code default when none is provided and the level is empty), runs the
@@ -42,6 +51,15 @@ public:
 	 */
 	void RequestSummon(ETeam Team, const FVector& Location, float Lifetime);
 
+	/** Raise a temporary wall barrier (Ice Wall). */
+	void RaiseWall(const FVector& Center, const FVector& Dir, float HalfLength, float Duration);
+
+	/** Clamp a proposed move From->To so it does not cross any active wall. Returns the allowed target. */
+	FVector BlockMovement(const FVector& From, const FVector& To) const;
+
+	/** True if the straight line From->To crosses an active wall (used to block attacks through it). */
+	bool IsPathBlocked(const FVector& From, const FVector& To) const;
+
 protected:
 	/** Optional battle definition. If unset, a default is loaded/synthesised for an empty level. */
 	UPROPERTY(EditAnywhere, Category="Ninjago")
@@ -67,6 +85,9 @@ private:
 
 	/** Display name of the current preset scenario. */
 	FString ActiveScenarioName = TEXT("Grand Battle");
+
+	/** Active wall barriers (Ice Wall), ticked down and drawn each frame. */
+	TArray<FNinjagoWall> ActiveWalls;
 
 	void GatherUnits();
 	void SpawnFromSetup(const UNinjagoBattleSetup* Setup);

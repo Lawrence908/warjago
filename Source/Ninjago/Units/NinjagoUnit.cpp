@@ -290,7 +290,7 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 			{
 				const float Speed = FMath::Max(0.f, EffSpeedCmS())
 					* GetDefault<UNinjagoSettings>()->MoraleRoutSpeedMultiplier;
-				SetActorLocation(Anchor + Away.GetSafeNormal2D() * Speed * DeltaSeconds);
+				SetActorLocation(BlockedMove(Anchor, Anchor + Away.GetSafeNormal2D() * Speed * DeltaSeconds));
 			}
 		}
 		SteerModels(DeltaSeconds);
@@ -341,14 +341,14 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 		{
 			if (!bAttack)
 			{
-				SetActorLocation(FVector(RawTarget.X, RawTarget.Y, Anchor.Z));
+				SetActorLocation(BlockedMove(Anchor, FVector(RawTarget.X, RawTarget.Y, Anchor.Z)));
 				OrderType = EOrderType::NoOrder;
 				State = EUnitState::Idle;
 			}
 		}
 		else
 		{
-			SetActorLocation(Anchor + ToTarget.GetSafeNormal2D() * Speed * DeltaSeconds);
+			SetActorLocation(BlockedMove(Anchor, Anchor + ToTarget.GetSafeNormal2D() * Speed * DeltaSeconds));
 		}
 	}
 
@@ -759,7 +759,7 @@ bool ANinjagoUnit::ShouldAIFireAbility() const
 
 	const bool bOffensive = (Mag.Verb == TEXT("dmg") || Mag.Verb == TEXT("freeze")
 		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("crit")
-		|| Mag.Verb == TEXT("summon"));
+		|| Mag.Verb == TEXT("summon") || Mag.Verb == TEXT("terrain"));
 	const bool bSupport = (Mag.Verb == TEXT("heal") || Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def")
 		|| Mag.Verb == TEXT("speed") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"));
 	if (!bOffensive && !bSupport)
@@ -897,6 +897,15 @@ int32 ANinjagoUnit::ConsumeCritMultiplier()
 	bStealthed = false;
 	StealthTimer = 0.f;
 	return CritMultiplier;
+}
+
+FVector ANinjagoUnit::BlockedMove(const FVector& From, const FVector& To) const
+{
+	if (ANinjagoGameMode* GM = GetWorld()->GetAuthGameMode<ANinjagoGameMode>())
+	{
+		return GM->BlockMovement(From, To);
+	}
+	return To;
 }
 
 void ANinjagoUnit::ClearOrdersForRetarget()
@@ -1062,6 +1071,19 @@ bool ANinjagoUnit::TryFireAbility()
 		if (ANinjagoGameMode* GM = GetWorld()->GetAuthGameMode<ANinjagoGameMode>())
 		{
 			GM->RequestSummon(Team, Spot, Life);
+		}
+	}
+	else if (Mag.Verb == TEXT("terrain"))
+	{
+		// Ice Wall: raise a barrier ahead of the caster, perpendicular to its facing.
+		if (ANinjagoGameMode* GM = GetWorld()->GetAuthGameMode<ANinjagoGameMode>())
+		{
+			const FVector Fwd = GetActorForwardVector();
+			const FVector WallCenter = Centre + Fwd * 500.f;
+			const FVector WallDir = FVector::CrossProduct(Fwd, FVector::UpVector).GetSafeNormal2D();
+			const float HalfLen = FMath::Max(300.f, CachedAbility.RadiusCm * 0.5f);
+			const float Dur = CachedAbility.DurationS > 0.f ? CachedAbility.DurationS : 20.f;
+			GM->RaiseWall(WallCenter, WallDir, HalfLen, Dur);
 		}
 	}
 	else if (Mag.Verb == TEXT("control"))

@@ -38,6 +38,27 @@ namespace
 	// Which preset the code-default battle spawns. Persists across level reloads within a session.
 	int32 GScenarioIndex = 0;
 
+	// 2D segment intersection. If AB crosses CD, returns true and the parameter T along AB (0..1).
+	bool SegmentsCross(const FVector2D& A, const FVector2D& B, const FVector2D& C, const FVector2D& D, float& OutT)
+	{
+		const FVector2D AB = B - A;
+		const FVector2D CD = D - C;
+		const float Denom = AB.X * CD.Y - AB.Y * CD.X;
+		if (FMath::IsNearlyZero(Denom))
+		{
+			return false; // parallel
+		}
+		const FVector2D AC = C - A;
+		const float T = (AC.X * CD.Y - AC.Y * CD.X) / Denom;
+		const float U = (AC.X * AB.Y - AC.Y * AB.X) / Denom;
+		if (T >= 0.f && T <= 1.f && U >= 0.f && U <= 1.f)
+		{
+			OutT = T;
+			return true;
+		}
+		return false;
+	}
+
 	// Fill the two army rosters and the display name for a preset scenario (keys 1-4 in play).
 	void GetScenario(int32 Index, TArray<FName>& OutNinja, TArray<FName>& OutSkulkin, FString& OutName)
 	{
@@ -78,6 +99,27 @@ ANinjagoGameMode::ANinjagoGameMode()
 void ANinjagoGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	// Ice walls: age out expired ones and draw the rest as a cyan barrier.
+	for (int32 i = ActiveWalls.Num() - 1; i >= 0; --i)
+	{
+		ActiveWalls[i].Remaining -= DeltaSeconds;
+		if (ActiveWalls[i].Remaining <= 0.f)
+		{
+			ActiveWalls.RemoveAtSwap(i);
+			continue;
+		}
+		const FNinjagoWall& W = ActiveWalls[i];
+		const FVector W1 = W.Center - W.Dir * W.HalfLength;
+		const FVector W2 = W.Center + W.Dir * W.HalfLength;
+		const FVector Up(0.f, 0.f, 220.f);
+		const FColor Ice(140, 210, 255);
+		DrawDebugLine(GetWorld(), W1, W2, Ice, false, -1.f, 0, 18.f);
+		DrawDebugLine(GetWorld(), W1 + Up, W2 + Up, Ice, false, -1.f, 0, 18.f);
+		DrawDebugLine(GetWorld(), W1, W1 + Up, Ice, false, -1.f, 0, 18.f);
+		DrawDebugLine(GetWorld(), W2, W2 + Up, Ice, false, -1.f, 0, 18.f);
+		DrawDebugLine(GetWorld(), W.Center, W.Center + Up, Ice, false, -1.f, 0, 18.f);
+	}
 
 	// Per-unit health bar (green when full, red when nearly dead) and status markers.
 	for (ANinjagoUnit* Unit : AllUnits)
@@ -232,6 +274,72 @@ void ANinjagoGameMode::LoadScenario(int32 Index)
 	RestartBattle(); // reload; the new StartPlay spawns the chosen scenario
 }
 
+void ANinjagoGameMode::RaiseWall(const FVector& Center, const FVector& Dir, float HalfLength, float Duration)
+{
+	FNinjagoWall Wall;
+	Wall.Center = Center;
+	Wall.Dir = Dir.GetSafeNormal2D();
+	Wall.HalfLength = FMath::Max(50.f, HalfLength);
+	Wall.Remaining = FMath::Max(1.f, Duration);
+	ActiveWalls.Add(Wall);
+}
+
+FVector ANinjagoGameMode::BlockMovement(const FVector& From, const FVector& To) const
+{
+	if (ActiveWalls.Num() == 0)
+	{
+		return To;
+	}
+	const FVector2D A(From.X, From.Y);
+	const FVector2D B(To.X, To.Y);
+
+	float NearestT = 1.f;
+	bool bBlocked = false;
+	for (const FNinjagoWall& Wall : ActiveWalls)
+	{
+		const FVector2D WDir(Wall.Dir.X, Wall.Dir.Y);
+		const FVector2D WC(Wall.Center.X, Wall.Center.Y);
+		const FVector2D W1 = WC - WDir * Wall.HalfLength;
+		const FVector2D W2 = WC + WDir * Wall.HalfLength;
+		float T = 1.f;
+		if (SegmentsCross(A, B, W1, W2, T) && T < NearestT)
+		{
+			NearestT = T;
+			bBlocked = true;
+		}
+	}
+	if (!bBlocked)
+	{
+		return To;
+	}
+	// Stop just short of the wall.
+	const FVector2D Stop = A + (B - A) * (NearestT * 0.9f);
+	return FVector(Stop.X, Stop.Y, To.Z);
+}
+
+bool ANinjagoGameMode::IsPathBlocked(const FVector& From, const FVector& To) const
+{
+	if (ActiveWalls.Num() == 0)
+	{
+		return false;
+	}
+	const FVector2D A(From.X, From.Y);
+	const FVector2D B(To.X, To.Y);
+	for (const FNinjagoWall& Wall : ActiveWalls)
+	{
+		const FVector2D WDir(Wall.Dir.X, Wall.Dir.Y);
+		const FVector2D WC(Wall.Center.X, Wall.Center.Y);
+		const FVector2D W1 = WC - WDir * Wall.HalfLength;
+		const FVector2D W2 = WC + WDir * Wall.HalfLength;
+		float T = 1.f;
+		if (SegmentsCross(A, B, W1, W2, T))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void ANinjagoGameMode::FlushPendingSummons()
 {
 	// Move queued summons into the live combat set. Called only at safe points (never mid-iteration).
@@ -316,6 +424,7 @@ void ANinjagoGameMode::RunCombatTick()
 
 	const float EngageR = S->EngageRangeCm;
 	const float EngageRSq = EngageR * EngageR;
+	const bool bWallsActive = ActiveWalls.Num() > 0; // only pay the wall cost when a wall exists
 
 	for (ANinjagoUnit* Atk : AllUnits)
 	{
@@ -367,6 +476,11 @@ void ANinjagoGameMode::RunCombatTick()
 					const float Dsq = FVector::DistSquared2D(AtkModels[ai].Location, DefModels[di].Location);
 					if (Dsq <= BestDsq)
 					{
+						// Cannot fight through an Ice Wall: skip a target the wall stands between.
+						if (bWallsActive && IsPathBlocked(AtkModels[ai].Location, DefModels[di].Location))
+						{
+							continue;
+						}
 						BestDsq = Dsq;
 						BestDef = Def;
 						BestIdx = di;
