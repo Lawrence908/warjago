@@ -31,9 +31,9 @@ namespace
 	// HRO_RONIN is a Ninja with Vanish (v0.17). LRD_HARUMI is a guest with passive stealth (v0.19):
 	// she starts invisible and reveals for good on her first strike.
 	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES"), TEXT("HRO_RONIN"), TEXT("LRD_HARUMI") };
-	// HRO_WYPLASH adds a def+3 ally buff (v0.7); HRO_MACHIA is a guest resurrector (v0.15) that can
-	// reform a destroyed Skulkin unit at 60% HP.
-	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH"), TEXT("HRO_MACHIA") };
+	// HRO_WYPLASH: def+3 ally buff (v0.7). HRO_MACHIA: guest resurrector (v0.15). LRD_CLOUSE: guest
+	// summoner (v0.21) who calls in a giant serpent to fight for the Skulkin.
+	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH"), TEXT("HRO_MACHIA"), TEXT("LRD_CLOUSE") };
 
 	// Which preset the code-default battle spawns. Persists across level reloads within a session.
 	int32 GScenarioIndex = 0;
@@ -232,6 +232,31 @@ void ANinjagoGameMode::LoadScenario(int32 Index)
 	RestartBattle(); // reload; the new StartPlay spawns the chosen scenario
 }
 
+void ANinjagoGameMode::FlushPendingSummons()
+{
+	// Move queued summons into the live combat set. Called only at safe points (never mid-iteration).
+	if (PendingSummons.Num() > 0)
+	{
+		AllUnits.Append(PendingSummons);
+		PendingSummons.Reset();
+	}
+}
+
+void ANinjagoGameMode::RequestSummon(ETeam Team, const FVector& Location, float Lifetime)
+{
+	UDataTable* Table = LoadObject<UDataTable>(nullptr, UnitTablePath);
+	const FName RowKey = GetDefault<UNinjagoSettings>()->SummonedUnitRow;
+	if (!Table || RowKey.IsNone())
+	{
+		return;
+	}
+	if (ANinjagoUnit* Summoned = SpawnUnit(Table, RowKey, Team, Location, FRotator::ZeroRotator))
+	{
+		Summoned->SetSummoned(Lifetime);
+		PendingSummons.Add(Summoned); // do not touch AllUnits here; flushed at the next combat tick
+	}
+}
+
 void ANinjagoGameMode::SpawnArmyLine(UDataTable* Table, const TArray<FName>& Army, ETeam Team, float LineX, float Yaw, float UnitSpacing)
 {
 	static const FString Ctx(TEXT("SpawnArmyLine"));
@@ -277,6 +302,7 @@ void ANinjagoGameMode::RunCombatTick()
 	}
 	bCombatHasRun = true;
 	EngagedThisTick.Reset();
+	FlushPendingSummons(); // summons join the combat set here, before any iteration this tick
 
 	const UNinjagoSettings* S = GetDefault<UNinjagoSettings>();
 	FNinjagoCombatParams P;
@@ -520,6 +546,10 @@ void ANinjagoGameMode::CheckWinCondition()
 	{
 		return; // do not declare a winner before the first combat tick has actually run
 	}
+
+	// Count any just-summoned units toward their side, so a pending summon is not lost to an
+	// early "win" if its summoner died on the same tick it was cast.
+	FlushPendingSummons();
 
 	// A team is only beaten when it has no living models AND none reassembling ("Already Dead").
 	int32 Ninja = 0;

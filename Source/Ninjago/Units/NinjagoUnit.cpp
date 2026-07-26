@@ -6,6 +6,7 @@
 #include "Combat/NinjagoMoraleResolver.h"
 #include "Combat/NinjagoAbilityEffect.h"
 #include "Core/NinjagoSettings.h"
+#include "Core/NinjagoGameMode.h"
 #include "NinjagoLog.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
@@ -208,6 +209,22 @@ void ANinjagoUnit::Tick(float DeltaSeconds)
 
 	Modifiers.Tick(DeltaSeconds);
 	ProcessRevives(DeltaSeconds);
+
+	// A summoned unit vanishes when its lifetime ends (its models simply die).
+	if (bSummoned && SummonLifetime > 0.f)
+	{
+		SummonLifetime -= DeltaSeconds;
+		if (SummonLifetime <= 0.f)
+		{
+			for (FNinjagoModel& M : Models)
+			{
+				M.bAlive = false;
+				M.Hp = 0;
+				M.ReviveTimer = 0.f;
+			}
+			State = EUnitState::Dead;
+		}
+	}
 
 	if (PlayerCastGrace > 0.f)
 	{
@@ -741,7 +758,8 @@ bool ANinjagoUnit::ShouldAIFireAbility() const
 	}
 
 	const bool bOffensive = (Mag.Verb == TEXT("dmg") || Mag.Verb == TEXT("freeze")
-		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("crit"));
+		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow") || Mag.Verb == TEXT("crit")
+		|| Mag.Verb == TEXT("summon"));
 	const bool bSupport = (Mag.Verb == TEXT("heal") || Mag.Verb == TEXT("atk") || Mag.Verb == TEXT("def")
 		|| Mag.Verb == TEXT("speed") || Mag.Verb == TEXT("buff") || Mag.Verb == TEXT("atkspeed"));
 	if (!bOffensive && !bSupport)
@@ -1035,6 +1053,16 @@ bool ANinjagoUnit::TryFireAbility()
 		// Vanish: hide for the duration and make the next attack a critical (crit=x3).
 		const float Dur = CachedAbility.DurationS > 0.f ? CachedAbility.DurationS : 8.f;
 		ApplyVanish(Dur, Mag.Value);
+	}
+	else if (Mag.Verb == TEXT("summon"))
+	{
+		// Call a temporary monster to fight for this unit's team, just ahead of it.
+		const float Life = CachedAbility.DurationS > 0.f ? CachedAbility.DurationS : S->SummonDefaultLifetime;
+		const FVector Spot = Centre + GetActorForwardVector() * 300.f;
+		if (ANinjagoGameMode* GM = GetWorld()->GetAuthGameMode<ANinjagoGameMode>())
+		{
+			GM->RequestSummon(Team, Spot, Life);
+		}
 	}
 	else if (Mag.Verb == TEXT("control"))
 	{

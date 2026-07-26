@@ -17,8 +17,8 @@ UNIT_TABLE = "/Game/Data/dt_units"
 # Guests: LRD_ICEEMPEROR (freeze v0.9), LRD_SKALES (mind control v0.10), HRO_RONIN (vanish v0.17),
 # LRD_HARUMI (passive stealth v0.19).
 NINJA = ["HRO_KAI", "HRO_JAY", "HRO_COLE", "HRO_ZANE", "NIN_SHINTARO", "NIN_SOLDIERS", "NIN_SAMURAIX", "LRD_ICEEMPEROR", "LRD_SKALES", "HRO_RONIN", "LRD_HARUMI"]
-# HRO_WYPLASH carries a def+3 ally buff (v0.7); HRO_MACHIA is a guest resurrector (v0.15).
-SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS", "HRO_WYPLASH", "HRO_MACHIA"]
+# Guests: HRO_WYPLASH (def+3 buff v0.7), HRO_MACHIA (resurrect v0.15), LRD_CLOUSE (summon v0.21).
+SKULKIN = ["SKU_MINERS", "SKU_WARRIORS", "SKU_WATCHMEN", "LRD_SAMUKAI", "SKU_ENGINEERS", "HRO_WYPLASH", "HRO_MACHIA", "LRD_CLOUSE"]
 
 
 def main():

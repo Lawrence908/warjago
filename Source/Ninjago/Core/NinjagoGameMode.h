@@ -36,6 +36,12 @@ public:
 	/** Switch the code-default battle to a preset scenario (0..3) and restart (keys 1-4). */
 	void LoadScenario(int32 Index);
 
+	/**
+	 * Queue a summoned unit to spawn for Team at Location with the given lifetime. It joins the
+	 * combat set at the start of the next combat tick (never mid-iteration), avoiding array churn.
+	 */
+	void RequestSummon(ETeam Team, const FVector& Location, float Lifetime);
+
 protected:
 	/** Optional battle definition. If unset, a default is loaded/synthesised for an empty level. */
 	UPROPERTY(EditAnywhere, Category="Ninjago")
@@ -46,6 +52,7 @@ protected:
 
 private:
 	UPROPERTY() TArray<TObjectPtr<ANinjagoUnit>> AllUnits;
+	UPROPERTY() TArray<TObjectPtr<ANinjagoUnit>> PendingSummons; // join AllUnits at the next combat tick
 	UPROPERTY() TObjectPtr<ANinjagoProjectileFX> ProjectileFX;
 
 	FTimerHandle CombatTimer;
@@ -71,6 +78,7 @@ private:
 	void AcquireTargets();
 	void MoralePass();
 	void AbilityAIPass();
+	void FlushPendingSummons();
 	void CheckWinCondition();
 	int32 LivingCountForTeam(ETeam Team) const;
 	ANinjagoUnit* NearestEnemyUnit(const ANinjagoUnit* For) const;

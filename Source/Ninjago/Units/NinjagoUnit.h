@@ -53,6 +53,9 @@ public:
 	/** Set the row + team before FinishSpawning (used by the game mode when spawning armies). */
 	void ConfigureSpawn(UDataTable* Table, FName RowName, ETeam InTeam);
 
+	/** Mark this as a temporary summoned unit that vanishes after Lifetime seconds. */
+	void SetSummoned(float Lifetime) { bSummoned = true; SummonLifetime = FMath::Max(1.f, Lifetime); }
+
 	/** Apply combat damage to one model; kills it at <= 0 HP. Returns true if this call killed it. */
 	bool ApplyModelDamage(int32 ModelIndex, int32 Damage);
 
@@ -233,6 +236,10 @@ private:
 
 	// Enemy models killed this battle.
 	int32 KillCount = 0;
+
+	// Summoned units are temporary and vanish when their lifetime runs out.
+	bool bSummoned = false;
+	float SummonLifetime = 0.f;
 
 	// Active timed stat modifiers (buffs/debuffs).
 	FNinjagoModifiers Modifiers;

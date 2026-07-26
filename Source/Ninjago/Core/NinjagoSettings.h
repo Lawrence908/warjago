@@ -133,4 +133,12 @@ public:
 	/** Seconds after a result before the battle auto-restarts. 0 disables auto-restart (press R). */
 	UPROPERTY(config, EditAnywhere, Category="Battle", meta=(ClampMin="0.0"))
 	float AutoRestartSeconds = 8.0f;
+
+	/** The unit row a "summon" ability calls in (a big monster to fight for the caster). */
+	UPROPERTY(config, EditAnywhere, Category="Abilities")
+	FName SummonedUnitRow = FName(TEXT("SER_DEVOURER"));
+
+	/** Lifetime of a summoned unit if its ability does not specify a duration (seconds). */
+	UPROPERTY(config, EditAnywhere, Category="Abilities", meta=(ClampMin="1.0"))
+	float SummonDefaultLifetime = 30.0f;
 };

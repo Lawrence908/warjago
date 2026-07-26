@@ -737,6 +737,30 @@ Play the default battle.
 
 ---
 
+## v0.21 - Summon (branch `v0.17`)
+
+Summon abilities (`summon=...`) call in a temporary monster (the `SummonedUnitRow`, a giant serpent
+by default) to fight for the caster's team, then it vanishes after its lifetime. To stay safe, the
+spawn is queued and the new unit only joins the combat set at the start of the next combat tick
+(never while the unit list is being iterated). The demo adds a guest summoner, `LRD_CLOUSE`, on the
+Skulkin side.
+
+The riskiest phase: it spawns a unit mid-battle. Verified by trace and by the deferred-registration
+design; watch this one closely on the first build.
+
+### Summon (visual)
+
+Play the default battle. Select `LRD_CLOUSE` and press Space (or let the AI cast it).
+
+**Pass checks:**
+
+- [ ] A big **serpent appears** next to Clouse and fights for the Skulkin within a couple of seconds.
+- [ ] It behaves like any unit (targets, is targeted, has a health bar).
+- [ ] After ~30s it **vanishes** (its models die and it disappears).
+- [ ] No crash when it spawns mid-battle (the deferred join is the thing to confirm).
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |
