@@ -29,8 +29,9 @@ namespace
 	// LRD_ICEEMPEROR is a guest freeze-caster (v0.9): select him and press Space to freeze Skulkin.
 	// LRD_SKALES is a guest hypnotist (v0.10): select him and press Space to mind-control a Skulkin unit.
 	const TArray<FName> DefaultNinja  = { TEXT("HRO_KAI"), TEXT("HRO_JAY"), TEXT("HRO_COLE"), TEXT("HRO_ZANE"), TEXT("NIN_SHINTARO"), TEXT("NIN_SOLDIERS"), TEXT("NIN_SAMURAIX"), TEXT("LRD_ICEEMPEROR"), TEXT("LRD_SKALES") };
-	// HRO_WYPLASH adds a def+3 ally buff (v0.7) to the Skulkin line.
-	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH") };
+	// HRO_WYPLASH adds a def+3 ally buff (v0.7); HRO_MACHIA is a guest resurrector (v0.15) that can
+	// reform a destroyed Skulkin unit at 60% HP.
+	const TArray<FName> DefaultSkulkin = { TEXT("SKU_MINERS"), TEXT("SKU_WARRIORS"), TEXT("SKU_WATCHMEN"), TEXT("LRD_SAMUKAI"), TEXT("SKU_ENGINEERS"), TEXT("HRO_WYPLASH"), TEXT("HRO_MACHIA") };
 
 	// Which preset the code-default battle spawns. Persists across level reloads within a session.
 	int32 GScenarioIndex = 0;

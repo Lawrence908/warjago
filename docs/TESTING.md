@@ -611,6 +611,30 @@ assigned Battle Setup uses those instead.
 
 ---
 
+## v0.15 - Resurrection (branch `v0.15`)
+
+Reform abilities (`revive=N%`) rebuild a **destroyed** friendly unit: every model comes back at N%
+HP with fresh morale and ammo, snapped back into formation. No new unit is spawned (the destroyed
+unit is already tracked), so it is safe and simple. The demo adds a guest resurrector, `HRO_MACHIA`,
+on the Skulkin side.
+
+Stateful integration, verified by trace; suite stays at 18.
+
+### Resurrection battle (visual)
+
+Play the default battle and let a Skulkin unit be wiped out.
+
+**Pass checks:**
+
+- [ ] After a Skulkin regiment is destroyed, it can **reform** whole (at ~60% HP) and rejoin the
+      fight (the resurrector `HRO_MACHIA` casts it, or select him and press Space).
+- [ ] The reformed unit fights normally again (fresh morale, ammo, formation).
+- [ ] The AI only casts it when there is actually a destroyed ally to rebuild.
+- [ ] It cannot un-lose a beaten battle: the caster must be alive to cast, and a living caster means
+      that side was not beaten.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

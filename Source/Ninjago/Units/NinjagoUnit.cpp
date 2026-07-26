@@ -408,6 +408,60 @@ float ANinjagoUnit::GetStrengthFraction() const
 	return FMath::Clamp(static_cast<float>(CurrentHp) / MaxHp, 0.f, 1.f);
 }
 
+void ANinjagoUnit::RebuildUnit(int32 HpPercent)
+{
+	if (!bRowValid || Models.Num() == 0)
+	{
+		return;
+	}
+	const int32 Hp = FMath::Max(1, (CachedRow.HpPerModel * FMath::Clamp(HpPercent, 1, 100)) / 100);
+	const int32 Count = Models.Num();
+	for (int32 i = 0; i < Count; ++i)
+	{
+		FNinjagoModel& M = Models[i];
+		M.bAlive = true;
+		M.Hp = Hp;
+		M.Ammo = FMath::Max(0, CachedRow.Ammo);
+		M.ReviveTimer = 0.f;
+		M.bHasRevived = false;
+		M.Location = SlotWorldLocation(M.SlotIndex == INDEX_NONE ? 0 : i, Count);
+		M.Yaw = GetActorRotation().Yaw;
+	}
+	LastLivingCount = Count;
+	CurrentMorale = MaxMorale;
+	bRouting = false;
+	StunTimer = 0.f;
+	bChargePending = true;
+	State = EUnitState::Idle;
+	OrderType = EOrderType::NoOrder;
+	AttackTarget.Reset();
+	UE_LOG(LogNinjago, Log, TEXT("%s reforms at %d%% HP"), *CachedRow.DisplayName, HpPercent);
+}
+
+ANinjagoUnit* ANinjagoUnit::FindDestroyedAlly(const FVector& Center, float Radius) const
+{
+	const float RadiusSq = Radius * Radius;
+	ANinjagoUnit* Nearest = nullptr;
+	float BestDsq = RadiusSq;
+	for (TActorIterator<ANinjagoUnit> It(GetWorld()); It; ++It)
+	{
+		ANinjagoUnit* Ally = *It;
+		// A destroyed friendly unit: our team, no living models and none reassembling.
+		if (!IsValid(Ally) || Ally == this || Ally->GetTeam() != Team
+			|| Ally->LivingModelCount() > 0 || Ally->PendingReviveCount() > 0)
+		{
+			continue;
+		}
+		const float Dsq = FVector::DistSquared2D(Center, Ally->GetActorLocation());
+		if (Dsq <= BestDsq)
+		{
+			BestDsq = Dsq;
+			Nearest = Ally;
+		}
+	}
+	return Nearest;
+}
+
 int32 ANinjagoUnit::PendingReviveCount() const
 {
 	int32 Count = 0;
@@ -643,6 +697,12 @@ bool ANinjagoUnit::ShouldAIFireAbility() const
 	}
 
 	const FNinjagoAbilityMagnitude Mag = FNinjagoAbilityEffect::ParseMagnitude(CachedAbility.Magnitude);
+
+	// Resurrection: only worth casting if a destroyed ally is in range to rebuild.
+	if (Mag.Verb == TEXT("revive"))
+	{
+		return FindDestroyedAlly(GetActorLocation(), CachedAbility.RadiusCm) != nullptr;
+	}
 
 	const bool bOffensive = (Mag.Verb == TEXT("dmg") || Mag.Verb == TEXT("freeze")
 		|| Mag.Verb == TEXT("control") || Mag.Verb == TEXT("slow"));
@@ -901,6 +961,14 @@ bool ANinjagoUnit::TryFireAbility()
 	{
 		// freeze=6s -> stun enemies in radius for that many seconds.
 		ApplyStunInRadius(Centre, CachedAbility.RadiusCm, static_cast<float>(Mag.Value));
+	}
+	else if (Mag.Verb == TEXT("revive"))
+	{
+		// Rebuild the nearest destroyed friendly unit at the given HP percent (e.g. Reform 60%).
+		if (ANinjagoUnit* Dead = FindDestroyedAlly(Centre, CachedAbility.RadiusCm))
+		{
+			Dead->RebuildUnit(Mag.Value);
+		}
 	}
 	else if (Mag.Verb == TEXT("control"))
 	{

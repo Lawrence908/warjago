@@ -59,6 +59,9 @@ public:
 	/** Restore HP to one living model, capped at its per-model maximum. */
 	void ApplyModelHeal(int32 ModelIndex, int32 Amount);
 
+	/** Rebuild a destroyed unit: every model back alive at HpPercent of max, fresh morale/ammo. */
+	void RebuildUnit(int32 HpPercent);
+
 	// --- Ranged (v0.2) ---
 
 	/** True if this unit's row can shoot (has range and ammo). */
@@ -249,6 +252,7 @@ private:
 	void ApplyAbilityChainDamage(const FVector& Center, float Radius, int32 Damage, int32 MaxTargets);
 	void ApplyAbilityHealInRadius(const FVector& Center, float Radius, int32 Amount, bool bPercent);
 	void ApplyModifierInRadius(const FVector& Center, float Radius, bool bEnemies, ENinjagoStat Stat, float FlatAdd, float PercentAdd, float Duration);
+	ANinjagoUnit* FindDestroyedAlly(const FVector& Center, float Radius) const;
 
 	/** World location of formation slot SlotIndex, given the unit's transform. */
 	FVector SlotWorldLocation(int32 SlotIndex, int32 Count) const;
