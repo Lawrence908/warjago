@@ -721,6 +721,22 @@ Play the default battle and watch the Ninja side.
 
 ---
 
+## v0.20 - Controls help overlay (branch `v0.17`)
+
+An on-screen controls list, shown by default and toggled with **H**, so the game is playable without
+the docs. When hidden it collapses to a small "H: help" hint. On-screen text, no assets.
+
+### Help overlay (visual)
+
+Play the default battle.
+
+**Pass checks:**
+
+- [ ] A controls list is visible from the start (select / move / power / camera / restart / battles).
+- [ ] Pressing **H** hides it (leaving a small "H: help" hint); pressing H again shows it.
+
+---
+
 ## Troubleshooting quick reference
 
 | Symptom | Likely cause | Fix |

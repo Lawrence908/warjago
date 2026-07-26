@@ -66,6 +66,9 @@ void ANinjagoPlayerController::BuildInput()
 	IA_Restart = NewObject<UInputAction>(this, TEXT("IA_Restart"));
 	IA_Restart->ValueType = EInputActionValueType::Boolean;
 
+	IA_Help = NewObject<UInputAction>(this, TEXT("IA_Help"));
+	IA_Help->ValueType = EInputActionValueType::Boolean;
+
 	IA_Scenarios.SetNum(4);
 	for (int32 i = 0; i < 4; ++i)
 	{
@@ -107,6 +110,7 @@ void ANinjagoPlayerController::BuildInput()
 	MappingContext->MapKey(IA_Deselect, EKeys::Escape);
 	MappingContext->MapKey(IA_Ability, EKeys::SpaceBar);
 	MappingContext->MapKey(IA_Restart, EKeys::R);
+	MappingContext->MapKey(IA_Help, EKeys::H);
 	MappingContext->MapKey(IA_Scenarios[0], EKeys::One);
 	MappingContext->MapKey(IA_Scenarios[1], EKeys::Two);
 	MappingContext->MapKey(IA_Scenarios[2], EKeys::Three);
@@ -126,6 +130,7 @@ void ANinjagoPlayerController::SetupInputComponent()
 		EIC->BindAction(IA_Deselect, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnDeselect);
 		EIC->BindAction(IA_Ability, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnAbility);
 		EIC->BindAction(IA_Restart, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnRestart);
+		EIC->BindAction(IA_Help, ETriggerEvent::Started, this, &ANinjagoPlayerController::OnHelp);
 		EIC->BindAction(IA_Scenarios[0], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario1);
 		EIC->BindAction(IA_Scenarios[1], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario2);
 		EIC->BindAction(IA_Scenarios[2], ETriggerEvent::Started, this, &ANinjagoPlayerController::OnScenario3);
@@ -204,6 +209,11 @@ void ANinjagoPlayerController::OnRestart(const FInputActionValue&)
 	UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this)));
 }
 
+void ANinjagoPlayerController::OnHelp(const FInputActionValue&)
+{
+	bShowHelp = !bShowHelp;
+}
+
 void ANinjagoPlayerController::LoadScenario(int32 Index)
 {
 	if (ANinjagoGameMode* GM = GetWorld()->GetAuthGameMode<ANinjagoGameMode>())
@@ -251,6 +261,23 @@ bool ANinjagoPlayerController::TraceGroundUnderCursor(FVector& OutLocation) cons
 void ANinjagoPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	// Controls overlay (toggle with H). Time 0 + redrawn each frame, so it updates instantly.
+	if (GEngine)
+	{
+		if (bShowHelp)
+		{
+			GEngine->AddOnScreenDebugMessage(40, 0.f, FColor::White, TEXT("Left-click: select a unit"));
+			GEngine->AddOnScreenDebugMessage(41, 0.f, FColor::White, TEXT("Right-click: move, or attack an enemy"));
+			GEngine->AddOnScreenDebugMessage(42, 0.f, FColor::White, TEXT("Space: use the selected unit's power"));
+			GEngine->AddOnScreenDebugMessage(43, 0.f, FColor::White, TEXT("WASD / wheel: move & zoom the camera   Esc: deselect"));
+			GEngine->AddOnScreenDebugMessage(44, 0.f, FColor::White, TEXT("R: fight again    1-4: pick a battle    H: hide this help"));
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(40, 0.f, FColor(150, 150, 150), TEXT("H: help"));
+		}
+	}
 
 	// Selection highlight: a ground ring under the selected unit (debug-draw stand-in for a decal).
 	if (ANinjagoUnit* Unit = Selected.Get())
