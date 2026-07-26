@@ -271,5 +271,27 @@ void ANinjagoPlayerController::Tick(float DeltaSeconds)
 			DrawDebugLine(GetWorld(), Left, Right, FColor(60, 60, 60), false, -1.f, 0, 10.f);
 			DrawDebugLine(GetWorld(), Left, Fill, Ready >= 1.f ? FColor::Green : FColor::Orange, false, -1.f, 0, 10.f);
 		}
+
+		// Selected-unit info panel (on-screen). Refreshed each frame with time 0, so it clears on
+		// deselect. Reuses the row data, including the Notes flavour text.
+		if (GEngine && Unit->IsRowValid())
+		{
+			const FNinjagoUnitRow& Row = Unit->GetRow();
+			const int32 StrPct = FMath::RoundToInt(Unit->GetStrengthFraction() * 100.f);
+			GEngine->AddOnScreenDebugMessage(30, 0.f, FColor::Yellow, Row.DisplayName);
+			if (!Row.Notes.IsEmpty())
+			{
+				GEngine->AddOnScreenDebugMessage(31, 0.f, FColor(210, 210, 210), Row.Notes);
+			}
+			GEngine->AddOnScreenDebugMessage(32, 0.f, FColor(180, 220, 180),
+				FString::Printf(TEXT("Models %d/%d   Str %d%%   Atk %d  Dmg %d  Def %d   Kills %d"),
+					Unit->LivingModelCount(), FMath::Max(1, Row.UnitSize), StrPct,
+					Row.MeleeAttack, Row.Damage, Row.MeleeDefence, Unit->GetKillCount()));
+			if (Unit->HasAbility())
+			{
+				GEngine->AddOnScreenDebugMessage(33, 0.f, FColor(160, 200, 255),
+					FString::Printf(TEXT("Ability: %s  [Space]"), *Unit->GetAbility().DisplayName));
+			}
+		}
 	}
 }
