@@ -5,7 +5,9 @@
 
 #if WITH_AUTOMATION_TESTS
 
-namespace
+// Named (not anonymous) so file-local helpers don't collide with identically
+// named helpers in sibling spec files when UE merges them into a unity build.
+namespace NinjagoCombatSpec
 {
 	// Default tuning, matching UNinjagoSettings defaults.
 	FNinjagoCombatParams DefaultParams()
@@ -13,6 +15,7 @@ namespace
 		return FNinjagoCombatParams{};
 	}
 }
+using namespace NinjagoCombatSpec;
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoHitChanceClampTest,
 	"Ninjago.Combat.HitChanceClamp",

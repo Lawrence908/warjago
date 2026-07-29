@@ -5,7 +5,9 @@
 
 #if WITH_AUTOMATION_TESTS
 
-namespace
+// Named (not anonymous) so file-local helpers don't collide with identically
+// named helpers in sibling spec files when UE merges them into a unity build.
+namespace NinjagoFormationSpec
 {
 	constexpr float kSpacing = 90.0f;
 
@@ -68,6 +70,7 @@ namespace
 		return Slots.Num() > 0 ? Sum / Slots.Num() : FVector2D::ZeroVector;
 	}
 }
+using namespace NinjagoFormationSpec;
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoFormationSingleTest,
 	"Ninjago.Formation.SingleEntityAtOrigin",

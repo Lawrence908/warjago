@@ -5,13 +5,16 @@
 
 #if WITH_AUTOMATION_TESTS
 
-namespace
+// Named (not anonymous) so file-local helpers don't collide with identically
+// named helpers in sibling spec files when UE merges them into a unity build.
+namespace NinjagoMoraleSpec
 {
 	FNinjagoMoraleParams DefaultParams()
 	{
 		return FNinjagoMoraleParams{};
 	}
 }
+using namespace NinjagoMoraleSpec;
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNinjagoMoraleCasualtyTest,
 	"Ninjago.Morale.CasualtiesLowerMorale",
